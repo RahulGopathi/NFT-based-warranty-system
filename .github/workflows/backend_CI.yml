@@ -10,7 +10,7 @@ on:
 
 
 env:
-  DJANGO_SETTINGS_MODULE: pydo.settings
+  DJANGO_SETTINGS_MODULE: PyDO.settings
   DJANGO_SECRET_KEY: "django-insecure-=4#vn-xc@33tjoudn&ydv(yw+5y3p5@ss+qiue-m@i%=$6)^v="
 
 jobs:
@@ -39,7 +39,7 @@ jobs:
     - name: Setup environment variables
       run: |
         cp .env.example .env
-        export DJANGO_SETTINGS_MODULE=pydo.settings
+        export DJANGO_SETTINGS_MODULE=PyDO.settings
     - name: Install dependencies
       working-directory: ./backend
       run: |
