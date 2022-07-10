@@ -10,8 +10,8 @@ on:
 
 
 env:
-  DJANGO_SETTINGS_MODULE: angeljob.settings
-  DJANGO_SECRET_KEY: "dcyz)+52d)n1f3d6dsf&g0p6a($(v4&rvu=9u3u6fib9=kzy$8"
+  DJANGO_SETTINGS_MODULE: pydo.settings
+  DJANGO_SECRET_KEY: "django-insecure-=4#vn-xc@33tjoudn&ydv(yw+5y3p5@ss+qiue-m@i%=$6)^v="
 
 jobs:
   build:
