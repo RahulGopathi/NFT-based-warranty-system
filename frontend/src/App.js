@@ -1,11 +1,13 @@
+import Home from './components/Home';
+import Install from './components/Install';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <h1>PyDO</h1>
-    </div>
-  );
+  if (window.ethereum) {
+    return <Home />;
+  } else {
+    return <Install />;
+  }
 }
 
 export default App;
