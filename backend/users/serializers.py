@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from users.models import Retailer
+from .models import Owner
 from django.contrib.auth.password_validation import validate_password
 
 
@@ -28,3 +29,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class OwnerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Owner
+        fields = ['phno', 'name', 'wallet_address', 'id']

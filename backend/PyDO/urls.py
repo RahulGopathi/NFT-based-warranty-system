@@ -22,8 +22,8 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
-    path('products/', include('products.urls')),
-    path('users/', include('users.urls')),
+    path('api/', include('products.urls')),
+    path('auth/', include('users.urls')),
     path('admin/', admin.site.urls),
 ]
 if settings.DEBUG:
