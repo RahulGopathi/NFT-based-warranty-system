@@ -1,9 +1,10 @@
-from rest_framework import viewsets
-from .models import Retailer
-from .serializers import RetailerSerializer
-# Create your views here.
+from users.models import Retailer
+from users.serializers import RegisterSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework import generics
 
 
-class RetailerViewset(viewsets.ModelViewSet):
+class RegisterView(generics.CreateAPIView):
     queryset = Retailer.objects.all()
-    serializer_class = RetailerSerializer
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
