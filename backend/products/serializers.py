@@ -28,3 +28,9 @@ class ItemSerializer(serializers.ModelSerializer):
         owner = Owner.objects.create(**owner_data)
         item = Item.objects.create(owner=owner, **validated_data)
         return item
+
+class UpdateItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
