@@ -29,6 +29,7 @@ class ItemSerializer(serializers.ModelSerializer):
         item = Item.objects.create(owner=owner, **validated_data)
         return item
 
+
 class UpdateItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
