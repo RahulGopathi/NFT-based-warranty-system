@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import LandingPage from './LandingPage';
+import '../App.css';
 
-async function connect(onConnected) {
+export async function connect(onConnected) {
   const accounts = await window.ethereum.request({
     method: 'eth_requestAccounts',
   });
@@ -30,17 +32,15 @@ function Home() {
   }, []);
 
   return (
-    <div>
-      <h1>PyDO</h1>
-
-      {userAddress ? (
-        <span>Connected to Adress: {userAddress}</span>
-      ) : (
-        <button onClick={() => connect(setUserAddress)}>
-          Connect to MetaMask
-        </button>
-      )}
-    </div>
+    <>
+      <div>
+        {userAddress ? (
+          <span>Connected to Adress: {userAddress}</span>
+        ) : (
+          <LandingPage setUserAddress={setUserAddress}/>
+        )}
+      </div>
+    </>
   );
 }
 
