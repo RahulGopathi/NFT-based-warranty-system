@@ -1,12 +1,9 @@
 from django.db import models
 
-# Create your models here.
-
-
 class Product(models.Model):
     name = models.CharField(max_length=100)
     tokenizable_data = models.FileField(upload_to='products/', null=True, blank=True)  # this would be the image or data that we tokenize
-    product_data = models.JSONField()  # optional data we want to store like product description etc
+    product_data = models.JSONField(null=True, blank=True)  # optional data we want to store like product description etc
     retailer = models.ForeignKey('users.Retailer', on_delete=models.CASCADE)
 
     def __str__(self):
