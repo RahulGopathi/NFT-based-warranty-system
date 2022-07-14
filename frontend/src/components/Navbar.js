@@ -1,18 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
-import { connect } from './Home';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import { connect } from '../views/customer/Home';
+import { Button, Divider, Menu, MenuItem } from '@mui/material';
+
 
 function Navbar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick1 = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
+
+  const handleClose = (e) => {
+
+    if (e.currentTarget.localName !== "ul") {
+      const menu = document.getElementById("simple-menu").children[2];
+      const menuBoundary = {
+        left: menu.offsetLeft,
+        top: e.currentTarget.offsetTop + e.currentTarget.offsetHeight,
+        right: menu.offsetLeft + menu.offsetHeight,
+        bottom: menu.offsetTop + menu.offsetHeight
+      };
+      if (
+        e.clientX >= menuBoundary.left &&
+        e.clientX <= menuBoundary.right &&
+        e.clientY <= menuBoundary.bottom &&
+        e.clientY >= menuBoundary.top
+      ) {
+        return;
+      }
+    }
     setAnchorEl(null);
   };
 
@@ -42,7 +57,7 @@ function Navbar(props) {
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
             PyDO
-            <i class="fa-brands fa-hive"></i>
+            <i className="fa-brands fa-hive"></i>
           </Link>
           <ul className='nav-menu'>
             {/* <li className='nav-item'>
@@ -59,21 +74,26 @@ function Navbar(props) {
               aria-controls={open ? 'basic-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick1}
+              onMouseEnter={(e) => { setAnchorEl(e.currentTarget); }}
+              onMouseLeave={handleClose}
             >
-              Login <i class="fa-solid fa-angle-down"></i>
+              Login <i className="fa-solid fa-angle-down"></i>
             </Button>
             <Menu
               id="basic-menu"
               anchorEl={anchorEl}
               open={open}
-              onClose={handleClose}
               MenuListProps={{
                 'aria-labelledby': 'basic-button',
+                onMouseLeave: (e) => {
+                  handleClose(e);
+                }
               }}
+              sx={{ boxShadow: "rgb(0 0 0 / 16%) 0px 4px 16px" }}
             >
               <MenuItem onClick={() => connect(props.setUserAddress)}>Customer</MenuItem>
-              <MenuItem onClick={handleClose}>Retailer</MenuItem>
+              <Divider />
+              <MenuItem>Retailer</MenuItem>
             </Menu>
           </div>}
 

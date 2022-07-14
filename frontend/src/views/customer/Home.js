@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import LandingPage from './LandingPage';
-import '../App.css';
+import LandingPage from '../LandingPage';
+import '../../App.css';
 
 export async function connect(onConnected) {
   const accounts = await window.ethereum.request({
@@ -37,7 +37,7 @@ function Home() {
         {userAddress ? (
           <span>Connected to Adress: {userAddress}</span>
         ) : (
-          <LandingPage setUserAddress={setUserAddress}/>
+          <LandingPage setUserAddress={setUserAddress} />
         )}
       </div>
     </>
