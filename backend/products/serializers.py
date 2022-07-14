@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_retailer_name(self, obj):
-        return obj.retailer.name
+        return obj.retailer.first_name + " " + obj.retailer.last_name
 
 
 class ItemSerializer(serializers.ModelSerializer):

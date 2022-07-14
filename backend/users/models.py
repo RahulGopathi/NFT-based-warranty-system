@@ -15,14 +15,13 @@ class Owner(models.Model):
 class Retailer(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=100, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.name
+        return self.first_name + " " + self.last_name
 
     class Meta:
         verbose_name = "Retailer"
