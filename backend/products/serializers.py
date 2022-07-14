@@ -3,9 +3,10 @@ from django.core.files import File
 from rest_framework import serializers
 from .models import Product, Item
 from users.models import Owner
-from users.serializers import OwnerSerializer
 from .utils import serialize_image
 import os
+
+
 class ProductSerializer(serializers.ModelSerializer):
     retailer_name = serializers.SerializerMethodField()
 
@@ -35,7 +36,7 @@ class ItemSerializer(serializers.ModelSerializer):
         item = Item.objects.create(owner=owner, product=product, **validated_data)
         ipfs_hash, image_url = serialize_image(image, validated_data['serial_no'])
         item.image_ipfs = ipfs_hash
-        item.warranty_image = File(open(os.path.join(settings.MEDIA_ROOT, image_url),'rb'), name=image_url)
+        item.warranty_image = File(open(os.path.join(settings.MEDIA_ROOT, image_url), 'rb'), name=image_url)
         item.save()
         return item
 

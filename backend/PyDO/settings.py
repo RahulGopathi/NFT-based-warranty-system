@@ -194,4 +194,4 @@ PINATA_SECRET_KEY = config('PINATA_SECRET_KEY')
 PINATA_API_URL = "https://api.pinata.cloud"
 PINATA_JWT_SECRET = config('PINATA_JWT_SECRET')
 
-DOMAIN_URL= config('DOMAIN_URL', default='http://localhost:8000')
+DOMAIN_URL = config('DOMAIN_URL', default='http://localhost:8000')

@@ -46,7 +46,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     def issue_user(self, request, pk=None):
         item = self.get_object()
         owner_data = request.data['owner']
-        owner,_ = Owner.objects.get_or_create(**owner_data)
+        owner, _ = Owner.objects.get_or_create(**owner_data)
         item.owner = owner
         item.save()
         return Response(ItemSerializer(item).data, status=201)
