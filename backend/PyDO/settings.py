@@ -17,7 +17,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -189,3 +188,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PINATA_API_KEY = config('PINATA_API_KEY')
+PINATA_SECRET_KEY = config('PINATA_SECRET_KEY')
+PINATA_API_URL = "https://api.pinata.cloud"
+PINATA_JWT_SECRET = config('PINATA_JWT_SECRET')
+
+DOMAIN_URL= config('DOMAIN_URL', default='http://localhost:8000')
