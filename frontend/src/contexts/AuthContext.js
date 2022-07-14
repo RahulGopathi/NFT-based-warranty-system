@@ -8,9 +8,7 @@ const baseURL = API_AUTH_BASE_URL;
 
 const AuthContext = createContext();
 
-export default AuthContext;
-
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem('authTokens')
       ? JSON.parse(localStorage.getItem('authTokens'))
@@ -109,3 +107,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export { AuthContext, AuthProvider };
