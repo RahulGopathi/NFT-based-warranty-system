@@ -93,7 +93,10 @@ function Navbar() {
                 }}
                 sx={{ boxShadow: 'rgb(0 0 0 / 16%) 0px 4px 16px' }}
               >
-                <MenuItem id="menu-item-c" onClick={() => connectWallet(setUserWalletAddress)}>
+                <MenuItem
+                  id="menu-item-c"
+                  onClick={() => connectWallet(setUserWalletAddress)}
+                >
                   Customer
                 </MenuItem>
                 <Divider />

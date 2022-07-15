@@ -1,14 +1,14 @@
-import { useRef, useEffect, useContext } from 'react';
+import { useRef, useEffect, useContext, useState } from 'react';
 import '../App.css';
 import { Button } from '../components/Button';
 import './LandingPage.css';
-// import Navbar from '../components/Navbar';
 import { WalletContext } from '../contexts/WalletContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LandingPage() {
   const navigate = useNavigate();
   const videoRef = useRef();
+  const [isHovering, setIsHovering] = useState(false);
 
   const { userWalletAddress, setUserWalletAddress, connectWallet } =
     useContext(WalletContext);
@@ -21,17 +21,12 @@ function LandingPage() {
     }
   };
 
-  const redirectRetailer = () => {
-    navigate('/retailer-login');
-  };
-
   useEffect(() => {
     videoRef.current.playbackRate = 0.6;
   });
 
   return (
     <div className="landing-page">
-      {/* <Navbar /> */}
       <video src="/landing-video.mp4" ref={videoRef} autoPlay loop muted />
       <div id="overlay"></div>
       <div className="hero-container">
@@ -47,14 +42,27 @@ function LandingPage() {
           >
             CUSTOMER <i className="fa-solid fa-angle-right"></i>
           </Button>
-          <Button
-            className="btns"
-            buttonStyle="btn--outline"
-            buttonSize="btn--large"
-            onClick={redirectRetailer}
+          <Link
+            style={{
+              textDecoration: 'none',
+              color: isHovering ? 'black' : 'white',
+            }}
+            to="/retailer-login"
           >
-            RETAILER <i className="fa-solid fa-angle-right"></i>
-          </Button>
+            <Button
+              className="btns"
+              buttonStyle="btn--outline"
+              buttonSize="btn--large"
+              onMouseEnter={() => {
+                setIsHovering(true);
+              }}
+              onMouseLeave={() => {
+                setIsHovering(false);
+              }}
+            >
+              RETAILER <i className="fa-solid fa-angle-right"></i>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
