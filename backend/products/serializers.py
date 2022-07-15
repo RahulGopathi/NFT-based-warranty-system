@@ -9,20 +9,23 @@ import os
 
 class ProductSerializer(serializers.ModelSerializer):
     retailer_name = serializers.SerializerMethodField()
+    retailer_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = '__all__'
+        exclude = ['retailer']
 
     def get_retailer_name(self, obj):
         return obj.retailer.first_name + " " + obj.retailer.last_name
+    
+    def get_retailer_id(self, obj):
+        return obj.retailer.id
 
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = '__all__'
-        exclude_fields = ('owner')
+        fields = ('serial_no', 'warranty_period', 'product', 'warranty_image')
         read_only_fields = ('created_at', 'updated_at')
 
     def create(self, validated_data):

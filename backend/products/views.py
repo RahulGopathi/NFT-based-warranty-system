@@ -4,7 +4,6 @@ from rest_framework.decorators import action
 from .models import Product, Item
 from users.models import Owner
 from .serializers import ProductSerializer, ItemSerializer, UpdateItemSerializer
-# Create your views here.
 
 
 class ProductViewSet(viewsets.ModelViewSet):
