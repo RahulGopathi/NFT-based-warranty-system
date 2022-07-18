@@ -9,20 +9,19 @@ class Owner(models.Model):
     wallet_address = models.CharField(max_length=250, blank=True)
 
     def __str__(self):
-        return f"{self.name} {self.wallet_address}"
+        return f"{self.phno} {self.wallet_address}"
 
 
 class Retailer(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.email
+        return self.first_name + " " + self.last_name
 
     class Meta:
         verbose_name = "Retailer"
