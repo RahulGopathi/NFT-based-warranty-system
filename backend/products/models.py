@@ -20,7 +20,7 @@ class Item(models.Model):
     serial_no = models.CharField(max_length=100)
     warranty_start_date = models.DateField(null=True, blank=True)
     warranty_end_date = models.DateField(null=True, blank=True)
-    warranty_period = models.IntegerField(null=True, blank=True, help_text="Enter the value in months")
+    warranty_period = models.IntegerField(help_text="Enter the value in months")
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 

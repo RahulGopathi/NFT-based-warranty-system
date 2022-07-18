@@ -12,7 +12,7 @@ def serialize_image(image_path, text):
     image_dir = os.path.join(settings.MEDIA_ROOT, 'items/')
     if not os.path.exists(image_dir):
         os.makedirs(image_dir)
-    file_path = os.path.join(image_dir , file_name)
+    file_path = os.path.join(image_dir, file_name)
     cv2.imwrite(file_path, image)
     ipfs_hash = upload_file_to_ipfs(file_path)
     return ipfs_hash, os.path.join("items/", file_name)
