@@ -13,7 +13,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        exclude = ['retailer']
+        fields = "__all__"
 
     def get_retailer_name(self, obj):
         return obj.retailer.first_name + " " + obj.retailer.last_name

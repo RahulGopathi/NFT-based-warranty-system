@@ -3,8 +3,8 @@ from django.db import models
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    image = models.FileField(upload_to='products/', null=True, blank=True)  # this would be the image or data that we tokenize
-    product_data = models.JSONField()  # optional data we want to store like product description etc
+    image = models.FileField(upload_to='products/')  # this would be the image or data that we tokenize
+    product_data = models.JSONField(null=True, blank=True)  # optional data we want to store like product description etc
     retailer = models.ForeignKey('users.Retailer', on_delete=models.CASCADE)
 
     def __str__(self):
