@@ -28,16 +28,7 @@ function App() {
                   </div>
                 }
               />
-              <Route
-                path="/retailer-login"
-                element={
-                  <div>
-                    <CustomerProtectedRoute>
-                      <RetailerLogin />
-                    </CustomerProtectedRoute>
-                  </div>
-                }
-              />
+              <Route path="/retailer-login" element={<RetailerLogin />} />
             </Routes>
             <Toaster />
           </WalletProvider>
