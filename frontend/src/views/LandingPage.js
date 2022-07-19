@@ -4,6 +4,7 @@ import { Button } from '../components/Button';
 import './LandingPage.css';
 import { WalletContext } from '../contexts/WalletContext';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function LandingPage() {
   const redirectCustomer = () => {
     if (userWalletAddress) {
       navigate('/customer-dashboard');
+      toast.success('Wallet Connected succesfully!');
     } else {
       connectWallet(setUserWalletAddress);
     }
