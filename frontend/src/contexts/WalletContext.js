@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const WalletContext = createContext();
 
@@ -9,12 +10,19 @@ const WalletProvider = ({ children }) => {
   const [userWalletAddress, setUserWalletAddress] = useState('');
 
   const connectWallet = async (onConnected) => {
-    const accounts = await window.ethereum.request({
-      method: 'eth_requestAccounts',
-    });
+    try {
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
 
-    onConnected(accounts[0]);
-    navigate('/customer-dashboard');
+      if (accounts) {
+        onConnected(accounts[0]);
+        toast.success('Wallet Connected succesfully!');
+        navigate('/customer-dashboard');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const checkIfWalletIsConnected = async (onConnected) => {
