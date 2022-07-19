@@ -14,66 +14,8 @@ import {
 import { KeyboardArrowDown, Person, ShoppingCart } from '@mui/icons-material';
 import { WalletContext } from '../contexts/WalletContext';
 
-const useRovingIndex = (options) => {
-  const {
-    initialActiveIndex = 0,
-    vertical = false,
-    handlers = {},
-  } = options || {};
-  const [activeIndex, setActiveIndex] = React.useState(initialActiveIndex);
-  const targetRefs = React.useRef([]);
-  const targets = targetRefs.current;
-  const focusNext = () => {
-    let newIndex = activeIndex + 1;
-    if (newIndex >= targets.length) {
-      newIndex = 0;
-    }
-    targets[newIndex]?.focus();
-    setActiveIndex(newIndex);
-  };
-  const focusPrevious = () => {
-    let newIndex = activeIndex - 1;
-    if (newIndex < 0) {
-      newIndex = targets.length - 1;
-    }
-    targets[newIndex]?.focus();
-    setActiveIndex(newIndex);
-  };
-  const getTargetProps = (index) => ({
-    ref: (ref) => {
-      if (ref) {
-        targets[index] = ref;
-      }
-    },
-    tabIndex: activeIndex === index ? 0 : -1,
-    onKeyDown: (e) => {
-      if (Number.isInteger(activeIndex)) {
-        if (e.key === (vertical ? 'ArrowDown' : 'ArrowRight')) {
-          focusNext();
-        }
-        if (e.key === (vertical ? 'ArrowUp' : 'ArrowLeft')) {
-          focusPrevious();
-        }
-        handlers.onKeyDown?.(e, { setActiveIndex });
-      }
-    },
-    onClick: () => {
-      setActiveIndex(index);
-    },
-  });
-  return {
-    activeIndex,
-    setActiveIndex,
-    targets,
-    getTargetProps,
-    focusNext,
-    focusPrevious,
-  };
-};
 
 function Navbar() {
-  const { targets, getTargetProps, setActiveIndex, focusNext, focusPrevious } =
-    useRovingIndex();
   const { setUserWalletAddress, connectWallet } = useContext(WalletContext);
 
   const [click, setClick] = useState(false);
@@ -91,6 +33,7 @@ function Navbar() {
   };
 
   useEffect(() => {
+    console.log(window.location.pathname);
     showButton();
   }, []);
 
@@ -99,29 +42,6 @@ function Navbar() {
   const LoginMenu = React.forwardRef(
     ({ focusNext, focusPrevious, ...props }, ref) => {
       const [anchorEl, setAnchorEl] = React.useState(null);
-      const { targets, setActiveIndex, getTargetProps } = useRovingIndex({
-        initialActiveIndex: null,
-        vertical: true,
-        handlers: {
-          onKeyDown: (event, fns) => {
-            if (event.key.match(/(ArrowDown|ArrowUp|ArrowLeft|ArrowRight)/)) {
-              event.preventDefault();
-            }
-            if (event.key === 'Tab') {
-              setAnchorEl(null);
-              fns.setActiveIndex(null);
-            }
-            if (event.key === 'ArrowLeft') {
-              setAnchorEl(null);
-              focusPrevious();
-            }
-            if (event.key === 'ArrowRight') {
-              setAnchorEl(null);
-              focusNext();
-            }
-          },
-        },
-      });
 
       const open = Boolean(anchorEl);
       const id = open ? 'about-popper' : undefined;
@@ -134,17 +54,6 @@ function Navbar() {
               ref={ref}
               {...props}
               role="menuitem"
-              onKeyDown={(event) => {
-                props.onKeyDown?.(event);
-                if (event.key.match(/(ArrowLeft|ArrowRight|Tab)/)) {
-                  setAnchorEl(null);
-                }
-                if (event.key === 'ArrowDown') {
-                  event.preventDefault();
-                  targets[0]?.focus();
-                  setActiveIndex(0);
-                }
-              }}
               onFocus={(event) => setAnchorEl(event.currentTarget)}
               onMouseEnter={(event) => {
                 props.onMouseEnter?.(event);
@@ -181,7 +90,7 @@ function Navbar() {
                     onClick={() => connectWallet(setUserWalletAddress)}
                     role="none"
                   >
-                    <ListItemButton role="menuitem" {...getTargetProps(0)}>
+                    <ListItemButton role="menuitem">
                       <ListItemDecorator>
                         <Person />
                       </ListItemDecorator>
@@ -197,7 +106,7 @@ function Navbar() {
                     to="/retailer-login"
                   >
                     <ListItem role="none">
-                      <ListItemButton role="menuitem" {...getTargetProps(1)}>
+                      <ListItemButton role="menuitem">
                         <ListItemDecorator>
                           <ShoppingCart />
                         </ListItemDecorator>
@@ -216,7 +125,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="navbar">
+      <nav sx={{backdropFilter:"blur(20px)"}} className="navbar">
         <div className="navbar-container">
           <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
             PyDO
@@ -244,13 +153,6 @@ function Navbar() {
                 >
                   <ListItem role="none">
                     <LoginMenu
-                      onMouseEnter={() => {
-                        setActiveIndex(1);
-                        targets[1].focus();
-                      }}
-                      focusNext={focusNext}
-                      focusPrevious={focusPrevious}
-                      {...getTargetProps(1)}
                     />
                   </ListItem>
                 </List>
