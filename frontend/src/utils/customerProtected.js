@@ -1,10 +1,16 @@
 import { Navigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { WalletContext } from '../contexts/WalletContext';
+import toast from 'react-hot-toast';
 
 const CustomerProtectedRoute = ({ children }) => {
-  let { user } = useContext(AuthContext);
-  return user ? children : <Navigate to="/retailer-login" />;
+  let { userWalletAddress } = useContext(WalletContext);
+  if (userWalletAddress) {
+    return children;
+  } else {
+    toast.error('Please login as customer');
+    return <Navigate to="/" />;
+  }
 };
 
 export default CustomerProtectedRoute;
