@@ -7,7 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import LandingPage from './views/LandingPage';
 import CustomerDashboard from './views/customer/customerDashboard';
 import RetailerLogin from './views/retailer/retailerLogin';
-import RetailerSignup from './views/retailer/retailerSignup';
+import RetailerDashboard from './views/retailer/retailerDashboard';
 import CustomerProtectedRoute from './utils/customerProtected';
 
 function App() {
@@ -29,6 +29,7 @@ function App() {
                   </div>
                 }
               />
+              <Route path="/retailer-dashboard" element={<RetailerDashboard />} />
               <Route path="/retailer-login" element={<RetailerLogin />} />
               <Route path="/retailer-signup" element={<RetailerSignup />} />
             </Routes>
