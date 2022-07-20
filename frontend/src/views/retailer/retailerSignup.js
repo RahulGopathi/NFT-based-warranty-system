@@ -1,13 +1,12 @@
 import { Button } from '../../components/Button';
 import Form from 'react-bootstrap/Form';
-import {useNavigate, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import { Card } from 'react-bootstrap';
-import { useRef, useEffect, useContext, useState } from 'react';
+import { useRef, useContext, useState } from 'react';
 import './retailerSignup.css';
 import {AuthContext} from "../../contexts/AuthContext";
 
 function RetailerSignup() {
-    const navigate = useNavigate();
     const videoRef = useRef();
     const auth = useContext(AuthContext);
     
@@ -27,7 +26,7 @@ function RetailerSignup() {
             "last_name": last_name
         }
         console.log(data);
-        auth.registerUser("test", "mail", data.email, data.password, data.password2);
+        auth.registerUser(data.first_name, data.last_name, data.email, data.password, data.password2);
 
     }
 
@@ -43,9 +42,24 @@ function RetailerSignup() {
                         </Card.Title>
                         <Card.Text className='signup-body mt-4'>
                             <Form>
+                                <div className='row'>
+                                    <div className='col-md-6'>
+                                        <Form.Group controlId="formBasicName">
+                                            <Form.Label>First Name</Form.Label>
+                                            <Form.Control type="text" placeholder="Enter first name" value={first_name} onChange={(e)=>setFirstName(e.target.value)}/>
+                                        </Form.Group>
+                                    </div>
+                                    <div className='col-md-6'>
+                                        <Form.Group controlId="formBasicName">
+                                            <Form.Label>Last Name</Form.Label>
+                                            <Form.Control type="text" placeholder="Enter last name" value={last_name} onChange={(e)=>setLastName(e.target.value)}/>
+                                        </Form.Group>
+                                    </div>
+
+                                </div>
                                 <Form.Group controlId="formBasicEmail">
-                                    <Form.Label>Email address</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" value={email}  onChange={(e) => {setEmail(e.target.value)}} />
+                                    <Form.Label className='mt-3'>Email address</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email"  value={email}  onChange={(e) => {setEmail(e.target.value)}} />
                                 </Form.Group>
                                 <Form.Group controlId="formBasicPassword">
                                     <Form.Label className='mt-3'>Password</Form.Label>

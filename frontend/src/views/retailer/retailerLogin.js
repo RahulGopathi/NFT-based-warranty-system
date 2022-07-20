@@ -1,14 +1,12 @@
 import { Button } from '../../components/Button';
 import Form from 'react-bootstrap/Form';
-import {useNavigate, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import { Card } from 'react-bootstrap';
-import { useRef, useEffect, useContext, useState } from 'react';
+import { useRef, useContext, useState } from 'react';
 import './retailerLogin.css';
 import {AuthContext} from '../../contexts/AuthContext';
 function ReailerLogin() {
-  const navigate = useNavigate();
   const videoRef = useRef();
-  const [isHovering, setIsHovering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = useContext(AuthContext);
@@ -47,12 +45,6 @@ function ReailerLogin() {
                 <Button
                   buttonStyle="btn--outline"
                   buttonSize="btn--medium"
-                  onMouseEnter={() => {
-                    setIsHovering(true);
-                  }}
-                  onMouseLeave={() => {
-                    setIsHovering(false);
-                  }}
                   onClick={handleLogin}
                 >
                   Login 
