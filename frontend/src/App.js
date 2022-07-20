@@ -29,7 +29,10 @@ function App() {
                   </div>
                 }
               />
-              <Route path="/retailer-dashboard" element={<RetailerDashboard />} />
+              <Route
+                path="/retailer-dashboard"
+                element={<RetailerDashboard />}
+              />
               <Route path="/retailer-login" element={<RetailerLogin />} />
             </Routes>
             <Toaster />
