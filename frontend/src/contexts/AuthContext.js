@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const loginUser = async (email, password) => {
-    const response = await fetch(baseURL + '/login/', {
+    const response = await fetch(baseURL + '/auth/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const AuthProvider = ({ children }) => {
     password,
     password2
   ) => {
-    const response = await fetch(baseURL + '/register/', {
+    const response = await fetch(baseURL + '/auth/register/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const AuthProvider = ({ children }) => {
     const data = await response.json();
 
     if (response.status === 201) {
-      navigate('/login');
+      navigate('/retailer-login');
       toast.success('Registration Successful');
     } else {
       toast.error(data[Object.keys(data)[0]]);
