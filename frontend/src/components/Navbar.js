@@ -14,7 +14,6 @@ import {
 import { KeyboardArrowDown, Person, ShoppingCart } from '@mui/icons-material';
 import { WalletContext } from '../contexts/WalletContext';
 
-
 function Navbar() {
   const { setUserWalletAddress, connectWallet } = useContext(WalletContext);
 
@@ -125,7 +124,7 @@ function Navbar() {
 
   return (
     <>
-      <nav sx={{backdropFilter:"blur(20px)"}} className="navbar">
+      <nav sx={{ backdropFilter: 'blur(20px)' }} className="navbar">
         <div className="navbar-container">
           <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
             PyDO
@@ -152,8 +151,7 @@ function Navbar() {
                   }}
                 >
                   <ListItem role="none">
-                    <LoginMenu
-                    />
+                    <LoginMenu />
                   </ListItem>
                 </List>
               </Box>
