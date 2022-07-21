@@ -6,6 +6,8 @@ class Product(models.Model):
     image = models.FileField(upload_to='products/')  # this would be the image or data that we tokenize
     product_data = models.JSONField(null=True, blank=True)  # optional data we want to store like product description etc
     retailer = models.ForeignKey('users.Retailer', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
