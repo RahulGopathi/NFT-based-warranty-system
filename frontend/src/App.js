@@ -8,6 +8,7 @@ import LandingPage from './views/LandingPage';
 import CustomerDashboard from './views/customer/customerDashboard';
 import RetailerLogin from './views/retailer/retailerLogin';
 import RetailerDashboard from './views/retailer/retailerDashboard';
+import RetailerSignup from './views/retailer/retailerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
                 element={<RetailerDashboard />}
               />
               <Route path="/retailer-login" element={<RetailerLogin />} />
+              <Route path="/retailer-signup" element={<RetailerSignup />} />
             </Routes>
             <Toaster />
           </WalletProvider>

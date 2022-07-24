@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { useEffect, useState } from 'react';
 import useAxios from '../../utils/useAxios';
+=======
+import { useState } from 'react';
+>>>>>>> main
 import { styled } from '@mui/material/styles';
 import {
   Avatar,
@@ -11,6 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import PropTypes from 'prop-types';
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Button from '@mui/joy/Button';
@@ -18,6 +23,14 @@ import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Grid from '@mui/material/Grid';
 import CardOverflow from '@mui/joy/CardOverflow';
+=======
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import IconButton from '@mui/joy/IconButton';
+import AspectRatio from '@mui/joy/AspectRatio';
+>>>>>>> main
 
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
@@ -83,13 +96,17 @@ function a11yProps(index) {
 
 export default function RetailerDashboard() {
   const [value, setValue] = useState(0);
+<<<<<<< HEAD
   const [data, setData] = useState('');
   const api = useAxios();
+=======
+>>>>>>> main
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+<<<<<<< HEAD
   const calculateDateDifference = (date) => {
     const now = new Date().getDate();
     const then = new Date(date).getDate();
@@ -113,6 +130,8 @@ export default function RetailerDashboard() {
     fetchData();
   });
 
+=======
+>>>>>>> main
   return (
     <StyledDiv>
       <Box sx={{ width: '100%' }}>
@@ -147,6 +166,7 @@ export default function RetailerDashboard() {
         </Box>
         <TabPanel value={value} index={0}>
           <Box sx={{ width: '100%' }}>
+<<<<<<< HEAD
             <Box
               sx={{
                 borderBottom: 1,
@@ -157,6 +177,12 @@ export default function RetailerDashboard() {
             >
               <Tabs
                 scrollButtons
+=======
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs
+                scrollButtons
+                centered
+>>>>>>> main
                 variant="scrollable"
                 textColor="#A4A9AF"
                 value={value}
@@ -179,7 +205,11 @@ export default function RetailerDashboard() {
                   )}
                 />
                 <Tab
+<<<<<<< HEAD
                   label="Laptops"
+=======
+                  label="Search Products"
+>>>>>>> main
                   component={() => (
                     <Button onClick={() => setValue(0)}>
                       <Avatar
@@ -195,7 +225,11 @@ export default function RetailerDashboard() {
                   )}
                 />
                 <Tab
+<<<<<<< HEAD
                   label="Home"
+=======
+                  label="Search Products"
+>>>>>>> main
                   component={() => (
                     <Button onClick={() => setValue(0)}>
                       <Avatar
@@ -211,7 +245,11 @@ export default function RetailerDashboard() {
                   )}
                 />
                 <Tab
+<<<<<<< HEAD
                   label="Appliances"
+=======
+                  label="Search Products"
+>>>>>>> main
                   component={() => (
                     <Button onClick={() => setValue(0)}>
                       <Avatar
@@ -227,7 +265,11 @@ export default function RetailerDashboard() {
                   )}
                 />
                 <Tab
+<<<<<<< HEAD
                   label="Gadgets"
+=======
+                  label="Search Products"
+>>>>>>> main
                   component={() => (
                     <Button onClick={() => setValue(0)}>
                       <Avatar
@@ -243,6 +285,7 @@ export default function RetailerDashboard() {
                   )}
                 />
               </Tabs>
+<<<<<<< HEAD
             </Box>
             <Grid
               container
@@ -320,6 +363,61 @@ export default function RetailerDashboard() {
                 </Grid>
               ))}
             </Grid>
+=======
+              <Card
+                variant="outlined"
+                sx={{ minWidth: '10%', width: '20%', mt: 3 }}
+              >
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}
+                >
+                  <Typography
+                    level="h2"
+                    fontSize="md"
+                    sx={{ alignSelf: 'flex-start' }}
+                  >
+                    Yosemite National Park
+                  </Typography>
+                  <Typography level="body2">
+                    April 24 to May 02, 2021
+                  </Typography>
+                </Box>
+                <IconButton
+                  aria-label="bookmark Bahamas Islands"
+                  variant="plain"
+                  color="neutral"
+                  size="sm"
+                  sx={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}
+                >
+                  <BookmarkAdd />
+                </IconButton>
+
+                <AspectRatio minHeight="120px" maxHeight="200px" sx={{ my: 2 }}>
+                  <img
+                    src="https://images.unsplash.com/photo-1527549993586-dff825b37782?crop=entropy&auto=format&fit=crop&w=3270"
+                    alt=""
+                  />
+                </AspectRatio>
+                <Box sx={{ display: 'flex' }}>
+                  <div>
+                    <Typography level="body3">Total price:</Typography>
+                    <Typography fontSize="lg" fontWeight="lg">
+                      $2900
+                    </Typography>
+                  </div>
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    color="primary"
+                    aria-label="Explore Bahamas Islands"
+                    sx={{ ml: 'auto', fontWeight: 600 }}
+                  >
+                    Explore
+                  </Button>
+                </Box>
+              </Card>
+            </Box>
+>>>>>>> main
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>

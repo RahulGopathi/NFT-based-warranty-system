@@ -4,11 +4,16 @@ from rest_framework.decorators import action
 from .models import Product, Item
 from users.models import Owner
 from .serializers import ProductSerializer, ItemSerializer, UpdateItemSerializer
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filterset_fields = ('category',)
+    search_fields = ('name')
 
 
 class ItemViewSet(viewsets.ModelViewSet):
