@@ -29,7 +29,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {createData, getIssuedItems} from './utils'
 import useAxios from '../../utils/useAxios';
-
+import './retailerDashboard.css';
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
   marginLeft: 50,
@@ -95,8 +95,8 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
+      <TableRow>
+        <TableCell className='issued-products-body'>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -105,37 +105,37 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell className='issued-products-body' component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="center">{row.category}</TableCell>
-        <TableCell align="center">{row.created_at}</TableCell> 
+        <TableCell className='issued-products-body' align="center">{row.category}</TableCell>
+        <TableCell className='issued-products-body' align="center">{row.created_at}</TableCell> 
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Items
+              <Typography variant="h6" gutterBottom component="div" className='issued-products-body' align="center">
+                ITEMS
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Serial No</TableCell>
-                    <TableCell align="center">Customer</TableCell>
-                    <TableCell align="center">NFT Address</TableCell>
+                    <TableCell className='issued-products-body' align="center">Date</TableCell>
+                    <TableCell className='issued-products-body' align="center">Serial No</TableCell>
+                    <TableCell className='issued-products-body' align="center">Customer</TableCell>
+                    <TableCell className='issued-products-body' align="center">NFT Address</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
                     <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
+                      <TableCell className='issued-products-body' align="center" component="th" scope="row">
                         {historyRow.date}
                       </TableCell>
-                      <TableCell>{historyRow.serial_no}</TableCell>
-                      <TableCell align="center">{historyRow.customer}</TableCell>
-                      <TableCell align="center">
+                      <TableCell className='issued-products-body' align="center">{historyRow.serial_no}</TableCell>
+                      <TableCell className='issued-products-body' align="center">{historyRow.customer}</TableCell>
+                      <TableCell className='issued-products-body' align="center">
                         {historyRow.nft_id}
                       </TableCell>
                     </TableRow>
@@ -386,13 +386,13 @@ export default function RetailerDashboard() {
         </TabPanel>
         <TabPanel value={value} index={1}>
         <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
+      <Table aria-label="collapsible table" className='issued-products-table'>
         <TableHead>
           <TableRow>
-            <TableCell />
-            <TableCell>Product Name</TableCell>
-            <TableCell align="center">Category</TableCell>
-            <TableCell align="center">Created At&nbsp;(g)</TableCell>
+            <TableCell  />
+            <TableCell className='issued-products-head'>Product Name</TableCell>
+            <TableCell className='issued-products-head' align="center">Category</TableCell>
+            <TableCell className='issued-products-head' align="center">Created At&nbsp;(g)</TableCell>
             {/* <TableCell align="center">Carbs&nbsp;(g)</TableCell>
             <TableCell align="center">Protein&nbsp;(g)</TableCell> */}
           </TableRow>
