@@ -25,7 +25,6 @@ function RetailerSignup() {
       first_name: first_name,
       last_name: last_name,
     };
-    console.log(data);
     auth.registerUser(
       data.first_name,
       data.last_name,
