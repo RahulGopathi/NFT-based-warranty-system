@@ -2,10 +2,11 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
-import AuthContext from '../contexts/AuthContext';
-import { API_BASE_URL } from '../config';
+import {AuthContext} from '../contexts/AuthContext';
+import { API_BASE_URL, API_AUTH_BASE_URL } from '../config';
 
 const baseURL = API_BASE_URL;
+const authBaseURL = API_AUTH_BASE_URL;
 
 const useAxios = () => {
   const { authTokens, setUser, setAuthTokens } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const useAxios = () => {
 
     if (!isExpired) return req;
 
-    const response = await axios.post(`${baseURL}/login/refresh/`, {
+    const response = await axios.post(`${authBaseURL}/login/refresh/`, {
       refresh: authTokens.refresh,
     });
 
