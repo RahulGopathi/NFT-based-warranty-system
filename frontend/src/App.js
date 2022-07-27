@@ -8,6 +8,7 @@ import LandingPage from './views/LandingPage';
 import CustomerDashboard from './views/customer/customerDashboard';
 import RetailerLogin from './views/retailer/retailerLogin';
 import CustomerProtectedRoute from './utils/customerProtected';
+import CustomerItemDescription from './views/customer/customerItemDescription';
 
 function App() {
   return (
@@ -24,6 +25,16 @@ function App() {
                   <div>
                     <CustomerProtectedRoute>
                       <CustomerDashboard />
+                    </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/customer-item-description"
+                element={
+                  <div>
+                    <CustomerProtectedRoute>
+                      <CustomerItemDescription />
                     </CustomerProtectedRoute>
                   </div>
                 }

@@ -1,0 +1,9 @@
+.product_name{
+    font-size: 2.5rem !important;
+}
+
+@media (max-width: 800px) {
+    .product_name{
+        font-size: 2rem !important;
+    }
+}
