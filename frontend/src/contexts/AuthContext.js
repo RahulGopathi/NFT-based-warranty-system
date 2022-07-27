@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const loginUser = async (email, password) => {
-    const response = await fetch(baseURL + '/auth/login/', {
+    const response = await fetch(baseURL + '/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem('authTokens', JSON.stringify(data));
-      navigate('/');
+      navigate('/retailer-dashboard');
       toast.success('Login Successful!');
     } else {
       toast.error(data.detail);
@@ -54,7 +54,7 @@ const AuthProvider = ({ children }) => {
     password,
     password2
   ) => {
-    const response = await fetch(baseURL + '/auth/register/', {
+    const response = await fetch(baseURL + '/register/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -19,6 +19,8 @@ class Product(models.Model):
     image = models.FileField(upload_to='products/')  # this would be the image or data that we tokenize
     product_data = models.JSONField(null=True, blank=True)  # optional data we want to store like product description etc
     retailer = models.ForeignKey('users.Retailer', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default=HOME)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
