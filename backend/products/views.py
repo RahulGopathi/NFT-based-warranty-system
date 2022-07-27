@@ -6,6 +6,7 @@ from users.models import Owner
 from .serializers import ProductSerializer, ItemSerializer, UpdateItemSerializer
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -14,12 +15,20 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_fields = ('category',)
     search_fields = ('name')
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        print(self.request.user)
+        return super().get_queryset().filter(retailer=self.request.user)
 
 
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     # permission_classes = [permission.IsAuthenticated]
+
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

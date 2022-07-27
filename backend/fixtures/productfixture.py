@@ -5,9 +5,9 @@ from users.models import Retailer
 from products.models import Product
 from datetime import datetime
 
-CATEGORY_CHOICES = ['Home', 'Appliances', 'Laptop', 'Mobile', 'Gadget']
+CATEGORY_CHOICES = ['home', 'appliances', 'laptop', 'mobile', 'gadget']
 
-COLOUR = ["yellow", "black", "purple", "red", "orange", "green", '#084594', '#2171b5', '#4292c6', '#6baed6', '#9ecae1',
+COLOUR = ["orange", '#084594', '#2171b5', '#4292c6', '#6baed6', '#9ecae1',
           '#c6dbef', '#deebf7', '#f7fbff']
 
 
@@ -20,7 +20,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     image = factory.django.ImageField(color=random.choice(COLOUR))
     product_data = {}
     retailer = factory.Iterator(Retailer.objects.all())
-    category = random.choice(CATEGORY_CHOICES)
+    category = factory.fuzzy.FuzzyChoice(CATEGORY_CHOICES)
 
 
 class ItemFactory(factory.django.DjangoModelFactory):
@@ -32,7 +32,7 @@ class ItemFactory(factory.django.DjangoModelFactory):
     product = factory.Iterator(Product.objects.all())
     image_ipfs = factory.Faker('uuid4')
     nft_id = factory.Faker('uuid4')
-    warranty_image = factory.django.ImageField(color=random.choice(COLOUR))
+    warranty_image = factory.django.ImageField(color=factory.fuzzy.FuzzyChoice(COLOUR))
     serial_no = factory.Faker('uuid4')
     warranty_start_date = factory.Faker('date_time_this_year')
     warranty_end_date = factory.Faker('date_time_this_year')

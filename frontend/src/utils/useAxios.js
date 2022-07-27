@@ -5,8 +5,8 @@ import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { API_BASE_URL, API_AUTH_BASE_URL } from '../config';
 
-const authBaseURL = API_AUTH_BASE_URL;
 const baseURL = API_BASE_URL;
+const authBaseURL = API_AUTH_BASE_URL;
 
 const useAxios = () => {
   const { authTokens, setUser, setAuthTokens } = useContext(AuthContext);

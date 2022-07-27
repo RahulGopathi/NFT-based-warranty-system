@@ -10,6 +10,7 @@ import os
 class ProductSerializer(serializers.ModelSerializer):
     retailer_name = serializers.SerializerMethodField()
     retailer_id = serializers.SerializerMethodField()
+    items = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -20,6 +21,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_retailer_id(self, obj):
         return obj.retailer.id
+
+    def get_items(self, obj):
+        queryset = Item.objects.filter(product=obj)
+        if len(queryset) > 0:
+            return ItemSerializer(queryset, many=True).data
+        return None
 
 
 class ItemSerializer(serializers.ModelSerializer):

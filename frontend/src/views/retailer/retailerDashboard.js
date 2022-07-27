@@ -1,12 +1,32 @@
-import { useEffect, useState } from 'react';
-import useAxios from '../../utils/useAxios';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { Avatar, Box, Grid, Tab, Tabs, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Collapse,
+  Grid,
+  Tab,
+  Tabs,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableContainer,
+  Typography,
+  Paper,
+} from '@mui/material';
+import useAxios from '../../utils/useAxios';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
+import IconButton from '@mui/joy/IconButton';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { createData } from './utils';
+import './retailerDashboard.css';
 import CardOverflow from '@mui/joy/CardOverflow';
 
 const StyledDiv = styled('div')(() => ({
@@ -14,6 +34,29 @@ const StyledDiv = styled('div')(() => ({
   marginLeft: 50,
   color: '#fff',
 }));
+
+// const StyledTextField = styled(TextField)({
+//   '& .MuiInputBase-root': {
+//     color: 'white',
+//   },
+//   '& label.Mui-focused': {
+//     color: '#00AB55',
+//   },
+//   '& .MuiInput-underline:after': {
+//     borderBottomColor: 'green',
+//   },
+//   '& .MuiOutlinedInput-root': {
+//     '& fieldset': {
+//       borderColor: '#B0B9C2',
+//     },
+//     '&:hover fieldset': {
+//       borderColor: '#000',
+//     },
+//     '&.Mui-focused fieldset': {
+//       borderColor: '#00AB55',
+//     },
+//   },
+// });
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,6 +84,104 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
+// Table
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <TableRow>
+        <TableCell className="issued-products-body">
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell className="issued-products-body" component="th" scope="row">
+          {row.name}
+        </TableCell>
+        <TableCell className="issued-products-body" align="center">
+          {row.category}
+        </TableCell>
+        <TableCell className="issued-products-body" align="center">
+          {row.created_at}
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                component="div"
+                className="issued-products-body"
+                align="center"
+              >
+                ITEMS
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell className="issued-products-body" align="center">
+                      Date
+                    </TableCell>
+                    <TableCell className="issued-products-body" align="center">
+                      Serial No
+                    </TableCell>
+                    <TableCell className="issued-products-body" align="center">
+                      Customer
+                    </TableCell>
+                    <TableCell className="issued-products-body" align="center">
+                      NFT Address
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.history.map((historyRow) => (
+                    <TableRow key={historyRow.date}>
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {historyRow.date}
+                      </TableCell>
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                      >
+                        {historyRow.serial_no}
+                      </TableCell>
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                      >
+                        {historyRow.customer}
+                      </TableCell>
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                      >
+                        {historyRow.nft_id}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+}
+
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -50,10 +191,28 @@ function a11yProps(index) {
 
 export default function RetailerDashboard() {
   const [value, setValue] = useState(0);
+  const [rows, setRows] = useState([]);
   const [categoryValue, setCategoryValue] = useState(0);
   const [products, setProducts] = useState([]);
   const [productsStatus, setProductsStatus] = useState('No Products');
   const api = useAxios();
+
+  const fetch_product_data = async () => {
+    const response = await api.get('/products');
+    const data = response.data;
+    let row_data = [];
+    data.map((e) => {
+      const product = createData(e);
+      row_data.push(product);
+      return 0;
+    });
+    setRows(row_data);
+  };
+
+  useEffect(() => {
+    fetch_product_data();
+    console.log(rows);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -86,7 +245,6 @@ export default function RetailerDashboard() {
   const fetchProductsByCategory = async (category, categoryIndex) => {
     try {
       const response = await api.get(`/products?category=${category}`);
-      console.log(response);
       if (response.status === 200) {
         setProducts(response.data);
         setCategoryValue(categoryIndex);
@@ -330,7 +488,34 @@ export default function RetailerDashboard() {
           )}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <TableContainer component={Paper}>
+            <Table
+              aria-label="collapsible table"
+              className="issued-products-table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell className="issued-products-head">
+                    Product Name
+                  </TableCell>
+                  <TableCell className="issued-products-head" align="center">
+                    Category
+                  </TableCell>
+                  <TableCell className="issued-products-head" align="center">
+                    Created At&nbsp;(g)
+                  </TableCell>
+                  {/* <TableCell align="center">Carbs&nbsp;(g)</TableCell>
+            <TableCell align="center">Protein&nbsp;(g)</TableCell> */}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <Row key={row.name} row={row} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </TabPanel>
       </Box>
     </StyledDiv>
