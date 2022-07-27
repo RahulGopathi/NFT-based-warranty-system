@@ -3,16 +3,16 @@ from django.db import models
 
 class Product(models.Model):
     HOME = 'home'
-    ELECTRONICS = 'electronics'
     APPLIANCES = 'appliances'
     LAPTOP = 'laptop'
     MOBILE = 'mobile'
+    GADGET = 'gadget'
     CATEGORY_CHOICES = (
         (HOME, 'Home'),
-        (ELECTRONICS, 'Electronics'),
         (APPLIANCES, 'Appliances'),
         (LAPTOP, 'Laptop'),
         (MOBILE, 'Mobile'),
+        (GADGET, 'Gadget'),
     )
 
     name = models.CharField(max_length=100)
