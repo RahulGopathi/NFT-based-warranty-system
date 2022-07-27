@@ -9,7 +9,7 @@ class Owner(models.Model):
     wallet_address = models.CharField(max_length=250, blank=True)
 
     def __str__(self):
-        return f"{self.phno} {self.wallet_address}"
+        return self.wallet_address
 
 
 class Retailer(AbstractUser):
