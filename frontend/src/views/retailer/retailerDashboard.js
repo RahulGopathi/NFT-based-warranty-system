@@ -4,7 +4,9 @@ import {
   Avatar,
   Box,
   Collapse,
+  InputAdornment,
   Grid,
+  TextField,
   Tab,
   Tabs,
   Table,
@@ -25,6 +27,7 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import IconButton from '@mui/joy/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { createData } from './utils';
 import './retailerDashboard.css';
 import CardOverflow from '@mui/joy/CardOverflow';
@@ -35,28 +38,31 @@ const StyledDiv = styled('div')(() => ({
   color: '#fff',
 }));
 
-// const StyledTextField = styled(TextField)({
-//   '& .MuiInputBase-root': {
-//     color: 'white',
-//   },
-//   '& label.Mui-focused': {
-//     color: '#00AB55',
-//   },
-//   '& .MuiInput-underline:after': {
-//     borderBottomColor: 'green',
-//   },
-//   '& .MuiOutlinedInput-root': {
-//     '& fieldset': {
-//       borderColor: '#B0B9C2',
-//     },
-//     '&:hover fieldset': {
-//       borderColor: '#000',
-//     },
-//     '&.Mui-focused fieldset': {
-//       borderColor: '#00AB55',
-//     },
-//   },
-// });
+const StyledTextField = styled(TextField)({
+  '& .MuiInputBase-input': {
+    color: '#fff',
+  },
+  '& .MuiInputBase-root': {
+    color: '#A4A9AF',
+  },
+  '& label.Mui-focused': {
+    color: '#00AB55',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'green',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#B0B9C2',
+    },
+    '&:hover fieldset': {
+      borderColor: '#fff',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#00AB55',
+    },
+  },
+});
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -195,6 +201,7 @@ export default function RetailerDashboard() {
   const [categoryValue, setCategoryValue] = useState(0);
   const [products, setProducts] = useState([]);
   const [productsStatus, setProductsStatus] = useState('No Products');
+  const [searchText, setSearchText] = useState('');
   const api = useAxios();
 
   const fetch_product_data = async () => {
@@ -254,26 +261,72 @@ export default function RetailerDashboard() {
     }
   };
 
+  const searchInputHandler = async (e) => {
+    var lowerCase = e.target.value.toLowerCase();
+    setSearchText(lowerCase);
+    try {
+      const response = await api.get(`/products?search=${lowerCase}`);
+      if (response.status === 200) {
+        setProducts(response.data);
+      }
+    } catch (e) {
+      setProductsStatus('An Error Occurred! please try again later.');
+    }
+  };
+
   return (
     <StyledDiv>
       <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            textColor="#A4A9AF"
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
+        <Grid
+          sx={{
+            borderBottom: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+          }}
+        >
+          <Grid>
+            <Tabs
+              textColor="#A4A9AF"
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab
+                label={<span style={{ color: '#A4A9AF' }}>My Products</span>}
+                {...a11yProps(0)}
+              />
+              <Tab
+                label={<span style={{ color: '#A4A9AF' }}>Issued Items</span>}
+                {...a11yProps(1)}
+              />
+            </Tabs>
+          </Grid>
+          <Grid
+            columns={{ xs: 12 }}
+            sx={{
+              marginLeft: { xs: 1, md: 10 },
+              marginBottom: 1,
+              width: { xs: '80%', md: '50%' },
+            }}
           >
-            <Tab
-              label={<span style={{ color: '#A4A9AF' }}>My Products</span>}
-              {...a11yProps(0)}
+            <StyledTextField
+              sx={{ marginTop: { xs: 5, md: 0 } }}
+              fullWidth
+              textColor="#A4A9AF"
+              variant="outlined"
+              label="Search"
+              onChange={searchInputHandler}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchOutlinedIcon sx={{ color: 'white' }} />
+                  </InputAdornment>
+                ),
+              }}
             />
-            <Tab
-              label={<span style={{ color: '#A4A9AF' }}>Issued Items</span>}
-              {...a11yProps(1)}
-            />
-          </Tabs>
-        </Box>
+          </Grid>
+        </Grid>
         <TabPanel value={value} index={0}>
           <Box
             sx={{
