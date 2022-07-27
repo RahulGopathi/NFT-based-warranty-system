@@ -10,6 +10,7 @@ import RetailerLogin from './views/retailer/retailerLogin';
 import RetailerDashboard from './views/retailer/retailerDashboard';
 import RetailerSignup from './views/retailer/retailerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
+import RetailerProtectedRoute from './utils/retailerProtected';
 
 function App() {
   return (
@@ -32,7 +33,13 @@ function App() {
               />
               <Route
                 path="/retailer-dashboard"
-                element={<RetailerDashboard />}
+                element={
+                  <div>
+                    <RetailerProtectedRoute>
+                      <RetailerDashboard />
+                    </RetailerProtectedRoute>
+                  </div>
+                }
               />
               <Route path="/retailer-login" element={<RetailerLogin />} />
               <Route path="/retailer-signup" element={<RetailerSignup />} />
