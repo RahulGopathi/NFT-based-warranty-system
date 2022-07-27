@@ -7,8 +7,11 @@ import { Toaster } from 'react-hot-toast';
 import LandingPage from './views/LandingPage';
 import CustomerDashboard from './views/customer/customerDashboard';
 import RetailerLogin from './views/retailer/retailerLogin';
+import RetailerDashboard from './views/retailer/retailerDashboard';
+import RetailerSignup from './views/retailer/retailerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
+import RetailerProtectedRoute from './utils/retailerProtected';
 
 function App() {
   return (
@@ -39,7 +42,18 @@ function App() {
                   </div>
                 }
               />
+              <Route
+                path="/retailer-dashboard"
+                element={
+                  <div>
+                    <RetailerProtectedRoute>
+                      <RetailerDashboard />
+                    </RetailerProtectedRoute>
+                  </div>
+                }
+              />
               <Route path="/retailer-login" element={<RetailerLogin />} />
+              <Route path="/retailer-signup" element={<RetailerSignup />} />
             </Routes>
             <Toaster />
           </WalletProvider>

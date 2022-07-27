@@ -15,7 +15,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 15vh;
+  height: 0vh;
   max-width: 1500px;
 }
 
@@ -199,6 +199,7 @@
     transition: 250ms;
   }
 }
+
 /* 
 .Menu{
   display: flex;
