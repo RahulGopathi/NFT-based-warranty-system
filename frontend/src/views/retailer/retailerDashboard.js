@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { useState } from 'react';
+=======
+import {useState, useEffect  } from 'react';
+import * as React from 'react';
+>>>>>>> 5800769b32f86fd151220b908badd903e2e64dc8
 import { styled } from '@mui/material/styles';
 import {
   Avatar,
@@ -16,7 +21,23 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import IconButton from '@mui/joy/IconButton';
 import AspectRatio from '@mui/joy/AspectRatio';
+<<<<<<< HEAD
 
+=======
+import Collapse from '@mui/material/Collapse';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import {createData, getIssuedItems} from './utils'
+import useAxios from '../../utils/useAxios';
+import './retailerDashboard.css';
+>>>>>>> 5800769b32f86fd151220b908badd903e2e64dc8
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
   marginLeft: 50,
@@ -46,6 +67,11 @@ const StyledTextField = styled(TextField)({
   },
 });
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 5800769b32f86fd151220b908badd903e2e64dc8
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -72,6 +98,92 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
+<<<<<<< HEAD
+=======
+
+// Table
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <React.Fragment>
+      <TableRow>
+        <TableCell className='issued-products-body'>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell className='issued-products-body' component="th" scope="row">
+          {row.name}
+        </TableCell>
+        <TableCell className='issued-products-body' align="center">{row.category}</TableCell>
+        <TableCell className='issued-products-body' align="center">{row.created_at}</TableCell> 
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div" className='issued-products-body' align="center">
+                ITEMS
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell className='issued-products-body' align="center">Date</TableCell>
+                    <TableCell className='issued-products-body' align="center">Serial No</TableCell>
+                    <TableCell className='issued-products-body' align="center">Customer</TableCell>
+                    <TableCell className='issued-products-body' align="center">NFT Address</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.history.map((historyRow) => (
+                    <TableRow key={historyRow.date}>
+                      <TableCell className='issued-products-body' align="center" component="th" scope="row">
+                        {historyRow.date}
+                      </TableCell>
+                      <TableCell className='issued-products-body' align="center">{historyRow.serial_no}</TableCell>
+                      <TableCell className='issued-products-body' align="center">{historyRow.customer}</TableCell>
+                      <TableCell className='issued-products-body' align="center">
+                        {historyRow.nft_id}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
+
+// Row.propTypes = {
+//   row: PropTypes.shape({
+//     calories: PropTypes.number.isRequired,
+//     carbs: PropTypes.number.isRequired,
+//     fat: PropTypes.number.isRequired,
+//     history: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         amount: PropTypes.number.isRequired,
+//         customerId: PropTypes.string.isRequired,
+//         date: PropTypes.string.isRequired,
+//       }),
+//     ).isRequired,
+//     name: PropTypes.string.isRequired,
+//     price: PropTypes.number.isRequired,
+//     protein: PropTypes.number.isRequired,
+//   }).isRequired,
+// };
+
+// 
+
+>>>>>>> 5800769b32f86fd151220b908badd903e2e64dc8
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -81,11 +193,39 @@ function a11yProps(index) {
 
 export default function RetailerDashboard() {
   const [value, setValue] = useState(0);
+<<<<<<< HEAD
+=======
+  const [rows, setRows] = useState([]);
+  const api = useAxios()
+
+  const fetch_product_data = async () => {
+    const response = await api.get('/products')
+    const data = response.data
+    let row_data = []
+    console.log("DATA", data)
+    data.map(e => {
+      const product = createData(e)
+      console.log("Product", product)
+      row_data.push(product)
+    })
+    setRows(row_data)
+  }
+
+  useEffect(() => {
+    fetch_product_data();
+    console.log(rows);
+  }, []);
+
+>>>>>>> 5800769b32f86fd151220b908badd903e2e64dc8
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> 5800769b32f86fd151220b908badd903e2e64dc8
   return (
     <StyledDiv>
       <Box sx={{ width: '100%' }}>
@@ -266,7 +406,29 @@ export default function RetailerDashboard() {
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>
+<<<<<<< HEAD
           Item Two
+=======
+        <TableContainer component={Paper}>
+      <Table aria-label="collapsible table" className='issued-products-table'>
+        <TableHead>
+          <TableRow>
+            <TableCell  />
+            <TableCell className='issued-products-head'>Product Name</TableCell>
+            <TableCell className='issued-products-head' align="center">Category</TableCell>
+            <TableCell className='issued-products-head' align="center">Created At&nbsp;(g)</TableCell>
+            {/* <TableCell align="center">Carbs&nbsp;(g)</TableCell>
+            <TableCell align="center">Protein&nbsp;(g)</TableCell> */}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <Row key={row.name} row={row} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+>>>>>>> 5800769b32f86fd151220b908badd903e2e64dc8
         </TabPanel>
       </Box>
     </StyledDiv>
