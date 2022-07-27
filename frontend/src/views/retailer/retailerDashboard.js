@@ -3,60 +3,60 @@ import { styled } from '@mui/material/styles';
 import {
   Avatar,
   Box,
-  InputAdornment,
+  Collapse,
+  Grid,
   Tab,
   Tabs,
-  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableContainer,
   Typography,
+  Paper,
 } from '@mui/material';
+import useAxios from '../../utils/useAxios';
 import PropTypes from 'prop-types';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
+import { Link } from 'react-router-dom';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
-import IconButton from '@mui/joy/IconButton';
 import AspectRatio from '@mui/joy/AspectRatio';
-import Collapse from '@mui/material/Collapse';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import IconButton from '@mui/joy/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { createData, getIssuedItems } from './utils'
-import useAxios from '../../utils/useAxios';
+import { createData } from './utils';
 import './retailerDashboard.css';
+import CardOverflow from '@mui/joy/CardOverflow';
+
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
   marginLeft: 50,
   color: '#fff',
 }));
 
-const StyledTextField = styled(TextField)({
-  '& .MuiInputBase-root': {
-    color: 'white',
-  },
-  '& label.Mui-focused': {
-    color: '#00AB55',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: 'green',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#B0B9C2',
-    },
-    '&:hover fieldset': {
-      borderColor: '#000',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#00AB55',
-    },
-  },
-});
+// const StyledTextField = styled(TextField)({
+//   '& .MuiInputBase-root': {
+//     color: 'white',
+//   },
+//   '& label.Mui-focused': {
+//     color: '#00AB55',
+//   },
+//   '& .MuiInput-underline:after': {
+//     borderBottomColor: 'green',
+//   },
+//   '& .MuiOutlinedInput-root': {
+//     '& fieldset': {
+//       borderColor: '#B0B9C2',
+//     },
+//     '&:hover fieldset': {
+//       borderColor: '#000',
+//     },
+//     '&.Mui-focused fieldset': {
+//       borderColor: '#00AB55',
+//     },
+//   },
+// });
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -84,7 +84,6 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-
 // Table
 function Row(props) {
   const { row } = props;
@@ -93,7 +92,7 @@ function Row(props) {
   return (
     <>
       <TableRow>
-        <TableCell className='issued-products-body'>
+        <TableCell className="issued-products-body">
           <IconButton
             aria-label="expand row"
             size="small"
@@ -102,37 +101,73 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell className='issued-products-body' component="th" scope="row">
+        <TableCell className="issued-products-body" component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell className='issued-products-body' align="center">{row.category}</TableCell>
-        <TableCell className='issued-products-body' align="center">{row.created_at}</TableCell>
+        <TableCell className="issued-products-body" align="center">
+          {row.category}
+        </TableCell>
+        <TableCell className="issued-products-body" align="center">
+          {row.created_at}
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div" className='issued-products-body' align="center">
+              <Typography
+                variant="h6"
+                gutterBottom
+                component="div"
+                className="issued-products-body"
+                align="center"
+              >
                 ITEMS
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell className='issued-products-body' align="center">Date</TableCell>
-                    <TableCell className='issued-products-body' align="center">Serial No</TableCell>
-                    <TableCell className='issued-products-body' align="center">Customer</TableCell>
-                    <TableCell className='issued-products-body' align="center">NFT Address</TableCell>
+                    <TableCell className="issued-products-body" align="center">
+                      Date
+                    </TableCell>
+                    <TableCell className="issued-products-body" align="center">
+                      Serial No
+                    </TableCell>
+                    <TableCell className="issued-products-body" align="center">
+                      Customer
+                    </TableCell>
+                    <TableCell className="issued-products-body" align="center">
+                      NFT Address
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
                     <TableRow key={historyRow.date}>
-                      <TableCell className='issued-products-body' align="center" component="th" scope="row">
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
                         {historyRow.date}
                       </TableCell>
-                      <TableCell className='issued-products-body' align="center">{historyRow.serial_no}</TableCell>
-                      <TableCell className='issued-products-body' align="center">{historyRow.customer}</TableCell>
-                      <TableCell className='issued-products-body' align="center">
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                      >
+                        {historyRow.serial_no}
+                      </TableCell>
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                      >
+                        {historyRow.customer}
+                      </TableCell>
+                      <TableCell
+                        className="issued-products-body"
+                        align="center"
+                      >
                         {historyRow.nft_id}
                       </TableCell>
                     </TableRow>
@@ -147,26 +182,6 @@ function Row(props) {
   );
 }
 
-// Row.propTypes = {
-//   row: PropTypes.shape({
-//     calories: PropTypes.number.isRequired,
-//     carbs: PropTypes.number.isRequired,
-//     fat: PropTypes.number.isRequired,
-//     history: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         amount: PropTypes.number.isRequired,
-//         customerId: PropTypes.string.isRequired,
-//         date: PropTypes.string.isRequired,
-//       }),
-//     ).isRequired,
-//     name: PropTypes.string.isRequired,
-//     price: PropTypes.number.isRequired,
-//     protein: PropTypes.number.isRequired,
-//   }).isRequired,
-// };
-
-//
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -177,30 +192,68 @@ function a11yProps(index) {
 export default function RetailerDashboard() {
   const [value, setValue] = useState(0);
   const [rows, setRows] = useState([]);
-  const api = useAxios()
+  const [categoryValue, setCategoryValue] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [productsStatus, setProductsStatus] = useState('No Products');
+  const api = useAxios();
 
   const fetch_product_data = async () => {
-    const response = await api.get('/products')
-    const data = response.data
-    let row_data = []
-    console.log("DATA", data)
-    data.map(e => {
-      const product = createData(e)
-      console.log("Product", product)
-      row_data.push(product)
-    })
-    setRows(row_data)
-  }
+    const response = await api.get('/products');
+    const data = response.data;
+    let row_data = [];
+    data.map((e) => {
+      const product = createData(e);
+      row_data.push(product);
+      return 0;
+    });
+    setRows(row_data);
+  };
 
   useEffect(() => {
     fetch_product_data();
     console.log(rows);
-  }, []);
-
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const calculateDateDifference = (date) => {
+    const now = new Date().getDate();
+    const then = new Date(date).getDate();
+    const diff = now - then;
+    const diffDays = Math.floor(diff);
+    return diffDays;
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const fetchProducts = async () => {
+    try {
+      const response = await api.get('/products');
+      console.log(response);
+      if (response.status === 200) {
+        setProducts(response.data);
+      }
+    } catch (e) {
+      setProductsStatus('An Error Occurred! please try again later.');
+    }
+  };
+
+  const fetchProductsByCategory = async (category, categoryIndex) => {
+    try {
+      const response = await api.get(`/products?category=${category}`);
+      if (response.status === 200) {
+        setProducts(response.data);
+        setCategoryValue(categoryIndex);
+      }
+    } catch (e) {
+      setProductsStatus('An Error Occurred! please try again later.');
+    }
+  };
+
   return (
     <StyledDiv>
       <Box sx={{ width: '100%' }}>
@@ -211,184 +264,247 @@ export default function RetailerDashboard() {
             onChange={handleChange}
             aria-label="basic tabs example"
           >
-            <Tab label="My Products" {...a11yProps(0)} />
-            <Tab label="Issued Items" {...a11yProps(1)} />
             <Tab
-              label="Search Products"
-              {...a11yProps(2)}
-              component={() => (
-                <StyledTextField
-                  sx={{ marginLeft: 10, marginBottom: 1, width: '50%' }}
-                  fullWidth
-                  variant="outlined"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchOutlinedIcon sx={{ color: 'white' }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
+              label={<span style={{ color: '#A4A9AF' }}>My Products</span>}
+              {...a11yProps(0)}
+            />
+            <Tab
+              label={<span style={{ color: '#A4A9AF' }}>Issued Items</span>}
+              {...a11yProps(1)}
             />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs
-                scrollButtons
-                centered
-                variant="scrollable"
-                textColor="#A4A9AF"
-                value={value}
-                onChange={handleChange}
-              >
-                <Tab
-                  label="Mobiles"
-                  component={() => (
-                    <Button onClick={() => setValue(0)}>
-                      <Avatar
-                        sx={{
-                          height: 64,
-                          width: 64,
-                        }}
-                        variant="square"
-                        src="https://rukminim1.flixcart.com/flap/128/128/image/22fddf3c7da4c4f4.png"
-                      />
-                      <Typography>Mobiles</Typography>
-                    </Button>
-                  )}
-                />
-                <Tab
-                  label="Search Products"
-                  component={() => (
-                    <Button onClick={() => setValue(0)}>
-                      <Avatar
-                        sx={{
-                          height: 64,
-                          width: 64,
-                        }}
-                        variant="square"
-                        src="https://rukminim1.flixcart.com/flap/128/128/image/69c6589653afdb9a.png"
-                      />
-                      <Typography sx={{ mx: 1 }}>Laptops</Typography>
-                    </Button>
-                  )}
-                />
-                <Tab
-                  label="Search Products"
-                  component={() => (
-                    <Button onClick={() => setValue(0)}>
-                      <Avatar
-                        sx={{
-                          height: 64,
-                          width: 64,
-                        }}
-                        variant="square"
-                        src="https://rukminim1.flixcart.com/flap/128/128/image/ab7e2b022a4587dd.jpg"
-                      />
-                      <Typography sx={{ mx: 1 }}>Home</Typography>
-                    </Button>
-                  )}
-                />
-                <Tab
-                  label="Search Products"
-                  component={() => (
-                    <Button onClick={() => setValue(0)}>
-                      <Avatar
-                        sx={{
-                          height: 64,
-                          width: 64,
-                        }}
-                        variant="square"
-                        src="https://rukminim1.flixcart.com/flap/128/128/image/0ff199d1bd27eb98.png"
-                      />
-                      <Typography sx={{ mx: 1 }}>Appliances</Typography>
-                    </Button>
-                  )}
-                />
-                <Tab
-                  label="Search Products"
-                  component={() => (
-                    <Button onClick={() => setValue(0)}>
-                      <Avatar
-                        sx={{
-                          height: 64,
-                          width: 64,
-                        }}
-                        variant="square"
-                        src="https://rukminim1.flixcart.com/image/416/416/ktketu80/motion-controller/s/e/p/quest-2-advanced-all-in-one-vr-headset-128-gb-oculus-original-imag6wfp5kfjfgvf.jpeg?q=70"
-                      />
-                      <Typography sx={{ mx: 1 }}>Gadgets</Typography>
-                    </Button>
-                  )}
-                />
-              </Tabs>
-              <Card
-                variant="outlined"
-                sx={{ minWidth: '10%', width: '20%', mt: 3 }}
-              >
-                <Box
-                  sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}
-                >
-                  <Typography
-                    level="h2"
-                    fontSize="md"
-                    sx={{ alignSelf: 'flex-start' }}
-                  >
-                    Yosemite National Park
-                  </Typography>
-                  <Typography level="body2">
-                    April 24 to May 02, 2021
-                  </Typography>
-                </Box>
-                <IconButton
-                  aria-label="bookmark Bahamas Islands"
-                  variant="plain"
-                  color="neutral"
-                  size="sm"
-                  sx={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}
-                >
-                  <BookmarkAdd />
-                </IconButton>
-
-                <AspectRatio minHeight="120px" maxHeight="200px" sx={{ my: 2 }}>
-                  <img
-                    src="https://images.unsplash.com/photo-1527549993586-dff825b37782?crop=entropy&auto=format&fit=crop&w=3270"
-                    alt=""
-                  />
-                </AspectRatio>
-                <Box sx={{ display: 'flex' }}>
-                  <div>
-                    <Typography level="body3">Total price:</Typography>
-                    <Typography fontSize="lg" fontWeight="lg">
-                      $2900
-                    </Typography>
-                  </div>
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: 'divider',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Tabs
+              scrollButtons
+              variant="scrollable"
+              value={categoryValue}
+              onChange={handleChange}
+            >
+              <Tab
+                label="All"
+                component={() => (
                   <Button
-                    variant="solid"
-                    size="sm"
-                    color="primary"
-                    aria-label="Explore Bahamas Islands"
-                    sx={{ ml: 'auto', fontWeight: 600 }}
+                    onClick={() => {
+                      fetchProducts();
+                      setCategoryValue(0);
+                    }}
                   >
-                    Explore
+                    <Avatar
+                      sx={{
+                        height: 32,
+                        width: 32,
+                        marginRight: 1,
+                      }}
+                      variant="square"
+                      src="https://static-assets-web.flixcart.com/www/promos/new/20150528-140547-favicon-retina.ico"
+                    />
+                    <Typography>All</Typography>
                   </Button>
-                </Box>
-              </Card>
-            </Box>
+                )}
+              />
+              <Tab
+                label="Mobiles"
+                component={() => (
+                  <Button onClick={() => fetchProductsByCategory('mobile', 1)}>
+                    <Avatar
+                      sx={{
+                        height: 64,
+                        width: 64,
+                      }}
+                      variant="square"
+                      src="https://rukminim1.flixcart.com/flap/128/128/image/22fddf3c7da4c4f4.png"
+                    />
+                    <Typography>Mobiles</Typography>
+                  </Button>
+                )}
+              />
+              <Tab
+                label="Laptops"
+                component={() => (
+                  <Button onClick={() => fetchProductsByCategory('laptop', 2)}>
+                    <Avatar
+                      sx={{
+                        height: 64,
+                        width: 64,
+                      }}
+                      variant="square"
+                      src="https://rukminim1.flixcart.com/flap/128/128/image/69c6589653afdb9a.png"
+                    />
+                    <Typography sx={{ mx: 1 }}>Laptops</Typography>
+                  </Button>
+                )}
+              />
+              <Tab
+                label="Home"
+                component={() => (
+                  <Button onClick={() => fetchProductsByCategory('home', 3)}>
+                    <Avatar
+                      sx={{
+                        height: 64,
+                        width: 64,
+                      }}
+                      variant="square"
+                      src="https://rukminim1.flixcart.com/flap/128/128/image/ab7e2b022a4587dd.jpg"
+                    />
+                    <Typography sx={{ mx: 1 }}>Home</Typography>
+                  </Button>
+                )}
+              />
+              <Tab
+                label="Appliances"
+                component={() => (
+                  <Button
+                    onClick={() => fetchProductsByCategory('appliances', 4)}
+                  >
+                    <Avatar
+                      sx={{
+                        height: 64,
+                        width: 64,
+                      }}
+                      variant="square"
+                      src="https://rukminim1.flixcart.com/flap/128/128/image/0ff199d1bd27eb98.png"
+                    />
+                    <Typography sx={{ mx: 1 }}>Appliances</Typography>
+                  </Button>
+                )}
+              />
+              <Tab
+                label="Gadgets"
+                component={() => (
+                  <Button onClick={() => fetchProductsByCategory('gadget', 5)}>
+                    <Avatar
+                      sx={{
+                        height: 64,
+                        width: 64,
+                      }}
+                      variant="square"
+                      src="https://rukminim1.flixcart.com/image/416/416/ktketu80/motion-controller/s/e/p/quest-2-advanced-all-in-one-vr-headset-128-gb-oculus-original-imag6wfp5kfjfgvf.jpeg?q=70"
+                    />
+                    <Typography sx={{ mx: 1 }}>Gadgets</Typography>
+                  </Button>
+                )}
+              />
+            </Tabs>
           </Box>
+          {products.length === 0 ? (
+            <Box
+              sx={{ display: 'flex', justifyContent: 'center', height: '30vh' }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ position: 'relative', top: '50%', color: '#A4A9AF' }}
+              >
+                {productsStatus}
+              </Typography>
+            </Box>
+          ) : (
+            <Box sx={{ width: '100%' }}>
+              <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+              >
+                {Array.from(products).map((product, index) => (
+                  <Grid item xs={4} sm={4} md={3} key={index}>
+                    <Card
+                      variant="outlined"
+                      sx={{ minWidth: '10%', width: '100%', mt: 3 }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 0.5,
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          fontSize="md"
+                          sx={{ alignSelf: 'flex-start' }}
+                        >
+                          {product.name}
+                        </Typography>
+                        <Typography variant="caption">
+                          Updated {calculateDateDifference(product.updated_at)}d
+                          ago
+                        </Typography>
+                      </Box>
+                      <AspectRatio
+                        minHeight="120px"
+                        maxHeight="200px"
+                        sx={{ my: 2 }}
+                      >
+                        <img src={product.image} alt="" />
+                      </AspectRatio>
+                      <CardOverflow
+                        variant="soft"
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          gap: 1.5,
+                          py: 1.5,
+                          px: 'var(--Card-padding)',
+                          borderTop: '1px solid',
+                          borderColor: 'neutral.outlinedBorder',
+                          bgcolor: 'background.level1',
+                        }}
+                      >
+                        <Link
+                          to="#"
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            textDecoration: 'none',
+                            color: 'white',
+                            width: '100%',
+                          }}
+                        >
+                          <Box>
+                            <Button
+                              variant="solid"
+                              size="sm"
+                              color="primary"
+                              sx={{ ml: 'auto', fontWeight: 600 }}
+                            >
+                              Add Item
+                            </Button>
+                          </Box>
+                        </Link>
+                      </CardOverflow>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          )}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <TableContainer component={Paper}>
-            <Table aria-label="collapsible table" className='issued-products-table'>
+            <Table
+              aria-label="collapsible table"
+              className="issued-products-table"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell />
-                  <TableCell className='issued-products-head'>Product Name</TableCell>
-                  <TableCell className='issued-products-head' align="center">Category</TableCell>
-                  <TableCell className='issued-products-head' align="center">Created At&nbsp;(g)</TableCell>
+                  <TableCell className="issued-products-head">
+                    Product Name
+                  </TableCell>
+                  <TableCell className="issued-products-head" align="center">
+                    Category
+                  </TableCell>
+                  <TableCell className="issued-products-head" align="center">
+                    Created At&nbsp;(g)
+                  </TableCell>
                   {/* <TableCell align="center">Carbs&nbsp;(g)</TableCell>
             <TableCell align="center">Protein&nbsp;(g)</TableCell> */}
                 </TableRow>
@@ -400,8 +516,8 @@ export default function RetailerDashboard() {
               </TableBody>
             </Table>
           </TableContainer>
-        </TabPanel >
-      </Box >
-    </StyledDiv >
+        </TabPanel>
+      </Box>
+    </StyledDiv>
   );
 }

@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
-import {AuthContext} from '../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import { API_BASE_URL, API_AUTH_BASE_URL } from '../config';
 
 const baseURL = API_BASE_URL;

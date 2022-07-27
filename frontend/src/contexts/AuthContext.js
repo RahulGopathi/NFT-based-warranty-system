@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem('authTokens', JSON.stringify(data));
-      navigate('/');
+      navigate('/retailer-dashboard');
       toast.success('Login Successful!');
     } else {
       toast.error(data.detail);
