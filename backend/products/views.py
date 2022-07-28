@@ -14,7 +14,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_fields = ('category',)
-    search_fields = ('name')
+    search_fields = ('name',)
     permission_classes = [IsAuthenticated]
 
     # def get_queryset(self):
