@@ -101,7 +101,7 @@ export default function CustomerDashboard() {
                       fontSize="md"
                       sx={{ alignSelf: 'flex-start' }}
                     >
-                      {item.product}
+                      {item.product.name}
                     </Typography>
                   </Box>
                   <AspectRatio
