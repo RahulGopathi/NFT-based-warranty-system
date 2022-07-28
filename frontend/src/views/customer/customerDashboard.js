@@ -49,7 +49,7 @@ export default function CustomerDashboard() {
       }}
     >
       {items.length === 0 ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', height: '30vh' }}>
+        <Box sx={{ width: '100%' }}>
           <Box
             sx={{
               display: 'flex',
@@ -60,7 +60,7 @@ export default function CustomerDashboard() {
           </Box>
           <Typography
             variant="h5"
-            sx={{ position: 'relative', top: '50%', color: '#A4A9AF' }}
+            sx={{ position: 'relative', top: '50%', color: '#A4A9AF', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
           >
             {itemsStatus}
           </Typography>

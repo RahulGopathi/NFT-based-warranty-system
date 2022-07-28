@@ -22,7 +22,7 @@ const Img = styled('img')({
 export default function ComplexGrid() {
   let { id } = useParams();
   const [item, setItem] = useState([]);
-  const [itemStatus, setItemStatus] = useState('No such Item');
+  const [itemStatus, setItemStatus] = useState('Loading...');
   const api = useAxios();
 
   useEffect(() => {
