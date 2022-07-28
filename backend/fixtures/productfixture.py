@@ -18,7 +18,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
 
     name = factory.Faker('sentence', nb_words=3)
     image = factory.django.ImageField(color=random.choice(COLOUR))
-    product_data = {}
+    product_data = factory.Faker('sentence', nb_words=10)
     retailer = factory.Iterator(Retailer.objects.all())
     category = factory.fuzzy.FuzzyChoice(CATEGORY_CHOICES)
 

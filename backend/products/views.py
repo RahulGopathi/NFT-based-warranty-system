@@ -17,9 +17,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ('name')
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        print(self.request.user)
-        return super().get_queryset().filter(retailer=self.request.user)
+    # def get_queryset(self):
+    #     print(self.request.user)
+    #     return super().get_queryset().filter(retailer=self.request.user)
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -27,8 +27,8 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     # permission_classes = [permission.IsAuthenticated]
 
-    def get_queryset(self):
-        return super().get_queryset().filter(owner=self.request.user)
+    # def get_queryset(self):
+    #     return super().get_queryset().filter(owner=self.request.user)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

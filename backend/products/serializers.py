@@ -32,7 +32,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ('serial_no', 'warranty_period', 'product', 'warranty_image', 'created_at', 'updated_at')
+        fields = ('id', 'serial_no', 'warranty_period', 'warranty_end_date', 'product', 'warranty_image', 'created_at', 'updated_at')
         read_only_fields = ('created_at', 'updated_at')
 
     def create(self, validated_data):
