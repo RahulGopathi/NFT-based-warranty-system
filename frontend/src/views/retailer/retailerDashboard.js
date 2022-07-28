@@ -25,9 +25,11 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
 import IconButton from '@mui/joy/IconButton';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import {
+  KeyboardArrowUp,
+  KeyboardArrowDown,
+  SearchOutlined,
+} from '@mui/icons-material';
 import { createData } from './utils';
 import './retailerDashboard.css';
 import CardOverflow from '@mui/joy/CardOverflow';
@@ -104,7 +106,7 @@ function Row(props) {
             size="small"
             onClick={() => setOpen(!open)}
           >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
         <TableCell className="issued-products-body" component="th" scope="row">
@@ -321,7 +323,7 @@ export default function RetailerDashboard() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <SearchOutlinedIcon sx={{ color: 'white' }} />
+                    <SearchOutlined sx={{ color: 'white' }} />
                   </InputAdornment>
                 ),
               }}

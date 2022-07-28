@@ -116,7 +116,7 @@ function RetailerSignup() {
             </Card.Text>
             <div className="row justify-content-center mt-4">
               <small className="text-center">
-                Already have an account? <Link to="/retailer-login">Login</Link>
+                Already have an account? <Link to="/retailer/login">Login</Link>
               </small>
             </div>
           </Card.Body>

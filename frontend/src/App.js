@@ -18,31 +18,57 @@ function App() {
       <Router>
         <AuthProvider>
           <WalletProvider>
-            <Navbar />
             <Routes>
-              <Route path="/" exact element={<LandingPage />} />
               <Route
-                path="/customer-dashboard"
+                path="/"
+                exact
+                element={
+                  <div>
+                    <Navbar />
+                    <LandingPage />
+                  </div>
+                }
+              />
+              <Route
+                path="/customer/dashboard"
                 element={
                   <div>
                     <CustomerProtectedRoute>
+                      <Navbar />
                       <CustomerDashboard />
                     </CustomerProtectedRoute>
                   </div>
                 }
               />
               <Route
-                path="/retailer-dashboard"
+                path="/retailer/dashboard"
                 element={
                   <div>
                     <RetailerProtectedRoute>
+                      <Navbar />
                       <RetailerDashboard />
                     </RetailerProtectedRoute>
                   </div>
                 }
               />
-              <Route path="/retailer-login" element={<RetailerLogin />} />
-              <Route path="/retailer-signup" element={<RetailerSignup />} />
+              <Route
+                path="/retailer/login"
+                element={
+                  <div>
+                    <Navbar />
+                    <RetailerLogin />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/signup"
+                element={
+                  <div>
+                    <Navbar />
+                    <RetailerSignup />
+                  </div>
+                }
+              />
             </Routes>
             <Toaster />
           </WalletProvider>
