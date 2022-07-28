@@ -1,0 +1,13 @@
+.product_name {
+  font-size: 2.5rem !important;
+}
+
+.fields {
+  color: white;
+}
+
+@media (max-width: 800px) {
+  .product_name {
+    font-size: 2rem !important;
+  }
+}
