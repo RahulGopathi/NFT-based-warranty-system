@@ -201,6 +201,7 @@ export default function RetailerDashboard() {
   const [categoryValue, setCategoryValue] = useState(0);
   const [products, setProducts] = useState([]);
   const [productsStatus, setProductsStatus] = useState('No Products');
+  // eslint-disable-next-line
   const [searchText, setSearchText] = useState('');
   const api = useAxios();
 
