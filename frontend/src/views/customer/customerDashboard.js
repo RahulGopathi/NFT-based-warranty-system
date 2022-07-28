@@ -60,7 +60,14 @@ export default function CustomerDashboard() {
           </Box>
           <Typography
             variant="h5"
-            sx={{ position: 'relative', top: '50%', color: '#A4A9AF', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+            sx={{
+              position: 'relative',
+              top: '50%',
+              color: '#A4A9AF',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
             {itemsStatus}
           </Typography>
