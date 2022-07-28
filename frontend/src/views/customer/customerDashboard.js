@@ -67,6 +67,7 @@ export default function CustomerDashboard() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              height: '25vh',
             }}
           >
             {itemsStatus}
