@@ -10,6 +10,7 @@ import RetailerLogin from './views/retailer/retailerLogin';
 import RetailerDashboard from './views/retailer/retailerDashboard';
 import RetailerSignup from './views/retailer/retailerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
+import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
 
 function App() {
@@ -36,6 +37,17 @@ function App() {
                     <CustomerProtectedRoute>
                       <Navbar />
                       <CustomerDashboard />
+                    </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/item/:id"
+                element={
+                  <div>
+                    <CustomerProtectedRoute>
+                      <Navbar />
+                      <CustomerItemDescription />
                     </CustomerProtectedRoute>
                   </div>
                 }
