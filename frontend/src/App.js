@@ -12,6 +12,7 @@ import RetailerSignup from './views/retailer/retailerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
+import CustomerProfile from './views/customer/customerProfile';
 
 function App() {
   return (
@@ -22,6 +23,14 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" exact element={<LandingPage />} />
+              <Route
+                path="/customer/profile"
+                element={
+                  <div>
+                    <CustomerProfile />
+                  </div>
+                }
+              />
               <Route
                 path="/customer-dashboard"
                 element={
