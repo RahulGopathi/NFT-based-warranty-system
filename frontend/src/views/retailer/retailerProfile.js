@@ -5,6 +5,8 @@ import Grid from '@mui/material/Grid';
 import '../customer/customerProfile.css';
 import { Button } from '../../components/Button';
 import TextField from '@mui/material/TextField';
+import { AuthContext } from '../../contexts/AuthContext';
+import { useContext } from 'react';
 
 const StyledTextField = styled(TextField)({
   '& .MuiInputBase-input': {
@@ -37,10 +39,13 @@ const StyledTextField = styled(TextField)({
 
 export default function RetailerProfile() {
   const [label, setLabel] = React.useState('');
+  const { user } = useContext(AuthContext);
 
   const handleChange = (event) => {
     setLabel(event.target.value);
   };
+
+  console.log(user);
 
   return (
     <div>
@@ -72,7 +77,7 @@ export default function RetailerProfile() {
                 component="div"
                 sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
               >
-                <span>Name</span>
+                <span>First Name</span>
               </Typography>
               <div className="text-field">
                 <StyledTextField
@@ -83,7 +88,28 @@ export default function RetailerProfile() {
                   InputLabelProps={{ shrink: false }}
                   textColor="#A4A9AF"
                   variant="outlined"
-                  defaultValue="User Name"
+                  defaultValue={user.first_name}
+                  sx={{ color: 'white' }}
+                />
+              </div>
+              <Typography
+                gutterBottom
+                variant="subtitle1"
+                component="div"
+                sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
+              >
+                <span>Last Name</span>
+              </Typography>
+              <div className="text-field">
+                <StyledTextField
+                  fullWidth
+                  size="small"
+                  onChange={handleChange}
+                  label={label === '' ? ' ' : ' '}
+                  InputLabelProps={{ shrink: false }}
+                  textColor="#A4A9AF"
+                  variant="outlined"
+                  defaultValue={user.last_name}
                   sx={{ color: 'white' }}
                 />
               </div>
@@ -104,7 +130,7 @@ export default function RetailerProfile() {
                   InputLabelProps={{ shrink: false }}
                   textColor="#A4A9AF"
                   variant="outlined"
-                  defaultValue="xyz@gmail.com"
+                  defaultValue={user.email}
                   sx={{ color: 'white' }}
                 />
               </div>
