@@ -40,10 +40,9 @@ const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem('authTokens', JSON.stringify(data));
-      navigate('/retailer-dashboard');
-      toast.success('Login Successful!');
+      navigate('/retailer/dashboard');
     } else {
-      toast.error(data.detail);
+      toast.error('Something went wrong. Please try again.');
     }
   };
 
@@ -70,10 +69,9 @@ const AuthProvider = ({ children }) => {
     const data = await response.json();
 
     if (response.status === 201) {
-      navigate('/retailer-login');
-      toast.success('Registration Successful');
+      navigate('/retailer/login');
     } else {
-      toast.error(data[Object.keys(data)[0]]);
+      throw data[Object.keys(data)[0]];
     }
   };
 

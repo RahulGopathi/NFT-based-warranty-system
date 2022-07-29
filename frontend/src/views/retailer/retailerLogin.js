@@ -5,6 +5,8 @@ import { Card } from 'react-bootstrap';
 import { useRef, useContext, useState } from 'react';
 import './retailerLogin.css';
 import { AuthContext } from '../../contexts/AuthContext';
+import toast from 'react-hot-toast';
+
 function ReailerLogin() {
   const videoRef = useRef();
   const [email, setEmail] = useState('');
@@ -17,12 +19,15 @@ function ReailerLogin() {
       email: email,
       password: password,
     };
-    console.log(data);
-    auth.loginUser(data.email, data.password);
+    toast.promise(auth.loginUser(data.email, data.password), {
+      loading: 'Logging in...',
+      success: <b>Login Successful!</b>,
+      error: <b>Something went wrong. Please try again.</b>,
+    });
   };
 
   return (
-    <div className="retailer-login row justify-content-center">
+    <div className="retailer-login">
       <video src="/landing-video.mp4" ref={videoRef} autoPlay loop muted />
       <div id="overlay"></div>
       <div className="login-container container">
@@ -65,7 +70,7 @@ function ReailerLogin() {
             <div className="row justify-content-center mt-4">
               <small className="text-center">
                 Don't have an account?{' '}
-                <Link to="/retailer-signup">Sign Up</Link>
+                <Link to="/retailer/signup">Sign Up</Link>
               </small>
             </div>
           </Card.Body>

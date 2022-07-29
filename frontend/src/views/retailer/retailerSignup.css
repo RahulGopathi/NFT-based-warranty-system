@@ -1,3 +1,8 @@
+.retailer-signup {
+  display: flex;
+  justify-content: center;
+}
+
 video {
   top: 0%;
   object-fit: cover;

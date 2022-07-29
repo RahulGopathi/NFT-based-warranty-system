@@ -5,6 +5,7 @@ import { Card } from 'react-bootstrap';
 import { useRef, useContext, useState } from 'react';
 import './retailerSignup.css';
 import { AuthContext } from '../../contexts/AuthContext';
+import toast from 'react-hot-toast';
 
 function RetailerSignup() {
   const videoRef = useRef();
@@ -25,17 +26,24 @@ function RetailerSignup() {
       first_name: first_name,
       last_name: last_name,
     };
-    auth.registerUser(
-      data.first_name,
-      data.last_name,
-      data.email,
-      data.password,
-      data.password2
+    toast.promise(
+      auth.registerUser(
+        data.first_name,
+        data.last_name,
+        data.email,
+        data.password,
+        data.password2
+      ),
+      {
+        loading: 'Signing Up...',
+        success: <b>Registration Successful!!</b>,
+        error: (err) => <b>{err}</b>,
+      }
     );
   };
 
   return (
-    <div className="retailer-signup row justify-content-center">
+    <div className="retailer-signup">
       <video src="/landing-video.mp4" ref={videoRef} autoPlay loop muted />
       <div id="overlay"></div>
       <div className="signup-container container">
@@ -92,7 +100,7 @@ function RetailerSignup() {
                     }}
                   />
                 </Form.Group>
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group controlId="formBasicPassword2">
                   <Form.Label className="mt-3">Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
@@ -116,7 +124,7 @@ function RetailerSignup() {
             </Card.Text>
             <div className="row justify-content-center mt-4">
               <small className="text-center">
-                Already have an account? <Link to="/retailer-login">Login</Link>
+                Already have an account? <Link to="/retailer/login">Login</Link>
               </small>
             </div>
           </Card.Body>
