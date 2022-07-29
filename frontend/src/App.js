@@ -14,6 +14,7 @@ import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
+import CustomerClaim from './views/customer/claimProduct';
 
 function App() {
   return (
@@ -50,6 +51,17 @@ function App() {
                     <CustomerProtectedRoute>
                       <Navbar />
                       <CustomerDashboard />
+                    </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/customer/claim"
+                element={
+                  <div>
+                    <CustomerProtectedRoute>
+                      <Navbar />
+                      <CustomerClaim />
                     </CustomerProtectedRoute>
                   </div>
                 }
