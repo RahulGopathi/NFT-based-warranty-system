@@ -2,6 +2,17 @@ from rest_framework import serializers
 from users.models import Retailer
 from .models import Owner
 from django.contrib.auth.password_validation import validate_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['email'] = user.email
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+        return token
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -36,3 +47,10 @@ class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
         fields = ['phno', 'name', 'wallet_address', 'id']
+
+
+class OwnerLoginSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Owner
+        fields = ['wallet_address']
