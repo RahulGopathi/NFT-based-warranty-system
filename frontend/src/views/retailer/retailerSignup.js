@@ -43,7 +43,7 @@ function RetailerSignup() {
   };
 
   return (
-    <div className="retailer-signup row justify-content-center">
+    <div className="retailer-signup">
       <video src="/landing-video.mp4" ref={videoRef} autoPlay loop muted />
       <div id="overlay"></div>
       <div className="signup-container container">

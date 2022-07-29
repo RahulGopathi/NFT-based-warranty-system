@@ -27,7 +27,7 @@ function ReailerLogin() {
   };
 
   return (
-    <div className="retailer-login row justify-content-center">
+    <div className="retailer-login">
       <video src="/landing-video.mp4" ref={videoRef} autoPlay loop muted />
       <div id="overlay"></div>
       <div className="login-container container">
