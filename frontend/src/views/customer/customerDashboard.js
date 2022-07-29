@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import CardOverflow from '@mui/joy/CardOverflow';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import useAxios from '../../utils/useAxios';
+import useCustomerAxios from '../../utils/useCustomerAxios';
 
 const StyledDiv = styled('div')(() => ({
   color: '#fff',
@@ -18,7 +18,7 @@ export default function CustomerDashboard() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [itemsStatus, setItemsStatus] = useState('No Items');
-  const api = useAxios();
+  const api = useCustomerAxios();
 
   const redirectItem = (id) => {
     navigate('/item/' + id);

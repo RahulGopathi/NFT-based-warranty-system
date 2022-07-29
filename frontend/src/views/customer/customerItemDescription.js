@@ -10,7 +10,7 @@ import '../customer/customerItemDescription.css';
 import { Button } from '../../components/Button';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
-import useAxios from '../../utils/useAxios';
+import useCustomerAxios from '../../utils/useCustomerAxios';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -23,7 +23,7 @@ export default function ComplexGrid() {
   let { id } = useParams();
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
-  const api = useAxios();
+  const api = useCustomerAxios();
 
   useEffect(() => {
     fetchItem();

@@ -52,10 +52,14 @@ function Navbar(props) {
   const handleRoute = () => {
     const route = window.location.pathname.split('/')[1];
     const auth_route = window.location.pathname.split('/')[2];
-    if (route === 'customer') {
+    if (route === 'customer' && auth_route !== 'register') {
       setisHome(false);
       setisCustomer(true);
-    } else if (auth_route === 'login' || auth_route === 'signup') {
+    } else if (
+      auth_route === 'login' ||
+      auth_route === 'signup' ||
+      auth_route === 'register'
+    ) {
       setisHome(true);
       setisCustomer(false);
     } else if (route === '') {
