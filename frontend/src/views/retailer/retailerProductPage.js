@@ -280,7 +280,7 @@ export default function RetailerProduct() {
     console.log(product);
     console.log(issuedItems);
     console.log(UnissuedItems);
-  }, []);
+  }, []); // eslint-disable-line
   return (
     <StyledDiv>
       <div>
