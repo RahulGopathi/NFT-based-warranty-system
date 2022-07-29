@@ -47,6 +47,14 @@
   color: #61c97d !important;
 }
 
+.profile-icon {
+  opacity: 0.75;
+}
+
+.profile-icon:hover {
+  opacity: 1;
+}
+
 .fa-hive {
   margin-left: 0.5rem;
   font-size: 1.8rem;

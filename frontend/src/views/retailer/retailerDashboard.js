@@ -207,23 +207,6 @@ export default function RetailerDashboard() {
   const [searchText, setSearchText] = useState('');
   const api = useAxios();
 
-  const fetch_product_data = async () => {
-    const response = await api.get('/products');
-    const data = response.data;
-    let row_data = [];
-    data.map((e) => {
-      const product = createData(e);
-      row_data.push(product);
-      return 0;
-    });
-    setRows(row_data);
-  };
-
-  useEffect(() => {
-    fetch_product_data();
-    console.log(rows);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -246,6 +229,14 @@ export default function RetailerDashboard() {
       console.log(response);
       if (response.status === 200) {
         setProducts(response.data);
+        const data = response.data;
+        let row_data = [];
+        data.map((e) => {
+          const product = createData(e);
+          row_data.push(product);
+          return 0;
+        });
+        setRows(row_data);
       }
     } catch (e) {
       setProductsStatus('An Error Occurred! please try again later.');
@@ -271,6 +262,14 @@ export default function RetailerDashboard() {
       const response = await api.get(`/products?search=${lowerCase}`);
       if (response.status === 200) {
         setProducts(response.data);
+        const data = response.data;
+        let row_data = [];
+        data.map((e) => {
+          const product = createData(e);
+          row_data.push(product);
+          return 0;
+        });
+        setRows(row_data);
       }
     } catch (e) {
       setProductsStatus('An Error Occurred! please try again later.');

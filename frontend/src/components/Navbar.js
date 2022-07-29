@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { PopperUnstyled, ClickAwayListener } from '@mui/base';
-import { Avatar, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import {
   Box,
   List,
@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/joy';
 import {
+  AccountCircleOutlined,
   KeyboardArrowDown,
   Person,
   ShoppingCart,
@@ -23,7 +24,7 @@ import { WalletContext } from '../contexts/WalletContext';
 import { AuthContext } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 
-function Navbar() {
+function Navbar(props) {
   const navigate = useNavigate();
   const {
     userWalletAddress,
@@ -222,9 +223,10 @@ function Navbar() {
                 ...(open && theme.variants.plainHover.neutral),
               })}
             >
-              <Avatar>
-                <Person />
-              </Avatar>
+              <AccountCircleOutlined
+                className="profile-icon"
+                sx={{ fontSize: 45 }}
+              />
             </ListItemButton>
             <PopperUnstyled
               id={id}
@@ -308,7 +310,7 @@ function Navbar() {
             </li> */}
           </ul>
 
-          {!isHome && button && (
+          {props.showNavbarButton == null && !isHome && button && (
             <Box>
               <Button
                 className="nav-button"
@@ -329,7 +331,7 @@ function Navbar() {
 
           {button && (
             <div>
-              <Box sx={{ minHeight: 190, color: 'white', marginTop: 16 }}>
+              <Box sx={{ minHeight: 190, color: 'white', marginTop: 15 }}>
                 <List
                   role="menubar"
                   row
