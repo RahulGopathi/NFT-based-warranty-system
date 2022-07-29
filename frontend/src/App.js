@@ -12,6 +12,7 @@ import RetailerSignup from './views/retailer/retailerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
+import RetailerProduct from './views/retailer/retailerProductPage';
 
 function App() {
   return (
@@ -78,6 +79,15 @@ function App() {
                   <div>
                     <Navbar />
                     <RetailerSignup />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/products/:id"
+                element={
+                  <div>
+                    <Navbar />
+                    <RetailerProduct/>
                   </div>
                 }
               />

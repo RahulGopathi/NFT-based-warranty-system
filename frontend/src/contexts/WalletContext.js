@@ -65,11 +65,6 @@ const WalletProvider = ({ children }) => {
   useEffect(() => {
     checkIfWalletIsConnected(setUserWalletAddress);
     setLoading(false);
-
-    window.ethereum.on('disconnect', () => {
-      console.log('disconnected');
-      disconnectWallet();
-    });
   }, []); // eslint-disable-line
 
   return (
