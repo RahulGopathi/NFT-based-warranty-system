@@ -35,7 +35,7 @@ const StyledTextField = styled(TextField)({
   },
 });
 
-export default function CustomerProfile() {
+export default function RetailerProfile() {
   const [label, setLabel] = React.useState('');
 
   const handleChange = (event) => {
@@ -93,29 +93,7 @@ export default function CustomerProfile() {
                 component="div"
                 sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
               >
-                <span>Mobile no.</span>
-              </Typography>
-              <div className="text-field">
-                <StyledTextField
-                  fullWidth
-                  type="number"
-                  size="small"
-                  onChange={handleChange}
-                  label={label === '' ? ' ' : ' '}
-                  InputLabelProps={{ shrink: false }}
-                  textColor="#A4A9AF"
-                  variant="outlined"
-                  defaultValue="9030406785"
-                  sx={{ color: 'white' }}
-                />
-              </div>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-                component="div"
-                sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
-              >
-                <span>Wallet Address</span>
+                <span>Email</span>
               </Typography>
               <div className="text-field">
                 <StyledTextField
@@ -126,8 +104,7 @@ export default function CustomerProfile() {
                   InputLabelProps={{ shrink: false }}
                   textColor="#A4A9AF"
                   variant="outlined"
-                  InputProps={{ readOnly: true }}
-                  defaultValue="0x61543ABF468e38CfC2D574920c9fc4E563c1Db33"
+                  defaultValue="xyz@gmail.com"
                   sx={{ color: 'white' }}
                 />
               </div>

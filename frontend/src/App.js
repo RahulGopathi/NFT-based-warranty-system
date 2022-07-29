@@ -13,6 +13,7 @@ import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
 import CustomerProfile from './views/customer/customerProfile';
+import RetailerProfile from './views/retailer/retailerProfile';
 
 function App() {
   return (
@@ -20,22 +21,34 @@ function App() {
       <Router>
         <AuthProvider>
           <WalletProvider>
-            <Navbar />
             <Routes>
-              <Route path="/" exact element={<LandingPage />} />
               <Route
-                path="/customer/profile"
+                path="/"
+                exact
                 element={
                   <div>
-                    <CustomerProfile />
+                    <Navbar />
+                    <LandingPage />
                   </div>
                 }
               />
               <Route
-                path="/customer-dashboard"
+                path="/customer/profile"
                 element={
                   <div>
                     <CustomerProtectedRoute>
+                      <Navbar />
+                      <CustomerProfile />
+                    </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/customer/dashboard"
+                element={
+                  <div>
+                    <CustomerProtectedRoute>
+                      <Navbar />
                       <CustomerDashboard />
                     </CustomerProtectedRoute>
                   </div>
@@ -46,23 +59,52 @@ function App() {
                 element={
                   <div>
                     <CustomerProtectedRoute>
+                      <Navbar />
                       <CustomerItemDescription />
                     </CustomerProtectedRoute>
                   </div>
                 }
               />
               <Route
-                path="/retailer-dashboard"
+                path="/retailer/dashboard"
                 element={
                   <div>
                     <RetailerProtectedRoute>
+                      <Navbar />
                       <RetailerDashboard />
                     </RetailerProtectedRoute>
                   </div>
                 }
               />
-              <Route path="/retailer-login" element={<RetailerLogin />} />
-              <Route path="/retailer-signup" element={<RetailerSignup />} />
+              <Route
+                path="/retailer/profile"
+                element={
+                  <div>
+                    <RetailerProtectedRoute>
+                      <Navbar />
+                      <RetailerProfile />
+                    </RetailerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/login"
+                element={
+                  <div>
+                    <Navbar />
+                    <RetailerLogin />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/signup"
+                element={
+                  <div>
+                    <Navbar />
+                    <RetailerSignup />
+                  </div>
+                }
+              />
             </Routes>
             <Toaster />
           </WalletProvider>

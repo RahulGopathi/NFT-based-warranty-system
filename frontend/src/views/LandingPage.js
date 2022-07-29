@@ -16,7 +16,7 @@ function LandingPage() {
 
   const redirectCustomer = () => {
     if (userWalletAddress) {
-      navigate('/customer-dashboard');
+      navigate('/customer/dashboard');
       toast.success('Wallet Connected succesfully!');
     } else {
       connectWallet(setUserWalletAddress);
@@ -49,7 +49,7 @@ function LandingPage() {
               textDecoration: 'none',
               color: isHovering ? 'black' : 'white',
             }}
-            to="/retailer-login"
+            to="/retailer/login"
           >
             <Button
               className="btns"

@@ -8,7 +8,9 @@
   position: sticky;
   top: 0;
   z-index: 999;
-  backdrop-filter: blur(20px);
+  border-style: solid;
+  border-width: 0px 0px thin;
+  border-color: #c2e0ff14;
 }
 
 .navbar-container {
@@ -30,6 +32,29 @@
   align-items: center;
 }
 
+.nav-button {
+  background-color: 'transparent';
+  width: max-content;
+  border-radius: 5px !important;
+}
+
+.nav-button:hover {
+  background-color: #002f0f !important;
+}
+
+.nav-button-text {
+  font-family: 'PT Sans', sans-serif !important;
+  color: #61c97d !important;
+}
+
+.profile-icon {
+  opacity: 0.75;
+}
+
+.profile-icon:hover {
+  opacity: 1;
+}
+
 .fa-hive {
   margin-left: 0.5rem;
   font-size: 1.8rem;
@@ -48,6 +73,7 @@
 
 .nav-menu-mobile {
   display: none;
+  list-style: none;
 }
 
 .nav-item {

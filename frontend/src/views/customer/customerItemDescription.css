@@ -6,19 +6,6 @@
   color: white;
 }
 
-.text-field {
-  width: 300px;
-}
-
-.text {
-  color: white !important;
-}
-
-.profile {
-  width: 300px;
-  margin: auto;
-}
-
 @media (max-width: 800px) {
   .product_name {
     font-size: 2rem !important;

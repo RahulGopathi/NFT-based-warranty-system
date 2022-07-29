@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { PopperUnstyled, ClickAwayListener } from '@mui/base';
+import { Button } from '@mui/material';
 import {
   Box,
   List,
@@ -10,13 +11,30 @@ import {
   ListItemButton,
   ListItemDecorator,
   Sheet,
+  Typography,
 } from '@mui/joy';
-import { KeyboardArrowDown, Person, ShoppingCart } from '@mui/icons-material';
+import {
+  AccountCircleOutlined,
+  KeyboardArrowDown,
+  Person,
+  ShoppingCart,
+  Logout,
+} from '@mui/icons-material';
 import { WalletContext } from '../contexts/WalletContext';
+import { AuthContext } from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
 
-function Navbar() {
-  const { setUserWalletAddress, connectWallet } = useContext(WalletContext);
-
+function Navbar(props) {
+  const navigate = useNavigate();
+  const {
+    userWalletAddress,
+    setUserWalletAddress,
+    connectWallet,
+    disconnectWallet,
+  } = useContext(WalletContext);
+  const { logoutUser } = useContext(AuthContext);
+  const [isCustomer, setisCustomer] = useState(false);
+  const [isHome, setisHome] = useState(true);
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
 
@@ -31,10 +49,61 @@ function Navbar() {
     }
   };
 
+  const handleRoute = () => {
+    const route = window.location.pathname.split('/')[1];
+    const auth_route = window.location.pathname.split('/')[2];
+    if (route === 'customer') {
+      setisHome(false);
+      setisCustomer(true);
+    } else if (auth_route === 'login' || auth_route === 'signup') {
+      setisHome(true);
+      setisCustomer(false);
+    } else if (route === '') {
+      setisHome(true);
+      setisCustomer(false);
+    } else {
+      setisHome(false);
+      setisCustomer(false);
+    }
+  };
+
   useEffect(() => {
-    console.log(window.location.pathname);
+    handleRoute();
     showButton();
   }, []);
+
+  const redirectCustomer = () => {
+    if (userWalletAddress) {
+      navigate('/customer/dashboard');
+      toast.success('Wallet Connected succesfully!');
+    } else {
+      connectWallet(setUserWalletAddress);
+    }
+  };
+
+  const handleLogout = () => {
+    if (isCustomer) {
+      disconnectWallet();
+    } else {
+      logoutUser();
+    }
+  };
+
+  const handleProfileRedirect = () => {
+    if (isCustomer) {
+      navigate('/customer/profile');
+    } else {
+      navigate('/retailer/profile');
+    }
+  };
+
+  const handleNavButtonRedirect = () => {
+    if (isCustomer) {
+      navigate('/customer/claim');
+    } else {
+      navigate('/retailer/create');
+    }
+  };
 
   window.addEventListener('resize', showButton);
 
@@ -73,7 +142,12 @@ function Navbar() {
             >
               <Sheet
                 variant="outlined"
-                sx={{ my: 2, boxShadow: 'md', borderRadius: 'sm' }}
+                sx={{
+                  my: 2,
+                  boxShadow: 'md',
+                  borderRadius: '8px',
+                  backgroundColor: '#001E3C',
+                }}
               >
                 <List
                   role="menu"
@@ -85,11 +159,11 @@ function Navbar() {
                     '--List-decorator-width': '32px',
                   }}
                 >
-                  <ListItem
-                    onClick={() => connectWallet(setUserWalletAddress)}
-                    role="none"
-                  >
-                    <ListItemButton role="menuitem">
+                  <ListItem onClick={redirectCustomer} role="none">
+                    <ListItemButton
+                      role="menuitem"
+                      sx={{ backgroundColor: '#071A2F' }}
+                    >
                       <ListItemDecorator>
                         <Person />
                       </ListItemDecorator>
@@ -102,10 +176,13 @@ function Navbar() {
                       textDecoration: 'none',
                       color: 'white',
                     }}
-                    to="/retailer-login"
+                    to="/retailer/login"
                   >
                     <ListItem role="none">
-                      <ListItemButton role="menuitem">
+                      <ListItemButton
+                        role="menuitem"
+                        sx={{ backgroundColor: '#071A2F' }}
+                      >
                         <ListItemDecorator>
                           <ShoppingCart />
                         </ListItemDecorator>
@@ -122,9 +199,104 @@ function Navbar() {
     }
   );
 
+  const ProfileMenu = React.forwardRef(
+    ({ focusNext, focusPrevious, ...props }, ref) => {
+      const [anchorEl, setAnchorEl] = React.useState(null);
+
+      const open = Boolean(anchorEl);
+      const id = open ? 'about-popper' : undefined;
+      return (
+        <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+          <Box onMouseLeave={() => setAnchorEl(null)}>
+            <ListItemButton
+              aria-haspopup
+              aria-expanded={open ? 'true' : 'false'}
+              ref={ref}
+              {...props}
+              role="menuitem"
+              onFocus={(event) => setAnchorEl(event.currentTarget)}
+              onMouseEnter={(event) => {
+                props.onMouseEnter?.(event);
+                setAnchorEl(event.currentTarget);
+              }}
+              sx={(theme) => ({
+                ...(open && theme.variants.plainHover.neutral),
+              })}
+            >
+              <AccountCircleOutlined
+                className="profile-icon"
+                sx={{ fontSize: 45 }}
+              />
+            </ListItemButton>
+            <PopperUnstyled
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              disablePortal
+              keepMounted
+            >
+              <Sheet
+                variant="outlined"
+                sx={{
+                  my: 2,
+                  boxShadow: 'md',
+                  borderRadius: '8px',
+                  backgroundColor: '#001E3C',
+                  width: '120%',
+                }}
+              >
+                <List
+                  role="menu"
+                  aria-label="About"
+                  sx={{
+                    '--List-radius': '8px',
+                    '--List-padding': '4px',
+                    '--List-divider-gap': '4px',
+                    '--List-decorator-width': '32px',
+                  }}
+                >
+                  <ListItem role="none" onClick={handleProfileRedirect}>
+                    <ListItemButton
+                      role="menuitem"
+                      sx={{ backgroundColor: '#071A2F' }}
+                    >
+                      <ListItemDecorator>
+                        <Person />
+                      </ListItemDecorator>
+                      My Profile
+                    </ListItemButton>
+                  </ListItem>
+                  <ListDivider />
+                  <ListItem role="none" onClick={handleLogout}>
+                    <ListItemButton
+                      role="menuitem"
+                      sx={{ backgroundColor: '#071A2F' }}
+                    >
+                      <ListItemDecorator>
+                        <Logout />
+                      </ListItemDecorator>
+                      Logout
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </Sheet>
+            </PopperUnstyled>
+          </Box>
+        </ClickAwayListener>
+      );
+    }
+  );
+
   return (
     <>
-      <nav sx={{ backdropFilter: 'blur(20px)' }} className="navbar">
+      <nav
+        style={
+          isHome
+            ? { backdropFilter: 'none', border: 'none' }
+            : { backdropFilter: 'blur(20px)' }
+        }
+        className="navbar"
+      >
         <div className="navbar-container">
           <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
             PyDO
@@ -138,9 +310,28 @@ function Navbar() {
             </li> */}
           </ul>
 
+          {props.showNavbarButton == null && !isHome && button && (
+            <Box>
+              <Button
+                className="nav-button"
+                variant="outlined"
+                color="success"
+                onClick={handleNavButtonRedirect}
+              >
+                <Typography
+                  component="span"
+                  level="body1"
+                  className="nav-button-text"
+                >
+                  {isCustomer ? 'Claim Product' : 'Create Product'}
+                </Typography>
+              </Button>
+            </Box>
+          )}
+
           {button && (
             <div>
-              <Box sx={{ minHeight: 190, color: 'white', marginTop: 18 }}>
+              <Box sx={{ minHeight: 190, color: 'white', marginTop: 15 }}>
                 <List
                   role="menubar"
                   row
@@ -151,7 +342,7 @@ function Navbar() {
                   }}
                 >
                   <ListItem role="none">
-                    <LoginMenu />
+                    {isHome ? <LoginMenu /> : <ProfileMenu />}
                   </ListItem>
                 </List>
               </Box>
@@ -163,23 +354,40 @@ function Navbar() {
           </div>
           <ul className={click ? 'nav-menu-mobile active' : 'nav-menu-mobile'}>
             <li>
-              <Link
-                to="/"
-                className="nav-links-mobile"
-                onClick={() => connectWallet(setUserWalletAddress)}
-              >
-                Customer Login
-              </Link>
+              {isHome ? (
+                <Link
+                  to="/"
+                  className="nav-links-mobile"
+                  onClick={() => connectWallet(setUserWalletAddress)}
+                >
+                  Customer Login
+                </Link>
+              ) : (
+                <Box
+                  className="nav-links-mobile"
+                  onClick={handleProfileRedirect}
+                >
+                  <Person sx={{ marginRight: 1, marginBottom: 0.5 }} />
+                  My Profile
+                </Box>
+              )}
             </li>
 
             <li>
-              <Link
-                to="/retailer-login"
-                className="nav-links-mobile"
-                onClick={closeMobileMenu}
-              >
-                Retailer Login
-              </Link>
+              {isHome ? (
+                <Link
+                  to="/retailer/login"
+                  className="nav-links-mobile"
+                  onClick={closeMobileMenu}
+                >
+                  Retailer Login
+                </Link>
+              ) : (
+                <Box className="nav-links-mobile" onClick={handleLogout}>
+                  <Logout sx={{ marginRight: 1, marginBottom: 0.5 }} />
+                  Logout
+                </Box>
+              )}
             </li>
           </ul>
         </div>
