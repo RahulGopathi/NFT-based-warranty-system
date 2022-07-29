@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Product, Item
 from users.models import Owner
-from .serializers import ProductSerializer, ItemSerializer, UpdateItemSerializer
+from .serializers import ProductSerializer, ItemSerializer
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
@@ -31,7 +31,9 @@ class ItemViewSet(viewsets.ModelViewSet):
     search_fields = ('serial_no', 'owner__name')
 
     def get_queryset(self):
-        return super().get_queryset().filter(owner=Owner.objects.filter(wallet_address=self.request.query_params['wallet_address']).first())
+        if self.request.query_params.get('wallet_address'):
+            super().get_queryset().filter(owner__wallet_address=self.request.query_params['wallet_address']).first()
+        return super().get_queryset()
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -51,24 +53,6 @@ class ItemViewSet(viewsets.ModelViewSet):
         item.warranty_image = File(open(os.path.join(settings.MEDIA_ROOT, image_url), 'rb'), name=image_url.split('/')[-1])
         item.save()
         return Response(ItemSerializer(item).data)
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        data = dict(request.data)
-        data['owner'] = data['owner']['id']
-        print(data['owner'])
-        serializer = UpdateItemSerializer(instance, data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
-
-    def partial_update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        data = dict(request.data)
-        serializer = UpdateItemSerializer(instance, data=data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def add_nft(self, request, pk=None):
