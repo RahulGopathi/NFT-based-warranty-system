@@ -17,18 +17,13 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     permission_classes = [IsAuthenticated]
 
-    # def get_queryset(self):
-    #     print(self.request.user)
-    #     return super().get_queryset().filter(retailer=self.request.user)
-
-
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     # permission_classes = [permission.IsAuthenticated]
-
-    # def get_queryset(self):
-    #     return super().get_queryset().filter(owner=self.request.user)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filterset_fields = ('product', 'warranty_end_date', 'warranty_period', )
+    search_fields = ('serial_no', 'owner__name')
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
