@@ -32,7 +32,10 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(owner=Owner.objects.filter(wallet_address=self.request.query_params['wallet_address']).first())
+        wallet_address = self.request.query_params.get('wallet_address', None)
+        if wallet_address:
+            return super().get_queryset().filter(owner__wallet_address=wallet_address)
+        return super().get_queryset()
 
     def create(self, request, *args, **kwargs):
         data = request.data
