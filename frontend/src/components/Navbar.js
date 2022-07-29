@@ -55,7 +55,7 @@ function Navbar(props) {
     if (route === 'customer') {
       setisHome(false);
       setisCustomer(true);
-    } else if (auth_route === 'login' || auth_route === 'register') {
+    } else if (auth_route === 'login' || auth_route === 'signup') {
       setisHome(true);
       setisCustomer(false);
     } else if (route === '') {
