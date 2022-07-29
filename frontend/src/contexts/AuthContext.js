@@ -70,9 +70,8 @@ const AuthProvider = ({ children }) => {
 
     if (response.status === 201) {
       navigate('/retailer/login');
-      toast.success('Registration Successful');
     } else {
-      toast.error(data[Object.keys(data)[0]]);
+      throw data[Object.keys(data)[0]];
     }
   };
 

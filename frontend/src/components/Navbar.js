@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { PopperUnstyled, ClickAwayListener } from '@mui/base';
-import { Avatar } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
 import {
   Box,
   List,
@@ -11,6 +11,7 @@ import {
   ListItemButton,
   ListItemDecorator,
   Sheet,
+  Typography,
 } from '@mui/joy';
 import {
   KeyboardArrowDown,
@@ -92,6 +93,14 @@ function Navbar() {
       navigate('/customer/profile');
     } else {
       navigate('/retailer/profile');
+    }
+  };
+
+  const handleNavButtonRedirect = () => {
+    if (isCustomer) {
+      navigate('/customer/claim');
+    } else {
+      navigate('/retailer/create');
     }
   };
 
@@ -299,9 +308,28 @@ function Navbar() {
             </li> */}
           </ul>
 
+          {!isHome && button && (
+            <Box>
+              <Button
+                className="nav-button"
+                variant="outlined"
+                color="success"
+                onClick={handleNavButtonRedirect}
+              >
+                <Typography
+                  component="span"
+                  level="body1"
+                  className="nav-button-text"
+                >
+                  {isCustomer ? 'Claim Product' : 'Create Product'}
+                </Typography>
+              </Button>
+            </Box>
+          )}
+
           {button && (
             <div>
-              <Box sx={{ minHeight: 190, color: 'white', marginTop: 18 }}>
+              <Box sx={{ minHeight: 190, color: 'white', marginTop: 16 }}>
                 <List
                   role="menubar"
                   row
