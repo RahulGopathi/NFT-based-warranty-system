@@ -78,6 +78,7 @@ export default function CustomerItemDescription() {
   const api = useCustomerAxios();
   const { customer } = React.useContext(WalletContext);
   const [item, setItem] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [order, setOrder] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
   const [inputPhoneNumber, setInputPhoneNumber] = useState('');
@@ -115,7 +116,7 @@ export default function CustomerItemDescription() {
   };
 
   const handleClickOpenOtp = () => {
-    if (inputPhoneNumber && inputPhoneNumber.length == 10) {
+    if (inputPhoneNumber && inputPhoneNumber.length === 10) {
       const phoneNumber = '+91' + customer.phno;
       const appVerifier = window.recaptchaVerifier;
 
@@ -137,8 +138,7 @@ export default function CustomerItemDescription() {
           setDialogStatusText('An error occurred while sending OTP');
           console.log(error);
         });
-    }
-    else {
+    } else {
       setDialogStatusText('Invalid phone number given');
       setOpen(false);
       setOpenOtp(true);
@@ -164,8 +164,7 @@ export default function CustomerItemDescription() {
           setOpenOtp(false);
           setOpenLink(true);
         });
-    }
-    else {
+    } else {
       setDialogStatusText('Invalid OTP entered');
     }
   };
@@ -174,6 +173,7 @@ export default function CustomerItemDescription() {
     setOpenLink(false);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const createOrder = async (given_phno, item_id) => {
     const response = await fetch(API_BASE_URL + '/orders/', {
       method: 'POST',
@@ -189,11 +189,10 @@ export default function CustomerItemDescription() {
     console.log(data);
     if (response.status === 201) {
       setOrder(data);
-    }
-    else {
+    } else {
       setDialogStatusText('An error occurred while creating order');
     }
-  }
+  };
 
   useEffect(() => {
     fetchItem();
