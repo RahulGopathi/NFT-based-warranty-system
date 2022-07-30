@@ -20,6 +20,11 @@ import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
 import '../customer/customerItemDescription.css';
 import { Button } from 'react-bootstrap';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
@@ -95,6 +100,7 @@ export default function RetailerProduct() {
   const [product, setProduct] = React.useState({});
   const [issuedItems, setIssuedItems] = React.useState([]);
   const [UnissuedItems, setUnissuedItems] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
   const params = useParams();
   const api = useAxios();
 
@@ -183,6 +189,7 @@ export default function RetailerProduct() {
                       className="nav-button"
                       variant="outlined"
                       color="success"
+                      onClick={handleOpen}
                     >
                       <Typography
                         component="span"
@@ -192,6 +199,7 @@ export default function RetailerProduct() {
                         Issue to Customer
                       </Typography>
                     </Button>
+                    
                   </Box>
                 </Box>
               </Box>
@@ -275,6 +283,16 @@ export default function RetailerProduct() {
     );
   }
 
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+  const handleOpen = () => {
+    setOpen(true);
+  }
+
+
+
   useEffect(() => {
     fetchData();
     console.log(product);
@@ -284,6 +302,36 @@ export default function RetailerProduct() {
   return (
     <StyledDiv>
       <div>
+      <Dialog open={open} onClose={handleClose}>
+                      <DialogTitle>Issue to Customer</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          To Issue to User please Enter the customer name and phone number
+                        </DialogContentText>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="phone"
+                          label="Phone Number"
+                          type="number"
+                          fullWidth
+                          variant="standard"
+                        />
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="Name"
+                          label="Customer Name"
+                          type="text"
+                          fullWidth
+                          variant="standard"
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleClose}>Issue</Button>
+                      </DialogActions>
+      </Dialog>
         <Box
           sx={{
             display: 'flex',
