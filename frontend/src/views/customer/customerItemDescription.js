@@ -10,6 +10,12 @@ import '../customer/customerItemDescription.css';
 import { Button } from '../../components/Button';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import useCustomerAxios from '../../utils/useCustomerAxios';
 
 const Img = styled('img')({
@@ -19,11 +25,64 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
+const StyledTextField = styled(TextField)({
+  '& .MuiInputBase-input': {
+    color: '#000',
+  },
+  '& .MuiInputBase-root': {
+    color: '#A4A9AF',
+  },
+  '& label': {
+    color: '#000',
+  },
+  '& label.Mui-focused': {
+    color: '#000',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'green',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#B0B9C2',
+    },
+    '&:hover fieldset': {
+      borderColor: '#000',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#000',
+    },
+  },
+});
+
 export default function ComplexGrid() {
   let { id } = useParams();
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
+  const [open, setOpen] = React.useState(false);
+  const [openLink, setOpenLink] = React.useState(false);
+  const [label, setLabel] = React.useState('');
   const api = useCustomerAxios();
+
+  const handleChange = (event) => {
+    setLabel(event.target.value);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickOpenLink = () => {
+    setOpenLink(true);
+    setOpen(false);
+  };
+
+  const handleCloseLink = () => {
+    setOpenLink(false);
+  };
 
   useEffect(() => {
     fetchItem();
@@ -139,9 +198,63 @@ export default function ComplexGrid() {
                 className="btns"
                 buttonStyle="btn--primary"
                 buttonSize="btn--large"
+                onClick={handleClickOpen}
               >
                 Transfer
               </Button>
+              <Dialog open={open} onClose={handleClose} className="dialog-1">
+                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+                  Transfer
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Enter the Mobile no. of the person you want to transfer the
+                    product to
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Mobile Number"
+                    type="number"
+                    fullWidth
+                    variant="standard"
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleClickOpenLink}>Transfer</Button>
+                </DialogActions>
+              </Dialog>
+              <Dialog
+                open={openLink}
+                onClose={handleCloseLink}
+                className="dialog-2"
+              >
+                <DialogContent>
+                  <DialogContentText>
+                    Copy and Share this unique transfer link
+                  </DialogContentText>
+                  <div className="text-field">
+                    <StyledTextField
+                      fullWidth
+                      size="small"
+                      onChange={handleChange}
+                      label={label === '' ? ' ' : ' '}
+                      InputLabelProps={{ shrink: false }}
+                      textColor="#A4A9AF"
+                      variant="outlined"
+                      InputProps={{ readOnly: true }}
+                      defaultValue="link"
+                      sx={{ color: 'white', mt: 1 }}
+                    />
+                  </div>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseLink}>Cancel</Button>
+                  <Button onClick={handleCloseLink}>Copy</Button>
+                </DialogActions>
+              </Dialog>
             </Box>
           </Box>
         </div>
