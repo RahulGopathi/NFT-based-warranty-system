@@ -9,6 +9,7 @@ import CustomerDashboard from './views/customer/customerDashboard';
 import RetailerLogin from './views/retailer/retailerLogin';
 import RetailerDashboard from './views/retailer/retailerDashboard';
 import RetailerSignup from './views/retailer/retailerSignup';
+import CustomerSignup from './views/customer/customerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
@@ -41,6 +42,15 @@ function App() {
                       <Navbar />
                       <CustomerProfile />
                     </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/customer/register"
+                element={
+                  <div>
+                    <Navbar showNavbarButton={false} />
+                    <CustomerSignup />
                   </div>
                 }
               />

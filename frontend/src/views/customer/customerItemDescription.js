@@ -10,13 +10,13 @@ import '../customer/customerItemDescription.css';
 import { Button } from '../../components/Button';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
-import useAxios from '../../utils/useAxios';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import useCustomerAxios from '../../utils/useCustomerAxios';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -58,10 +58,10 @@ export default function ComplexGrid() {
   let { id } = useParams();
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
-  const api = useAxios();
   const [open, setOpen] = React.useState(false);
   const [openLink, setOpenLink] = React.useState(false);
   const [label, setLabel] = React.useState('');
+  const api = useCustomerAxios();
 
   const handleChange = (event) => {
     setLabel(event.target.value);
@@ -203,10 +203,13 @@ export default function ComplexGrid() {
                 Transfer
               </Button>
               <Dialog open={open} onClose={handleClose} className="dialog-1">
-                <DialogTitle sx={{margin: 'auto', fontSize: 25 }}>Transfer</DialogTitle>
+                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+                  Transfer
+                </DialogTitle>
                 <DialogContent>
                   <DialogContentText>
-                    Enter the Mobile no. of the person you want to transfer the product to
+                    Enter the Mobile no. of the person you want to transfer the
+                    product to
                   </DialogContentText>
                   <TextField
                     autoFocus
@@ -223,7 +226,11 @@ export default function ComplexGrid() {
                   <Button onClick={handleClickOpenLink}>Transfer</Button>
                 </DialogActions>
               </Dialog>
-              <Dialog open={openLink} onClose={handleCloseLink} className="dialog-2">
+              <Dialog
+                open={openLink}
+                onClose={handleCloseLink}
+                className="dialog-2"
+              >
                 <DialogContent>
                   <DialogContentText>
                     Copy and Share this unique transfer link

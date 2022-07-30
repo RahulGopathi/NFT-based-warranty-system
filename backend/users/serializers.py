@@ -47,3 +47,10 @@ class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
         fields = ['phno', 'name', 'wallet_address', 'id']
+
+
+class OwnerLoginSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Owner
+        fields = ['wallet_address']

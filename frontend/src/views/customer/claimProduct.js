@@ -114,8 +114,12 @@ export default function CustomerClaim() {
                     Claim Other Product?
                   </Typography>
                 </Box>
-                <AspectRatio minHeight="120px" maxHeight="200px" sx={{ mt: 4, mb:0 }}>
-                  <AddCircleIcon fontSize='large'></AddCircleIcon>
+                <AspectRatio
+                  minHeight="120px"
+                  maxHeight="200px"
+                  sx={{ mt: 4, mb: 0 }}
+                >
+                  <AddCircleIcon fontSize="large"></AddCircleIcon>
                 </AspectRatio>
               </Card>
             </Grid>
