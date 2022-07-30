@@ -17,6 +17,7 @@ import RetailerProduct from './views/retailer/retailerProductPage';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
 import CustomerClaim from './views/customer/claimProduct';
+import CreateProduct from './views/retailer/createProduct';
 
 function App() {
   return (
@@ -134,6 +135,15 @@ function App() {
                   <div>
                     <Navbar />
                     <RetailerProduct />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/create/"
+                element={
+                  <div>
+                    <Navbar />
+                    <CreateProduct />
                   </div>
                 }
               />
