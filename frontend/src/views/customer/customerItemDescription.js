@@ -20,9 +20,10 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import { WalletContext } from '../../contexts/WalletContext';
 import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../../config';
+import { API_BASE_URL, firebaseConfig } from '../../config';
 import {
   getAuth,
   RecaptchaVerifier,
@@ -68,11 +69,17 @@ const StyledTextField = styled(TextField)({
   },
 });
 
-export default function ComplexGrid() {
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+export default function CustomerItemDescription() {
   let { id } = useParams();
   const api = useCustomerAxios();
   const { customer } = React.useContext(WalletContext);
   const [item, setItem] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [order, setOrder] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
   const [inputPhoneNumber, setInputPhoneNumber] = useState('');
   const [inputOTP, setInputOTP] = useState('');
@@ -81,6 +88,7 @@ export default function ComplexGrid() {
   const [openLink, setOpenLink] = React.useState(false);
   const [openOtp, setOpenOtp] = React.useState(false);
   const [label, setLabel] = React.useState('');
+  let query = useQuery();
 
   const getInputData = (input) => {
     const otp =
@@ -108,8 +116,8 @@ export default function ComplexGrid() {
   };
 
   const handleClickOpenOtp = () => {
-    if (!inputPhoneNumber === '') {
-      const phoneNumber = '+91' + inputPhoneNumber;
+    if (inputPhoneNumber && inputPhoneNumber.length === 10) {
+      const phoneNumber = '+91' + customer.phno;
       const appVerifier = window.recaptchaVerifier;
 
       console.log('sending OTP to ' + phoneNumber);
@@ -130,6 +138,10 @@ export default function ComplexGrid() {
           setDialogStatusText('An error occurred while sending OTP');
           console.log(error);
         });
+    } else {
+      setDialogStatusText('Invalid phone number given');
+      setOpen(false);
+      setOpenOtp(true);
     }
   };
 
@@ -138,11 +150,12 @@ export default function ComplexGrid() {
   };
 
   const handleClickOpenLink = async () => {
-    if (!inputOTP === '') {
+    if (inputOTP) {
       const code = inputOTP;
       window.confirmationResult
         .confirm(code)
         .then((result) => {
+          setDialogStatusText('Loading...');
           setOpenOtp(false);
           setOpenLink(true);
         })
@@ -151,11 +164,34 @@ export default function ComplexGrid() {
           setOpenOtp(false);
           setOpenLink(true);
         });
+    } else {
+      setDialogStatusText('Invalid OTP entered');
     }
   };
 
   const handleCloseLink = () => {
     setOpenLink(false);
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const createOrder = async (given_phno, item_id) => {
+    const response = await fetch(API_BASE_URL + '/orders/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phno: customer.phno,
+        item: item_id,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 201) {
+      setOrder(data);
+    } else {
+      setDialogStatusText('An error occurred while creating order');
+    }
   };
 
   useEffect(() => {
@@ -171,6 +207,10 @@ export default function ComplexGrid() {
       },
       auth
     );
+
+    if (query.get('setOpen') === 'true') {
+      setOpen(true);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchItem = async () => {
@@ -295,7 +335,6 @@ export default function ComplexGrid() {
                 open={open}
                 onClose={handleClose}
                 className="dialog"
-                disableBackdropClick={true}
                 PaperProps={{
                   style: {
                     backgroundColor: '#0a1929',
@@ -323,7 +362,7 @@ export default function ComplexGrid() {
                       onChange={handleChange}
                       label={label === '' ? ' ' : ' '}
                       InputLabelProps={{ shrink: false }}
-                      textColor="#A4A9AF"
+                      textcolor="#A4A9AF"
                       variant="outlined"
                       sx={{ color: 'white', mt: 2 }}
                     />
@@ -405,6 +444,7 @@ export default function ComplexGrid() {
                     border: 0.1,
                     borderColor: '#A4A9AF',
                     borderStyle: 'solid',
+                    minWidth: '300px',
                   },
                 }}
               >

@@ -17,6 +17,7 @@ import RetailerProduct from './views/retailer/retailerProductPage';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
 import CustomerClaim from './views/customer/claimProduct';
+import ClaimItemDescription from './views/customer/claimItemDescription';
 
 function App() {
   return (
@@ -85,6 +86,15 @@ function App() {
                       <Navbar />
                       <CustomerItemDescription />
                     </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/claim/order/:order_id"
+                element={
+                  <div>
+                    <Navbar />
+                    <ClaimItemDescription />
                   </div>
                 }
               />

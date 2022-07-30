@@ -52,6 +52,16 @@ class Order(models.Model):
     phno = models.CharField(max_length=10)
     name = models.CharField(max_length=100, blank=True)
     is_delivered = models.BooleanField(default=False)
+    order_id = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.item.serial_no}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.is_delivered:
+            self.item.is_issued = True
+            self.item.save()
+        if self.order_id == "":
+            self.order_id = str(self.id) + 'x' + self.item.image_ipfs[-6:]
+            self.save()

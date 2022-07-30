@@ -93,32 +93,35 @@ export default function CustomerDashboard() {
                 <Card
                   variant="outlined"
                   sx={{ minWidth: '10%', width: '100%', mt: 3 }}
-                  onClick={() => {
-                    redirectItem(item.id);
-                  }}
                 >
                   <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 0.5,
+                    onClick={() => {
+                      redirectItem(item.id);
                     }}
                   >
-                    <Typography
-                      variant="h6"
-                      fontSize="md"
-                      sx={{ alignSelf: 'flex-start' }}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 0.5,
+                      }}
                     >
-                      {item.product.name}
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        fontSize="md"
+                        sx={{ alignSelf: 'flex-start' }}
+                      >
+                        {item.product.name}
+                      </Typography>
+                    </Box>
+                    <AspectRatio
+                      minHeight="120px"
+                      maxHeight="200px"
+                      sx={{ my: 2 }}
+                    >
+                      <img src={item.warranty_image} alt="product_img" />
+                    </AspectRatio>
                   </Box>
-                  <AspectRatio
-                    minHeight="120px"
-                    maxHeight="200px"
-                    sx={{ my: 2 }}
-                  >
-                    <img src={item.warranty_image} alt="product_img" />
-                  </AspectRatio>
                   <CardOverflow
                     variant="soft"
                     sx={{
@@ -133,7 +136,7 @@ export default function CustomerDashboard() {
                     }}
                   >
                     <Link
-                      to="#"
+                      to={'/item/' + item.id + '?setOpen=true'}
                       style={{
                         display: 'flex',
                         justifyContent: 'center',
