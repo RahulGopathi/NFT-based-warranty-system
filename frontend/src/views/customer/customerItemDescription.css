@@ -6,8 +6,27 @@
   color: white;
 }
 
+.dialog-1 {
+  width: 500px;
+  margin: auto;
+}
+
 @media (max-width: 800px) {
   .product_name {
     font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .dialog-1 {
+    width: 400px;
+    margin: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .dialog-1 {
+    width: 300px;
+    margin: auto;
   }
 }

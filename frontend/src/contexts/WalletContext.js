@@ -10,7 +10,6 @@ const WalletProvider = ({ children }) => {
   const navigate = useNavigate();
   const [customer, setCustomer] = useState(null); // eslint-disable-line
   const [loading, setLoading] = useState(true);
-  const [userRegistered, setUserRegistered] = useState(false); // eslint-disable-line
   const [userWalletAddress, setUserWalletAddress] = useState(
     localStorage.getItem('userWalletAddress')
       ? localStorage.getItem('userWalletAddress')
@@ -18,21 +17,22 @@ const WalletProvider = ({ children }) => {
   );
 
   const ownerLogin = async () => {
-    const response = await fetch(baseURL + '/owner/login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        wallet_address: userWalletAddress,
-      }),
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      setUserRegistered(true);
-      setCustomer(data);
-    } else {
-      navigate('/customer/register');
+    if (localStorage.getItem('userWalletAddress')) {
+      const response = await fetch(baseURL + '/owner/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          wallet_address: localStorage.getItem('userWalletAddress'),
+        }),
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setCustomer(data);
+      } else {
+        navigate('/customer/register');
+      }
     }
   };
 
@@ -49,9 +49,7 @@ const WalletProvider = ({ children }) => {
       }),
     });
     const data = await response.json();
-    console.log(data);
     if (response.status === 201) {
-      setUserRegistered(true);
       setCustomer(data);
       navigate('/customer/dashboard');
     } else {
@@ -69,10 +67,8 @@ const WalletProvider = ({ children }) => {
         onConnected(accounts[0]);
         localStorage.setItem('userWalletAddress', accounts[0]);
         toast.success('Wallet Connected succesfully!');
-        if (!localStorage.getItem('userWalletAddress')) {
-          console.log('User not registered');
+        if (!customer) {
           ownerLogin();
-          return;
         }
         navigate('/customer/dashboard');
       }
@@ -91,9 +87,7 @@ const WalletProvider = ({ children }) => {
         const account = accounts[0];
         onConnected(account);
         localStorage.setItem('userWalletAddress', account);
-        if (!localStorage.getItem('userWalletAddress')) {
-          ownerLogin();
-        }
+        ownerLogin();
         return;
       }
     }
@@ -103,6 +97,7 @@ const WalletProvider = ({ children }) => {
     try {
       localStorage.removeItem('userWalletAddress');
       setUserWalletAddress('');
+      setCustomer(null);
       toast.success('Logged Out succesfully!');
       navigate('/');
     } catch (error) {
@@ -112,6 +107,7 @@ const WalletProvider = ({ children }) => {
 
   const contextData = {
     customer,
+    ownerLogin,
     registerOwner,
     userWalletAddress,
     setUserWalletAddress,

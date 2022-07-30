@@ -14,6 +14,9 @@ import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
 import RetailerProduct from './views/retailer/retailerProductPage';
+import CustomerProfile from './views/customer/customerProfile';
+import RetailerProfile from './views/retailer/retailerProfile';
+import CustomerClaim from './views/customer/claimProduct';
 
 function App() {
   return (
@@ -42,12 +45,34 @@ function App() {
                 }
               />
               <Route
+                path="/customer/profile"
+                element={
+                  <div>
+                    <CustomerProtectedRoute>
+                      <Navbar />
+                      <CustomerProfile />
+                    </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
                 path="/customer/dashboard"
                 element={
                   <div>
                     <CustomerProtectedRoute>
                       <Navbar />
                       <CustomerDashboard />
+                    </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/customer/claim"
+                element={
+                  <div>
+                    <CustomerProtectedRoute>
+                      <Navbar />
+                      <CustomerClaim />
                     </CustomerProtectedRoute>
                   </div>
                 }
@@ -70,6 +95,17 @@ function App() {
                     <RetailerProtectedRoute>
                       <Navbar />
                       <RetailerDashboard />
+                    </RetailerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/profile"
+                element={
+                  <div>
+                    <RetailerProtectedRoute>
+                      <Navbar />
+                      <RetailerProfile />
                     </RetailerProtectedRoute>
                   </div>
                 }

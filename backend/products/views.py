@@ -31,8 +31,9 @@ class ItemViewSet(viewsets.ModelViewSet):
     search_fields = ('serial_no', 'owner__name')
 
     def get_queryset(self):
-        if self.request.query_params.get('wallet_address'):
-            super().get_queryset().filter(owner__wallet_address=self.request.query_params['wallet_address']).first()
+        wallet_address = self.request.query_params.get('wallet_address', None)
+        if wallet_address:
+            return super().get_queryset().filter(owner__wallet_address=wallet_address)
         return super().get_queryset()
 
     def create(self, request, *args, **kwargs):
