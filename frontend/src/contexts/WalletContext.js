@@ -18,21 +18,53 @@ const WalletProvider = ({ children }) => {
 
   const ownerLogin = async () => {
     if (localStorage.getItem('userWalletAddress')) {
-      const response = await fetch(baseURL + '/owner/login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          wallet_address: localStorage.getItem('userWalletAddress'),
-        }),
-      });
-      const data = await response.json();
-      if (response.status === 200) {
-        setCustomer(data);
-      } else {
-        navigate('/customer/register');
+      try {
+        const response = await fetch(baseURL + '/owner/login/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            wallet_address: localStorage.getItem('userWalletAddress'),
+          }),
+        });
+        const data = await response.json();
+        if (response.status === 200) {
+          setCustomer(data);
+          navigate('customer/dashboard');
+        } else {
+          navigate('/customer/register');
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error('Something went wrong');
       }
+    }
+  };
+
+  const updateOwner = async (owner_name, phno, owner_id) => {
+    const response = await fetch(baseURL + '/owner/update/' + owner_id + '/', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: owner_name,
+        phno: phno,
+      }),
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      const customer_data = {
+        name: data.name,
+        phno: data.phno,
+        wallet_address: userWalletAddress,
+      };
+      setCustomer(customer_data);
+      toast.success('Profile updated successfully');
+      navigate('customer/dashboard/');
+    } else {
+      toast.error('Something went wrong. Please try again.');
     }
   };
 
@@ -70,7 +102,6 @@ const WalletProvider = ({ children }) => {
         if (!customer) {
           ownerLogin();
         }
-        navigate('/customer/dashboard');
       }
     } catch (error) {
       toast.error(error.message);
@@ -87,7 +118,6 @@ const WalletProvider = ({ children }) => {
         const account = accounts[0];
         onConnected(account);
         localStorage.setItem('userWalletAddress', account);
-        ownerLogin();
         return;
       }
     }
@@ -108,6 +138,7 @@ const WalletProvider = ({ children }) => {
   const contextData = {
     customer,
     ownerLogin,
+    updateOwner,
     registerOwner,
     userWalletAddress,
     setUserWalletAddress,
