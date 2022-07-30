@@ -16,6 +16,11 @@ import RetailerProtectedRoute from './utils/retailerProtected';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
 import CustomerClaim from './views/customer/claimProduct';
+import OtpPage from './views/otpPage';
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from './config';
+
+const app = initializeApp(firebaseConfig);
 
 function App() {
   return (
