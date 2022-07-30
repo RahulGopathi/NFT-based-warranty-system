@@ -13,6 +13,7 @@ import CustomerSignup from './views/customer/customerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
 import RetailerProtectedRoute from './utils/retailerProtected';
+import RetailerProduct from './views/retailer/retailerProductPage';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
 import CustomerClaim from './views/customer/claimProduct';
@@ -124,6 +125,15 @@ function App() {
                   <div>
                     <Navbar />
                     <RetailerSignup />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/products/:id"
+                element={
+                  <div>
+                    <Navbar />
+                    <RetailerProduct />
                   </div>
                 }
               />
