@@ -50,6 +50,8 @@ class UpdateItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    item_data = serializers.SerializerMethodField()
+
     class Meta:
         model = Order
         fields = "__all__"
@@ -60,3 +62,6 @@ class OrderSerializer(serializers.ModelSerializer):
         item.is_issued = True
         item.save()
         return attrs
+
+    def get_item_data(self, obj):
+        return ItemSerializer(obj.item).data

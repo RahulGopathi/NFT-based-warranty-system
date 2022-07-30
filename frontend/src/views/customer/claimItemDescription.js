@@ -11,7 +11,6 @@ import { Button } from '../../components/Button';
 import Otpinput from '../../components/otpInput';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
-import useCustomerAxios from '../../utils/useCustomerAxios';
 // import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -19,6 +18,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useLocation } from 'react-router-dom';
+import { API_BASE_URL, BASE_URL } from '../../config';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -32,10 +32,9 @@ function useQuery() {
 }
 
 export default function ClaimItemDescription() {
-  let { id } = useParams();
+  let { order_id } = useParams();
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
-  const api = useCustomerAxios();
   const [open, setOpen] = React.useState(false);
   let query = useQuery();
 
@@ -56,10 +55,18 @@ export default function ClaimItemDescription() {
 
   const fetchItem = async () => {
     try {
-      const response = await api.get('/items/' + id);
-      console.log(response.data);
+      const response = await fetch(
+        API_BASE_URL + '/orders/get_order/?order_id=' + order_id,
+        {
+          method: 'GET',
+        }
+      );
+      const data = await response.json();
+      console.log(order_id);
+      console.log(data);
       if (response.status === 200) {
-        setItem(response.data);
+        setItem(data);
+        console.log('entered');
       }
     } catch (e) {
       setItemStatus('An Error Occurred! please try again later.');
@@ -68,7 +75,7 @@ export default function ClaimItemDescription() {
 
   return (
     <div>
-      {item.product ? (
+      {item.item_data ? (
         <div>
           <Box
             sx={{
@@ -77,7 +84,7 @@ export default function ClaimItemDescription() {
             }}
           >
             <Typography className="product_name">
-              {item.product.name}
+              {item.item_data.product.name}
             </Typography>
           </Box>
           <Box
@@ -97,7 +104,10 @@ export default function ClaimItemDescription() {
                 sx={{ minWidth: '10%', width: 300, height: 190, mt: 3 }}
               >
                 <AspectRatio minHeight="120px" maxHeight="200px">
-                  <Img src={item.warranty_image} alt="product_img" />
+                  <Img
+                    src={BASE_URL + item.item_data.warranty_image}
+                    alt="product_img"
+                  />
                 </AspectRatio>
               </Card>
               <Grid item xs={12} sm container>
@@ -110,7 +120,7 @@ export default function ClaimItemDescription() {
                       sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
                     >
                       <span className="fields">Serial Number - </span>{' '}
-                      {item.serial_no}
+                      {item.item_data.serial_no}
                     </Typography>
                     <Typography
                       gutterBottom
@@ -119,7 +129,7 @@ export default function ClaimItemDescription() {
                       sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
                     >
                       <span className="fields">Retailer - </span>{' '}
-                      {item.product.retailer_name}
+                      {item.item_data.product.retailer_name}
                     </Typography>
                     <Typography
                       gutterBottom
@@ -128,7 +138,7 @@ export default function ClaimItemDescription() {
                       sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
                     >
                       <span className="fields">Description - </span>{' '}
-                      {item.product.product_data}
+                      {item.item_data.product.product_data}
                     </Typography>
                     <Typography
                       gutterBottom
@@ -137,7 +147,7 @@ export default function ClaimItemDescription() {
                       sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
                     >
                       <span className="fields">Warranty Period - </span>{' '}
-                      {item.warranty_period} months
+                      {item.item_data.product.warranty_period} months
                     </Typography>
                     <Typography
                       gutterBottom
@@ -146,7 +156,7 @@ export default function ClaimItemDescription() {
                       sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
                     >
                       <span className="fields">Warranty Status - </span> Expires
-                      on {item.warranty_end_date}
+                      on {item.item_data.warranty_end_date}
                     </Typography>
                   </Grid>
                   <Grid item></Grid>

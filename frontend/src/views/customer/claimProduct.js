@@ -8,7 +8,7 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import Grid from '@mui/material/Grid';
 import CardOverflow from '@mui/joy/CardOverflow';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import useCustomerAxios from '../../utils/useCustomerAxios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Dialog from '@mui/material/Dialog';
@@ -17,6 +17,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { WalletContext } from '../../contexts/WalletContext';
+import { BASE_URL } from '../../config';
 
 const StyledDiv = styled('div')(() => ({
   color: '#fff',
@@ -59,6 +61,7 @@ export default function CustomerClaim() {
   const [open, setOpen] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [label, setLabel] = useState('');
+  const { customer } = useContext(WalletContext);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -69,7 +72,7 @@ export default function CustomerClaim() {
   };
 
   const redirectItem = (id) => {
-    navigate('/item/claim/' + id);
+    navigate('/claim/order/' + id);
   };
 
   useEffect(() => {
@@ -77,9 +80,11 @@ export default function CustomerClaim() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchItems = async () => {
+    console.log(customer.phno);
     try {
-      const response = await api.get('/items');
+      const response = await api.get('/orders/?phno=' + customer.phno);
       console.log(response.data);
+      console.log(customer.phno);
       if (response.status === 200) {
         setItems(response.data);
       }
@@ -178,7 +183,7 @@ export default function CustomerClaim() {
                 >
                   <Box
                     onClick={() => {
-                      redirectItem(item.id);
+                      redirectItem(item.order_id);
                     }}
                   >
                     <Box
@@ -193,7 +198,7 @@ export default function CustomerClaim() {
                         fontSize="md"
                         sx={{ alignSelf: 'flex-start' }}
                       >
-                        {item.product.name}
+                        {item.item_data.product.name}
                       </Typography>
                     </Box>
                     <AspectRatio
@@ -201,7 +206,10 @@ export default function CustomerClaim() {
                       maxHeight="200px"
                       sx={{ my: 2 }}
                     >
-                      <img src={item.warranty_image} alt="product_img" />
+                      <img
+                        src={BASE_URL + item.item_data.warranty_image}
+                        alt="product_img"
+                      />
                     </AspectRatio>
                   </Box>
                   <CardOverflow
@@ -218,7 +226,7 @@ export default function CustomerClaim() {
                     }}
                   >
                     <Link
-                      to={'/item/claim/' + item.id + '?setOpen=true'}
+                      to={'/claim/order/' + item.order_id + '?setOpen=true'}
                       style={{
                         display: 'flex',
                         justifyContent: 'center',

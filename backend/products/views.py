@@ -38,12 +38,12 @@ class ItemViewSet(viewsets.ModelViewSet):
             return super().get_queryset().filter(owner__wallet_address=wallet_address)
         return super().get_queryset()
 
-    def retrieve(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         if request.query_params.get('serial_no'):
             item_serializer_no = request.query_params.get('serial_no')
             item = get_object_or_404(Item, serial_no=item_serializer_no)
             return Response(ItemSerializer(item).data)
-        return super().retrieve(request, *args, *kwargs)
+        return super(ItemViewSet, self).list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -86,3 +86,24 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_fields = ('is_delivered',)
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        phno = self.request.query_params.get('phno', None)
+        if phno:
+            return super().get_queryset().filter(phno=phno)
+        return super().get_queryset()
+
+    @action(detail=False, methods=['get'])
+    def get_order(self, request):
+        order_id = request.query_params.get('order_id', None)
+        order = get_object_or_404(Order, order_id=order_id)
+        return Response(OrderSerializer(order).data)
+
+    @action(detail=False, methods=['get'])
+    def claim_order(self, request):
+        order_id = request.query_params.get('order_id', None)
+        order = get_object_or_404(Order, order_id=order_id)
+        order.is_delivered = True
+        order.save()
+        return Response(OrderSerializer(order).data)

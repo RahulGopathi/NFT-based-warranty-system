@@ -90,13 +90,11 @@ function App() {
                 }
               />
               <Route
-                path="/item/claim/:id"
+                path="/claim/order/:order_id"
                 element={
                   <div>
-                    <CustomerProtectedRoute>
-                      <Navbar />
-                      <ClaimItemDescription />
-                    </CustomerProtectedRoute>
+                    <Navbar />
+                    <ClaimItemDescription />
                   </div>
                 }
               />
