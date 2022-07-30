@@ -48,11 +48,12 @@ class UpdateItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('created_at', 'updated_at')
 
+
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
-    
+
     def validate(self, attrs):
         super().validate(attrs)
         item = attrs.get('item')

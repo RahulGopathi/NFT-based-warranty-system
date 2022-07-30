@@ -46,8 +46,12 @@ class Item(models.Model):
     def __str__(self):
         return f"{self.serial_no}"
 
+
 class Order(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     phno = models.CharField(max_length=10)
     name = models.CharField(max_length=100, blank=True)
     is_delivered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.item.serial_no}"

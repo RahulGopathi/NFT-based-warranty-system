@@ -73,10 +73,9 @@ class ItemViewSet(viewsets.ModelViewSet):
         item.save()
         return Response(ItemSerializer(item).data, status=201)
 
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_fields = ('is_delivered',)
-
-
