@@ -6,9 +6,10 @@
   color: white;
 }
 
-.dialog-1 {
-  width: 500px;
+.dialog {
+  width: 700px;
   margin: auto;
+  overflow-x: hidden !important;
 }
 
 @media (max-width: 800px) {
@@ -18,15 +19,21 @@
 }
 
 @media (max-width: 500px) {
-  .dialog-1 {
+  .dialog {
     width: 400px;
     margin: auto;
   }
 }
 
 @media (max-width: 400px) {
-  .dialog-1 {
-    width: 300px;
+  .dialog {
+    width: 370px;
     margin: auto;
+  }
+
+  .dialog-btns {
+    width: 240px;
+    margin: auto;
+    padding: 0px !important;
   }
 }
