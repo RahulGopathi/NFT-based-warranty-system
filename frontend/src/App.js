@@ -35,6 +35,15 @@ function App() {
                 }
               />
               <Route
+                path="/customer/register"
+                element={
+                  <div>
+                    <Navbar showNavbarButton={false} />
+                    <CustomerSignup />
+                  </div>
+                }
+              />
+              <Route
                 path="/customer/profile"
                 element={
                   <div>
@@ -42,15 +51,6 @@ function App() {
                       <Navbar />
                       <CustomerProfile />
                     </CustomerProtectedRoute>
-                  </div>
-                }
-              />
-              <Route
-                path="/customer/register"
-                element={
-                  <div>
-                    <Navbar showNavbarButton={false} />
-                    <CustomerSignup />
                   </div>
                 }
               />

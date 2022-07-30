@@ -71,69 +71,75 @@ export default function RetailerProfile() {
         >
           <Box className="profile">
             <Grid item xs>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-                component="div"
-                sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
-              >
-                <span>First Name</span>
-              </Typography>
-              <div className="text-field">
-                <StyledTextField
-                  fullWidth
-                  size="small"
-                  onChange={handleChange}
-                  label={label === '' ? ' ' : ' '}
-                  InputLabelProps={{ shrink: false }}
-                  textColor="#A4A9AF"
-                  variant="outlined"
-                  defaultValue={user.first_name}
-                  sx={{ color: 'white' }}
-                />
-              </div>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-                component="div"
-                sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
-              >
-                <span>Last Name</span>
-              </Typography>
-              <div className="text-field">
-                <StyledTextField
-                  fullWidth
-                  size="small"
-                  onChange={handleChange}
-                  label={label === '' ? ' ' : ' '}
-                  InputLabelProps={{ shrink: false }}
-                  textColor="#A4A9AF"
-                  variant="outlined"
-                  defaultValue={user.last_name}
-                  sx={{ color: 'white' }}
-                />
-              </div>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-                component="div"
-                sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
-              >
-                <span>Email</span>
-              </Typography>
-              <div className="text-field">
-                <StyledTextField
-                  fullWidth
-                  size="small"
-                  onChange={handleChange}
-                  label={label === '' ? ' ' : ' '}
-                  InputLabelProps={{ shrink: false }}
-                  textColor="#A4A9AF"
-                  variant="outlined"
-                  defaultValue={user.email}
-                  sx={{ color: 'white' }}
-                />
-              </div>
+              <Box sx={{ margin: 2 }}>
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
+                >
+                  <span>First Name</span>
+                </Typography>
+                <div className="text-field">
+                  <StyledTextField
+                    fullWidth
+                    size="small"
+                    onChange={handleChange}
+                    label={label === '' ? ' ' : ' '}
+                    InputLabelProps={{ shrink: false }}
+                    textColor="#A4A9AF"
+                    variant="outlined"
+                    defaultValue={user.first_name}
+                    sx={{ color: 'white' }}
+                  />
+                </div>
+              </Box>
+              <Box sx={{ margin: 2 }}>
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
+                >
+                  <span>Last Name</span>
+                </Typography>
+                <div className="text-field">
+                  <StyledTextField
+                    fullWidth
+                    size="small"
+                    onChange={handleChange}
+                    label={label === '' ? ' ' : ' '}
+                    InputLabelProps={{ shrink: false }}
+                    textColor="#A4A9AF"
+                    variant="outlined"
+                    defaultValue={user.last_name}
+                    sx={{ color: 'white' }}
+                  />
+                </div>
+              </Box>
+              <Box sx={{ margin: 2 }}>
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
+                >
+                  <span>Email</span>
+                </Typography>
+                <div className="text-field">
+                  <StyledTextField
+                    fullWidth
+                    size="small"
+                    onChange={handleChange}
+                    label={label === '' ? ' ' : ' '}
+                    InputLabelProps={{ shrink: false }}
+                    textColor="#A4A9AF"
+                    variant="outlined"
+                    defaultValue={user.email}
+                    sx={{ color: 'white' }}
+                  />
+                </div>
+              </Box>
             </Grid>
           </Box>
           <Box

@@ -16,11 +16,9 @@ function LandingPage() {
 
   const redirectCustomer = () => {
     if (userWalletAddress) {
-      console.log('redirecting to customer dashboard');
       navigate('/customer/dashboard');
       toast.success('Wallet Connected succesfully!');
     } else {
-      console.log('calling connectWallet');
       connectWallet(setUserWalletAddress);
     }
   };

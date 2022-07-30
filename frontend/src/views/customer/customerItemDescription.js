@@ -10,13 +10,13 @@ import '../customer/customerItemDescription.css';
 import { Button } from '../../components/Button';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
+import useCustomerAxios from '../../utils/useCustomerAxios';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import useCustomerAxios from '../../utils/useCustomerAxios';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -58,10 +58,10 @@ export default function ComplexGrid() {
   let { id } = useParams();
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
+  const api = useCustomerAxios();
   const [open, setOpen] = React.useState(false);
   const [openLink, setOpenLink] = React.useState(false);
   const [label, setLabel] = React.useState('');
-  const api = useCustomerAxios();
 
   const handleChange = (event) => {
     setLabel(event.target.value);
