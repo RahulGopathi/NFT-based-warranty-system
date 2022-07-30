@@ -18,6 +18,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useLocation } from "react-router-dom";
 
 const Img = styled('img')({
   margin: 'auto',
@@ -55,6 +56,10 @@ const StyledTextField = styled(TextField)({
   },
 });
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export default function ComplexGrid() {
   let { id } = useParams();
   const [item, setItem] = useState([]);
@@ -64,6 +69,7 @@ export default function ComplexGrid() {
   const [openLink, setOpenLink] = React.useState(false);
   const [openOtp, setOpenOtp] = React.useState(false);
   const [label, setLabel] = React.useState('');
+  let query = useQuery();
 
   const handleChange = (event) => {
     setLabel(event.target.value);
@@ -97,6 +103,9 @@ export default function ComplexGrid() {
 
   useEffect(() => {
     fetchItem();
+    if(query.get("setOpen") === 'true'){
+      setOpen(true);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchItem = async () => {
