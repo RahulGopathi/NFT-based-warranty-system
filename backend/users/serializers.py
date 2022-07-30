@@ -42,6 +42,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+class RetailerUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Retailer
+        fields = ('first_name', 'last_name', 'email')
+
+
 class OwnerSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -54,3 +60,10 @@ class OwnerLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
         fields = ['wallet_address']
+
+
+class OwnerUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Owner
+        fields = ['name', 'phno']
