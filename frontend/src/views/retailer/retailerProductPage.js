@@ -27,7 +27,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import toast from 'react-hot-toast';
 
-
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
   marginLeft: 50,
@@ -208,7 +207,6 @@ export default function RetailerProduct() {
                         Issue to Customer
                       </Typography>
                     </Button>
-                    
                   </Box>
                 </Box>
               </Box>
@@ -294,26 +292,25 @@ export default function RetailerProduct() {
 
   const handleClose = () => {
     setOpen(false);
-  }
-
+  };
 
   const handleIssueUser = async () => {
-    console.log("ITEM",item);
+    console.log('ITEM', item);
     const payload = {
-      "phno": owner_phone,
-      "name": owner_name,
-      "item": item,
+      phno: owner_phone,
+      name: owner_name,
+      item: item,
     };
-    toast.promise(
-      api.post('/orders/', payload),
-        {
-          loading: 'Issuing...',
-          success: (data) => { setOpen(false); fetchData(); return 'Issued Successfully!'; },
-          error: (err) => <b>{err}</b>,
-        }
-      );
-  }
-
+    toast.promise(api.post('/orders/', payload), {
+      loading: 'Issuing...',
+      success: (data) => {
+        setOpen(false);
+        fetchData();
+        return 'Issued Successfully!';
+      },
+      error: (err) => <b>{err}</b>,
+    });
+  };
 
   useEffect(() => {
     fetchData();
@@ -321,40 +318,40 @@ export default function RetailerProduct() {
   return (
     <StyledDiv>
       <div>
-      <Dialog open={open} onClose={handleClose}>
-                      <DialogTitle>Issue to Customer</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          To Issue to User please Enter the customer name and phone number
-                        </DialogContentText>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="phone"
-                          label="Phone Number"
-                          type="number"
-                          fullWidth
-                          variant="standard"
-                          value={owner_phone}
-                          onChange={(e) => setOwnerPhone(e.target.value)}
-                        />
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="Name"
-                          label="Customer Name"
-                          type="text"
-                          fullWidth
-                          variant="standard"
-                          value={owner_name}
-                          onChange={(e) => setOwnerName(e.target.value)}
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button  onClick={handleIssueUser}>Issue</Button>
-                      </DialogActions>
-      </Dialog>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Issue to Customer</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To Issue to User please Enter the customer name and phone number
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="phone"
+              label="Phone Number"
+              type="number"
+              fullWidth
+              variant="standard"
+              value={owner_phone}
+              onChange={(e) => setOwnerPhone(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="Name"
+              label="Customer Name"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={owner_name}
+              onChange={(e) => setOwnerName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleIssueUser}>Issue</Button>
+          </DialogActions>
+        </Dialog>
         <Box
           sx={{
             display: 'flex',
@@ -405,7 +402,6 @@ export default function RetailerProduct() {
                     {product.product_data}
                   </Typography>
                 </Grid>
-                
               </Grid>
             </Grid>
           </Grid>
