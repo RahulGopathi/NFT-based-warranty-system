@@ -302,10 +302,17 @@ function Navbar(props) {
         className="navbar"
       >
         <div className="navbar-container">
-          <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
-            PyDO
-            <i className="fa-brands fa-hive"></i>
-          </Link>
+          {isHome ? (
+            <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+              PyDO
+              <i className="fa-brands fa-hive"></i>
+            </Link>
+          ) : (
+            <Box className="navbar-logo" onClick={closeMobileMenu}>
+              PyDO
+              <i className="fa-brands fa-hive"></i>
+            </Box>
+          )}
           <ul className="nav-menu">
             {/* <li className='nav-item'>
               <Link to='/' className='nav-links' onClick={closeMobileMenu}>

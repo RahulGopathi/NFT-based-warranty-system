@@ -8,6 +8,7 @@ import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
 import '../customer/customerItemDescription.css';
 import { Button } from '../../components/Button';
+import Otpinput from '../../components/otpInput';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import useCustomerAxios from '../../utils/useCustomerAxios';
@@ -27,16 +28,16 @@ const Img = styled('img')({
 
 const StyledTextField = styled(TextField)({
   '& .MuiInputBase-input': {
-    color: '#000',
+    color: '#fff',
   },
   '& .MuiInputBase-root': {
     color: '#A4A9AF',
   },
   '& label': {
-    color: '#000',
+    color: '#fff',
   },
   '& label.Mui-focused': {
-    color: '#000',
+    color: '#fff',
   },
   '& .MuiInput-underline:after': {
     borderBottomColor: 'green',
@@ -46,10 +47,10 @@ const StyledTextField = styled(TextField)({
       borderColor: '#B0B9C2',
     },
     '&:hover fieldset': {
-      borderColor: '#000',
+      borderColor: '#fff',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#000',
+      borderColor: '#fff',
     },
   },
 });
@@ -61,6 +62,7 @@ export default function ComplexGrid() {
   const api = useCustomerAxios();
   const [open, setOpen] = React.useState(false);
   const [openLink, setOpenLink] = React.useState(false);
+  const [openOtp, setOpenOtp] = React.useState(false);
   const [label, setLabel] = React.useState('');
 
   const handleChange = (event) => {
@@ -75,9 +77,18 @@ export default function ComplexGrid() {
     setOpen(false);
   };
 
-  const handleClickOpenLink = () => {
-    setOpenLink(true);
+  const handleClickOpenOtp = () => {
     setOpen(false);
+    setOpenOtp(true);
+  };
+
+  const handleCloseOtp = () => {
+    setOpenOtp(false);
+  };
+
+  const handleClickOpenLink = () => {
+    setOpenOtp(false);
+    setOpenLink(true);
   };
 
   const handleCloseLink = () => {
@@ -191,7 +202,7 @@ export default function ComplexGrid() {
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
-                marginTop: 5,
+                marginTop: 1,
               }}
             >
               <Button
@@ -202,40 +213,112 @@ export default function ComplexGrid() {
               >
                 Transfer
               </Button>
-              <Dialog open={open} onClose={handleClose} className="dialog-1">
+
+              {/* <<<<<<<< Mobile Number Input Dialog Box >>>>>>>> */}
+
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                className="dialog"
+                PaperProps={{
+                  style: {
+                    backgroundColor: '#0a1929',
+                    color: '#fff',
+                    border: 0.1,
+                    borderColor: '#A4A9AF',
+                    borderStyle: 'solid',
+                  },
+                }}
+              >
                 <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
                   Transfer
                 </DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
+                <DialogContent sx={{ pb: 0 }}>
+                  <DialogContentText sx={{ color: '#A4A9AF' }}>
                     Enter the Mobile no. of the person you want to transfer the
                     product to
                   </DialogContentText>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="Mobile Number"
-                    type="number"
-                    fullWidth
-                    variant="standard"
-                  />
+                  <div>
+                    <StyledTextField
+                      fullWidth
+                      type="tel"
+                      size="small"
+                      onChange={handleChange}
+                      label={label === '' ? ' ' : ' '}
+                      InputLabelProps={{ shrink: false }}
+                      textColor="#A4A9AF"
+                      variant="outlined"
+                      defaultValue="9030406785"
+                      sx={{ color: 'white', mt: 2 }}
+                    />
+                  </div>
                 </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={handleClickOpenLink}>Transfer</Button>
+                <DialogActions className="dialog-btns">
+                  <Button onClick={handleClose} className="left-btn">
+                    Cancel
+                  </Button>
+                  <Button onClick={handleClickOpenOtp} className="right-btn">
+                    Transfer
+                  </Button>
                 </DialogActions>
               </Dialog>
+
+              {/* <<<<<<<< OTP Input Dialog Box >>>>>>>> */}
+
+              <Dialog
+                open={openOtp}
+                onClose={handleCloseOtp}
+                className="dialog"
+                PaperProps={{
+                  style: {
+                    backgroundColor: '#0a1929',
+                    color: '#fff',
+                    border: 0.1,
+                    borderColor: '#A4A9AF',
+                    borderStyle: 'solid',
+                  },
+                }}
+              >
+                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+                  Enter OTP
+                </DialogTitle>
+                <DialogContent sx={{ pb: 0 }}>
+                  <DialogContentText sx={{ color: '#A4A9AF' }}>
+                    Enter the OTP sent to your Mobile Number
+                  </DialogContentText>
+                  <Otpinput />
+                </DialogContent>
+                <DialogActions>
+                  {/* <Button onClick={handleCloseOtp}>Resend OTP</Button> */}
+                  <Button onClick={handleClickOpenLink}>Continue</Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* <<<<<<<< Transfer Link Display Dialog Box >>>>>>>> */}
+
               <Dialog
                 open={openLink}
                 onClose={handleCloseLink}
-                className="dialog-2"
+                className="dialog"
+                PaperProps={{
+                  style: {
+                    backgroundColor: '#0a1929',
+                    color: '#fff',
+                    border: 0.1,
+                    borderColor: '#A4A9AF',
+                    borderStyle: 'solid',
+                  },
+                }}
               >
-                <DialogContent>
-                  <DialogContentText>
-                    Copy and Share this unique transfer link
+                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+                  Transfer Link
+                </DialogTitle>
+                <DialogContent sx={{ pb: 0 }}>
+                  <DialogContentText sx={{ color: '#61c97d' }}>
+                    The following Transfer link has been sent to the Mobile
+                    number you just entered!
                   </DialogContentText>
-                  <div className="text-field">
+                  <div>
                     <StyledTextField
                       fullWidth
                       size="small"
@@ -246,13 +329,13 @@ export default function ComplexGrid() {
                       variant="outlined"
                       InputProps={{ readOnly: true }}
                       defaultValue="link"
-                      sx={{ color: 'white', mt: 1 }}
+                      sx={{ color: 'white', mt: 2 }}
                     />
                   </div>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleCloseLink}>Cancel</Button>
-                  <Button onClick={handleCloseLink}>Copy</Button>
+                  <Button onClick={handleCloseLink}>Close</Button>
+                  <Button onClick={handleCloseLink}>Copy!</Button>
                 </DialogActions>
               </Dialog>
             </Box>
