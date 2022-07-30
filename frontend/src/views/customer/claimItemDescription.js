@@ -12,7 +12,7 @@ import Otpinput from '../../components/otpInput';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import useCustomerAxios from '../../utils/useCustomerAxios';
-import TextField from '@mui/material/TextField';
+// import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,53 +27,17 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-const StyledTextField = styled(TextField)({
-  '& .MuiInputBase-input': {
-    color: '#fff',
-  },
-  '& .MuiInputBase-root': {
-    color: '#A4A9AF',
-  },
-  '& label': {
-    color: '#fff',
-  },
-  '& label.Mui-focused': {
-    color: '#fff',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: 'green',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#B0B9C2',
-    },
-    '&:hover fieldset': {
-      borderColor: '#fff',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#fff',
-    },
-  },
-});
-
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-export default function CustomerItemDescription() {
+export default function ClaimItemDescription() {
   let { id } = useParams();
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
   const api = useCustomerAxios();
   const [open, setOpen] = React.useState(false);
-  const [openLink, setOpenLink] = React.useState(false);
-  const [openOtp, setOpenOtp] = React.useState(false);
-  const [label, setLabel] = React.useState('');
   let query = useQuery();
-
-  const handleChange = (event) => {
-    setLabel(event.target.value);
-  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,24 +45,6 @@ export default function CustomerItemDescription() {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleClickOpenOtp = () => {
-    setOpen(false);
-    setOpenOtp(true);
-  };
-
-  const handleCloseOtp = () => {
-    setOpenOtp(false);
-  };
-
-  const handleClickOpenLink = () => {
-    setOpenOtp(false);
-    setOpenLink(true);
-  };
-
-  const handleCloseLink = () => {
-    setOpenLink(false);
   };
 
   useEffect(() => {
@@ -220,10 +166,10 @@ export default function CustomerItemDescription() {
                 buttonSize="btn--large"
                 onClick={handleClickOpen}
               >
-                Transfer
+                Claim
               </Button>
 
-              {/* <<<<<<<< Mobile Number Input Dialog Box >>>>>>>> */}
+              {/* <<<<<<<< OTP Input Dialog Box >>>>>>>> */}
 
               <Dialog
                 open={open}
@@ -240,113 +186,21 @@ export default function CustomerItemDescription() {
                 }}
               >
                 <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  Transfer
-                </DialogTitle>
-                <DialogContent sx={{ pb: 0 }}>
-                  <DialogContentText sx={{ color: '#A4A9AF' }}>
-                    Enter the Mobile no. of the person you want to transfer the
-                    product to
-                  </DialogContentText>
-                  <div>
-                    <StyledTextField
-                      fullWidth
-                      type="tel"
-                      size="small"
-                      onChange={handleChange}
-                      label={label === '' ? ' ' : ' '}
-                      InputLabelProps={{ shrink: false }}
-                      textColor="#A4A9AF"
-                      variant="outlined"
-                      defaultValue="9030406785"
-                      sx={{ color: 'white', mt: 2 }}
-                    />
-                  </div>
-                </DialogContent>
-                <DialogActions className="dialog-btns">
-                  <Button onClick={handleClose} className="left-btn">
-                    Cancel
-                  </Button>
-                  <Button onClick={handleClickOpenOtp} className="right-btn">
-                    Transfer
-                  </Button>
-                </DialogActions>
-              </Dialog>
-
-              {/* <<<<<<<< OTP Input Dialog Box >>>>>>>> */}
-
-              <Dialog
-                open={openOtp}
-                onClose={handleCloseOtp}
-                className="dialog"
-                PaperProps={{
-                  style: {
-                    backgroundColor: '#0a1929',
-                    color: '#fff',
-                    border: 0.1,
-                    borderColor: '#A4A9AF',
-                    borderStyle: 'solid',
-                  },
-                }}
-              >
-                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
                   Enter OTP
                 </DialogTitle>
                 <DialogContent sx={{ pb: 0 }}>
                   <DialogContentText sx={{ color: '#A4A9AF' }}>
-                    Enter the OTP sent to your Mobile Number
+                    Enter the OTP sent to the Mobile Number given by the seller
                   </DialogContentText>
                   <Otpinput />
                 </DialogContent>
                 <DialogActions>
                   {/* <Button onClick={handleCloseOtp}>Resend OTP</Button> */}
-                  <Button onClick={handleClickOpenLink}>Continue</Button>
+                  <Button onClick={handleClose}>Continue</Button>
                 </DialogActions>
               </Dialog>
 
-              {/* <<<<<<<< Transfer Link Display Dialog Box >>>>>>>> */}
-
-              <Dialog
-                open={openLink}
-                onClose={handleCloseLink}
-                className="dialog"
-                PaperProps={{
-                  style: {
-                    backgroundColor: '#0a1929',
-                    color: '#fff',
-                    border: 0.1,
-                    borderColor: '#A4A9AF',
-                    borderStyle: 'solid',
-                  },
-                }}
-              >
-                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  Transfer Link
-                </DialogTitle>
-                <DialogContent sx={{ pb: 0 }}>
-                  <DialogContentText sx={{ color: '#61c97d' }}>
-                    The following Transfer link has been sent to the Mobile
-                    number you just entered!
-                  </DialogContentText>
-                  <div>
-                    <StyledTextField
-                      fullWidth
-                      size="small"
-                      onChange={handleChange}
-                      label={label === '' ? ' ' : ' '}
-                      InputLabelProps={{ shrink: false }}
-                      textColor="#A4A9AF"
-                      variant="outlined"
-                      InputProps={{ readOnly: true }}
-                      defaultValue="link"
-                      sx={{ color: 'white', mt: 2 }}
-                    />
-                  </div>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseLink}>Close</Button>
-                  <Button onClick={handleCloseLink}>Copy!</Button>
-                </DialogActions>
-              </Dialog>
+              {/* <<<<<<<< Dialog Box Ends >>>>>>>> */}
             </Box>
           </Box>
         </div>

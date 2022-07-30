@@ -2,27 +2,74 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Button from '@mui/joy/Button';
+import { Button as CustomButton } from '../../components/Button';
 import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Grid from '@mui/material/Grid';
 import CardOverflow from '@mui/joy/CardOverflow';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import useAxios from '../../utils/useAxios';
+import useCustomerAxios from '../../utils/useCustomerAxios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
 
 const StyledDiv = styled('div')(() => ({
   color: '#fff',
 }));
 
+const StyledTextField = styled(TextField)({
+  '& .MuiInputBase-input': {
+    color: '#fff',
+  },
+  '& .MuiInputBase-root': {
+    color: '#A4A9AF',
+  },
+  '& label': {
+    color: '#fff',
+  },
+  '& label.Mui-focused': {
+    color: '#fff',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'green',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#B0B9C2',
+    },
+    '&:hover fieldset': {
+      borderColor: '#fff',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#fff',
+    },
+  },
+});
+
 export default function CustomerClaim() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [itemsStatus, setItemsStatus] = useState('No Items');
-  const api = useAxios();
+  const api = useCustomerAxios();
+  const [open, setOpen] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [label, setLabel] = useState('');
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const redirectItem = (id) => {
-    navigate('/item/' + id);
+    navigate('/item/claim/' + id);
   };
 
   useEffect(() => {
@@ -97,7 +144,7 @@ export default function CustomerClaim() {
               <Card
                 variant="outlined"
                 sx={{ minWidth: '10%', width: '100%', mt: 3, pb: 7 }}
-                onClick={() => {}}
+                onClick={handleClickOpen}
               >
                 <Box
                   sx={{
@@ -128,32 +175,35 @@ export default function CustomerClaim() {
                 <Card
                   variant="outlined"
                   sx={{ minWidth: '10%', width: '100%', mt: 3 }}
-                  onClick={() => {
-                    redirectItem(item.id);
-                  }}
                 >
                   <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 0.5,
+                    onClick={() => {
+                      redirectItem(item.id);
                     }}
                   >
-                    <Typography
-                      variant="h6"
-                      fontSize="md"
-                      sx={{ alignSelf: 'flex-start' }}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 0.5,
+                      }}
                     >
-                      {item.product.name}
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        fontSize="md"
+                        sx={{ alignSelf: 'flex-start' }}
+                      >
+                        {item.product.name}
+                      </Typography>
+                    </Box>
+                    <AspectRatio
+                      minHeight="120px"
+                      maxHeight="200px"
+                      sx={{ my: 2 }}
+                    >
+                      <img src={item.warranty_image} alt="product_img" />
+                    </AspectRatio>
                   </Box>
-                  <AspectRatio
-                    minHeight="120px"
-                    maxHeight="200px"
-                    sx={{ my: 2 }}
-                  >
-                    <img src={item.warranty_image} alt="product_img" />
-                  </AspectRatio>
                   <CardOverflow
                     variant="soft"
                     sx={{
@@ -168,7 +218,7 @@ export default function CustomerClaim() {
                     }}
                   >
                     <Link
-                      to="#"
+                      to={'/item/claim/' + item.id + '?setOpen=true'}
                       style={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -193,6 +243,54 @@ export default function CustomerClaim() {
               </Grid>
             ))}
           </Grid>
+
+          {/* <<<<<<< Serial Number Input Dialog >>>>>>>> */}
+
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            className="dialog"
+            PaperProps={{
+              style: {
+                backgroundColor: '#0a1929',
+                color: '#fff',
+                border: 0.1,
+                borderColor: '#A4A9AF',
+                borderStyle: 'solid',
+              },
+            }}
+          >
+            <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+              Claim
+            </DialogTitle>
+            <DialogContent sx={{ pb: 0 }}>
+              <DialogContentText sx={{ color: '#A4A9AF' }}>
+                Enter the Serial no. of the product you want to claim
+              </DialogContentText>
+              <div>
+                <StyledTextField
+                  fullWidth
+                  type="text"
+                  size="small"
+                  label={label === '' ? ' ' : ' '}
+                  InputLabelProps={{ shrink: false }}
+                  textColor="#A4A9AF"
+                  variant="outlined"
+                  sx={{ color: 'white', mt: 2 }}
+                />
+              </div>
+            </DialogContent>
+            <DialogActions className="dialog-btns">
+              <CustomButton onClick={handleClose} className="left-btn">
+                Cancel
+              </CustomButton>
+              <CustomButton onClick={handleClose} className="right-btn">
+                Claim
+              </CustomButton>
+            </DialogActions>
+          </Dialog>
+
+          {/* <<<<<<< End Dialog >>>>>>>> */}
         </Box>
       )}
     </StyledDiv>

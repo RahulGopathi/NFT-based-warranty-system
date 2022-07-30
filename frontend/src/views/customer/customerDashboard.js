@@ -94,7 +94,11 @@ export default function CustomerDashboard() {
                   variant="outlined"
                   sx={{ minWidth: '10%', width: '100%', mt: 3 }}
                 >
-                  <Box onClick={() => { redirectItem(item.id); }}>
+                  <Box
+                    onClick={() => {
+                      redirectItem(item.id);
+                    }}
+                  >
                     <Box
                       sx={{
                         display: 'flex',
@@ -132,7 +136,7 @@ export default function CustomerDashboard() {
                     }}
                   >
                     <Link
-                      to={"/item/" + item.id + "?setOpen=true"}
+                      to={'/item/' + item.id + '?setOpen=true'}
                       style={{
                         display: 'flex',
                         justifyContent: 'center',

@@ -37,6 +37,13 @@ class ItemViewSet(viewsets.ModelViewSet):
             return super().get_queryset().filter(owner__wallet_address=wallet_address)
         return super().get_queryset()
 
+    def retrieve(self, request, *args, **kwargs):
+        if request.query_params.get('serial_no'):
+            item_serializer_no = request.query_params.get('serial_no')
+            item = get_object_or_404(Item, serial_no=item_serializer_no)
+            return Response(ItemSerializer(item).data)
+        return super().retrieve(request, *args, *kwargs)
+
     def create(self, request, *args, **kwargs):
         data = request.data
         serializer = self.get_serializer(data=data)

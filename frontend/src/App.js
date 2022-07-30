@@ -16,6 +16,7 @@ import RetailerProtectedRoute from './utils/retailerProtected';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
 import CustomerClaim from './views/customer/claimProduct';
+import ClaimItemDescription from './views/customer/claimItemDescription';
 
 function App() {
   return (
@@ -83,6 +84,17 @@ function App() {
                     <CustomerProtectedRoute>
                       <Navbar />
                       <CustomerItemDescription />
+                    </CustomerProtectedRoute>
+                  </div>
+                }
+              />
+              <Route
+                path="/item/claim/:id"
+                element={
+                  <div>
+                    <CustomerProtectedRoute>
+                      <Navbar />
+                      <ClaimItemDescription />
                     </CustomerProtectedRoute>
                   </div>
                 }
