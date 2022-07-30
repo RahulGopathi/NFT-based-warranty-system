@@ -7,7 +7,7 @@
 }
 
 .dialog {
-  width: 500px;
+  width: 700px;
   margin: auto;
   overflow-x: hidden !important;
 }
@@ -27,7 +27,7 @@
 
 @media (max-width: 400px) {
   .dialog {
-    width: 320px;
+    width: 370px;
     margin: auto;
   }
 

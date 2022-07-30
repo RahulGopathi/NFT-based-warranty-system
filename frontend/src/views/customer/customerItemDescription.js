@@ -12,12 +12,25 @@ import Otpinput from '../../components/otpInput';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import useCustomerAxios from '../../utils/useCustomerAxios';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from '@mui/material';
+import { WalletContext } from '../../contexts/WalletContext';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../../config';
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from 'firebase/auth';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 const Img = styled('img')({
   margin: 'auto',
@@ -57,16 +70,33 @@ const StyledTextField = styled(TextField)({
 
 export default function ComplexGrid() {
   let { id } = useParams();
+  const api = useCustomerAxios();
+  const { customer } = React.useContext(WalletContext);
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
-  const api = useCustomerAxios();
+  const [inputPhoneNumber, setInputPhoneNumber] = useState('');
+  const [inputOTP, setInputOTP] = useState('');
+  const [dialogStatusText, setDialogStatusText] = useState('');
   const [open, setOpen] = React.useState(false);
   const [openLink, setOpenLink] = React.useState(false);
   const [openOtp, setOpenOtp] = React.useState(false);
   const [label, setLabel] = React.useState('');
 
+  const getInputData = (input) => {
+    const otp =
+      input.input1 +
+      input.input2 +
+      input.input3 +
+      input.input4 +
+      input.input5 +
+      input.input6;
+    setInputOTP(otp);
+    console.log(otp);
+  };
+
   const handleChange = (event) => {
     setLabel(event.target.value);
+    setInputPhoneNumber(event.target.value);
   };
 
   const handleClickOpen = () => {
@@ -78,17 +108,50 @@ export default function ComplexGrid() {
   };
 
   const handleClickOpenOtp = () => {
-    setOpen(false);
-    setOpenOtp(true);
+    if (!inputPhoneNumber === '') {
+      const phoneNumber = '+91' + inputPhoneNumber;
+      const appVerifier = window.recaptchaVerifier;
+
+      console.log('sending OTP to ' + phoneNumber);
+      setDialogStatusText('Sending OTP to ' + phoneNumber);
+
+      signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+          // SMS sent. Prompt user to type the code from the message, then sign the
+          // user in with confirmationResult.confirm(code).
+          window.confirmationResult = confirmationResult;
+          setDialogStatusText('');
+          setOpen(false);
+          setOpenOtp(true);
+        })
+        .catch((error) => {
+          setOpen(false);
+          setOpenOtp(true);
+          setDialogStatusText('An error occurred while sending OTP');
+          console.log(error);
+        });
+    }
   };
 
   const handleCloseOtp = () => {
     setOpenOtp(false);
   };
 
-  const handleClickOpenLink = () => {
-    setOpenOtp(false);
-    setOpenLink(true);
+  const handleClickOpenLink = async () => {
+    if (!inputOTP === '') {
+      const code = inputOTP;
+      window.confirmationResult
+        .confirm(code)
+        .then((result) => {
+          setOpenOtp(false);
+          setOpenLink(true);
+        })
+        .catch((error) => {
+          setDialogStatusText('The OTP entered is incorrect, please try again');
+          setOpenOtp(false);
+          setOpenLink(true);
+        });
+    }
   };
 
   const handleCloseLink = () => {
@@ -97,6 +160,17 @@ export default function ComplexGrid() {
 
   useEffect(() => {
     fetchItem();
+
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      'recaptcha-container',
+      {
+        size: 'invisible',
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        },
+      },
+      auth
+    );
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchItem = async () => {
@@ -113,6 +187,7 @@ export default function ComplexGrid() {
 
   return (
     <div>
+      <div id="recaptcha-container"></div>
       {item.product ? (
         <div>
           <Box
@@ -220,6 +295,7 @@ export default function ComplexGrid() {
                 open={open}
                 onClose={handleClose}
                 className="dialog"
+                disableBackdropClick={true}
                 PaperProps={{
                   style: {
                     backgroundColor: '#0a1929',
@@ -231,7 +307,7 @@ export default function ComplexGrid() {
                 }}
               >
                 <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  Transfer
+                  Enter the Details
                 </DialogTitle>
                 <DialogContent sx={{ pb: 0 }}>
                   <DialogContentText sx={{ color: '#A4A9AF' }}>
@@ -243,12 +319,12 @@ export default function ComplexGrid() {
                       fullWidth
                       type="tel"
                       size="small"
+                      value={inputPhoneNumber}
                       onChange={handleChange}
                       label={label === '' ? ' ' : ' '}
                       InputLabelProps={{ shrink: false }}
                       textColor="#A4A9AF"
                       variant="outlined"
-                      defaultValue="9030406785"
                       sx={{ color: 'white', mt: 2 }}
                     />
                   </div>
@@ -258,7 +334,7 @@ export default function ComplexGrid() {
                     Cancel
                   </Button>
                   <Button onClick={handleClickOpenOtp} className="right-btn">
-                    Transfer
+                    Get OTP
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -280,17 +356,39 @@ export default function ComplexGrid() {
                 }}
               >
                 <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  Enter OTP
+                  {dialogStatusText ? '' : 'Enter OTP'}
                 </DialogTitle>
                 <DialogContent sx={{ pb: 0 }}>
                   <DialogContentText sx={{ color: '#A4A9AF' }}>
-                    Enter the OTP sent to your Mobile Number
+                    {dialogStatusText ? (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Typography sx={{ fontSize: '1.2rem' }}>
+                          {dialogStatusText}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <div>
+                        Enter the OTP sent to your Mobile Number ending with{' '}
+                        <b>XXXXXX{String(customer.phno).slice(-4)}.</b>
+                      </div>
+                    )}
                   </DialogContentText>
-                  <Otpinput />
+                  {!dialogStatusText && (
+                    <Otpinput getInputData={getInputData} />
+                  )}
                 </DialogContent>
                 <DialogActions>
                   {/* <Button onClick={handleCloseOtp}>Resend OTP</Button> */}
-                  <Button onClick={handleClickOpenLink}>Continue</Button>
+                  {dialogStatusText ? (
+                    <Button onClick={handleCloseOtp}>Cancel</Button>
+                  ) : (
+                    <Button onClick={handleClickOpenLink}>Transfer</Button>
+                  )}
                 </DialogActions>
               </Dialog>
 
@@ -311,31 +409,50 @@ export default function ComplexGrid() {
                 }}
               >
                 <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  Transfer Link
+                  {dialogStatusText ? '' : 'Transfer Link'}
                 </DialogTitle>
                 <DialogContent sx={{ pb: 0 }}>
                   <DialogContentText sx={{ color: '#61c97d' }}>
-                    The following Transfer link has been sent to the Mobile
-                    number you just entered!
+                    {dialogStatusText ? (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Typography sx={{ fontSize: '1.2rem' }}>
+                          {dialogStatusText}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <div>
+                        The following Transfer link has been sent to the Mobile
+                        number you just entered!
+                      </div>
+                    )}
                   </DialogContentText>
-                  <div>
-                    <StyledTextField
-                      fullWidth
-                      size="small"
-                      onChange={handleChange}
-                      label={label === '' ? ' ' : ' '}
-                      InputLabelProps={{ shrink: false }}
-                      textColor="#A4A9AF"
-                      variant="outlined"
-                      InputProps={{ readOnly: true }}
-                      defaultValue="link"
-                      sx={{ color: 'white', mt: 2 }}
-                    />
-                  </div>
+                  {!dialogStatusText && (
+                    <div>
+                      <StyledTextField
+                        fullWidth
+                        size="small"
+                        onChange={handleChange}
+                        label={label === '' ? ' ' : ' '}
+                        InputLabelProps={{ shrink: false }}
+                        textColor="#A4A9AF"
+                        variant="outlined"
+                        InputProps={{ readOnly: true }}
+                        defaultValue="link"
+                        sx={{ color: 'white', mt: 2 }}
+                      />
+                    </div>
+                  )}
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleCloseLink}>Close</Button>
-                  <Button onClick={handleCloseLink}>Copy!</Button>
+                  {!dialogStatusText && (
+                    <Button onClick={handleCloseLink}>Copy!</Button>
+                  )}
                 </DialogActions>
               </Dialog>
             </Box>
