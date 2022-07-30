@@ -19,6 +19,7 @@ class Product(models.Model):
     image = models.FileField(upload_to='products/')  # this would be the image or data that we tokenize
     product_data = models.CharField(max_length=500)  # optional data we want to store like product description etc
     retailer = models.ForeignKey('users.Retailer', on_delete=models.CASCADE)
+    warranty_period = models.IntegerField(help_text="Enter the value in months")
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default=HOME)
@@ -38,9 +39,9 @@ class Item(models.Model):
     serial_no = models.CharField(max_length=100)
     warranty_start_date = models.DateField(null=True, blank=True)
     warranty_end_date = models.DateField(null=True, blank=True)
-    warranty_period = models.IntegerField(help_text="Enter the value in months")
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    is_issued = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.serial_no}"
