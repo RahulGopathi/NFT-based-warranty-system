@@ -1,98 +1,131 @@
-import React from 'react';
+import { useState } from 'react';
 import '../components/otpInput.css';
 
-class Otpinput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: '',
-      otp1: '',
-      otp2: '',
-      otp3: '',
-      otp4: '',
-      disable: true,
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+export default function Otpinput({ getInputData }) {
+  const [otpInput, setOtpInput] = useState({
+    input1: '',
+    input2: '',
+    input3: '',
+    input4: '',
+    input5: '',
+    input6: '',
+  });
 
-  handleChange(value1, event) {
-    this.setState({ [value1]: event.target.value });
-  }
-
-  handleSubmit(event) {
-    // const data = new FormData(event.target);
-    console.log(this.state);
+  const handleSubmit = (event) => {
+    const data = new FormData(event.target);
+    console.log(data);
     event.preventDefault();
-  }
+  };
 
-  inputfocus = (elmnt) => {
-    if (elmnt.key === 'Delete' || elmnt.key === 'Backspace') {
-      const next = elmnt.target.tabIndex - 2;
+  const inputfocus = (element) => {
+    if (element.key === 'Delete' || element.key === 'Backspace') {
+      const next = element.target.tabIndex - 2;
       if (next > -1) {
-        elmnt.target.form.elements[next].focus();
+        element.target.form.elements[next].focus();
       }
     } else {
-      const next = elmnt.target.tabIndex;
-      if (next < 4) {
-        elmnt.target.form.elements[next].focus();
+      const next = element.target.tabIndex;
+      if (next < 6) {
+        element.target.form.elements[next].focus();
       }
     }
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <div className="otpContainer">
-          <input
-            name="otp1"
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp1}
-            onKeyPress={this.keyPressed}
-            onChange={(e) => this.handleChange('otp1', e)}
-            tabIndex="1"
-            maxLength="1"
-            onKeyUp={(e) => this.inputfocus(e)}
-          />
-          <input
-            name="otp2"
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp2}
-            onChange={(e) => this.handleChange('otp2', e)}
-            tabIndex="2"
-            maxLength="1"
-            onKeyUp={(e) => this.inputfocus(e)}
-          />
-          <input
-            name="otp3"
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp3}
-            onChange={(e) => this.handleChange('otp3', e)}
-            tabIndex="3"
-            maxLength="1"
-            onKeyUp={(e) => this.inputfocus(e)}
-          />
-          <input
-            name="otp4"
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp4}
-            onChange={(e) => this.handleChange('otp4', e)}
-            tabIndex="4"
-            maxLength="1"
-            onKeyUp={(e) => this.inputfocus(e)}
-          />
-        </div>
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="otpContainer">
+        <input
+          name="otp1"
+          type="text"
+          autoComplete="off"
+          className="otpInput"
+          value={otpInput.input1}
+          onChange={(e) => {
+            setOtpInput({ ...otpInput, input1: e.target.value });
+          }}
+          tabIndex="1"
+          maxLength="1"
+          onKeyUp={(e) => {
+            inputfocus(e);
+          }}
+        />
+        <input
+          name="otp2"
+          type="text"
+          autoComplete="off"
+          className="otpInput"
+          value={otpInput.input2}
+          onChange={(e) => {
+            setOtpInput({ ...otpInput, input2: e.target.value });
+          }}
+          tabIndex="2"
+          maxLength="1"
+          onKeyUp={(e) => {
+            inputfocus(e);
+          }}
+        />
+        <input
+          name="otp3"
+          type="text"
+          autoComplete="off"
+          className="otpInput"
+          value={otpInput.input3}
+          onChange={(e) => {
+            setOtpInput({ ...otpInput, input3: e.target.value });
+          }}
+          tabIndex="3"
+          maxLength="1"
+          onKeyUp={(e) => {
+            inputfocus(e);
+          }}
+        />
+        <input
+          name="otp4"
+          type="text"
+          autoComplete="off"
+          className="otpInput"
+          value={otpInput.input4}
+          onChange={(e) => {
+            setOtpInput({ ...otpInput, input4: e.target.value });
+          }}
+          tabIndex="4"
+          maxLength="1"
+          onKeyUp={(e) => {
+            inputfocus(e);
+          }}
+        />
+        <input
+          name="otp5"
+          type="text"
+          autoComplete="off"
+          className="otpInput"
+          value={otpInput.input5}
+          onChange={(e) => {
+            setOtpInput({ ...otpInput, input5: e.target.value });
+          }}
+          tabIndex="5"
+          maxLength="1"
+          onKeyUp={(e) => {
+            inputfocus(e);
+          }}
+        />
+        <input
+          name="otp6"
+          type="text"
+          autoComplete="off"
+          className="otpInput"
+          value={otpInput.input6}
+          onChange={(e) => {
+            setOtpInput({ ...otpInput, input6: e.target.value });
+          }}
+          tabIndex="6"
+          maxLength="1"
+          onKeyUp={(e) => {
+            inputfocus(e);
+            getInputData(otpInput);
+          }}
+        />
+      </div>
+    </form>
+  );
 }
-
-export default Otpinput;

@@ -75,6 +75,24 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async (first_name, last_name, email, id) => {
+    const response = await fetch(baseURL + '/update/' + id + '/', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        first_name,
+        last_name,
+        email,
+      }),
+    });
+    if (response.status === 200) {
+      toast.success('Profile updated successfully.');
+      navigate('/retailer/profile');
+    }
+  };
+
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
@@ -89,6 +107,7 @@ const AuthProvider = ({ children }) => {
     setAuthTokens,
     registerUser,
     loginUser,
+    updateUser,
     logoutUser,
   };
 

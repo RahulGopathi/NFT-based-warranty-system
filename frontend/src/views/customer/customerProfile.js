@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
@@ -37,31 +37,11 @@ const StyledTextField = styled(TextField)({
 });
 
 export default function CustomerProfile() {
-  const [label, setLabel] = useState('');
-  const [customerProfileData, setCustomerProfileData] = useState({
-    name: '',
-    phno: '',
-    wallet_address: '',
-  });
-  const { customer } = useContext(WalletContext);
-
-  const handleChange = (event) => {
-    setLabel(event.target.value);
-  };
-
-  const handleCustomerProfileData = (event) => {
-    if (customer) {
-      setCustomerProfileData({
-        name: customer.name,
-        phno: customer.phno,
-        wallet_address: customer.wallet_address,
-      });
-    }
-  };
-
-  useEffect(() => {
-    handleCustomerProfileData();
-  });
+  const [label, setLabel] = useState(''); // eslint-disable-line
+  const { customer, updateOwner } = useContext(WalletContext);
+  const [ownerName, setOwnerName] = useState(customer.name);
+  const [ownerPhone, setOwnerPhone] = useState(customer.phno);
+  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
   return (
     <div>
@@ -74,7 +54,7 @@ export default function CustomerProfile() {
         >
           <Typography className="product_name">Profile</Typography>
         </Box>
-        {customerProfileData.name === '' ? (
+        {ownerName === '' ? (
           <Box
             sx={{ display: 'flex', justifyContent: 'center', height: '30vh' }}
           >
@@ -112,8 +92,11 @@ export default function CustomerProfile() {
                     <StyledTextField
                       fullWidth
                       size="small"
-                      value={customerProfileData.name}
-                      onChange={handleChange}
+                      value={ownerName}
+                      onChange={(e) => {
+                        setOwnerName(e.target.value);
+                        setIsProfileUpdated(true);
+                      }}
                       label={label === '' ? ' ' : ' '}
                       InputLabelProps={{ shrink: false }}
                       textColor="#A4A9AF"
@@ -136,8 +119,11 @@ export default function CustomerProfile() {
                       fullWidth
                       type="tel"
                       size="small"
-                      value={customerProfileData.phno}
-                      onChange={handleChange}
+                      value={ownerPhone}
+                      onChange={(e) => {
+                        setOwnerPhone(e.target.value);
+                        setIsProfileUpdated(true);
+                      }}
                       label={label === '' ? ' ' : ' '}
                       InputLabelProps={{ shrink: false }}
                       textColor="#A4A9AF"
@@ -160,8 +146,7 @@ export default function CustomerProfile() {
                     <StyledTextField
                       fullWidth
                       size="small"
-                      value={customerProfileData.wallet_address}
-                      onChange={handleChange}
+                      value={customer.wallet_address}
                       label={label === '' ? ' ' : ' '}
                       InputLabelProps={{ shrink: false }}
                       textColor="#A4A9AF"
@@ -182,9 +167,12 @@ export default function CustomerProfile() {
               }}
             >
               <Button
-                className="btns"
-                buttonStyle="btn--primary"
-                buttonSize="btn--large"
+                buttonStyle={
+                  isProfileUpdated ? 'btn--primary' : 'btn--disabled'
+                }
+                onClick={() => {
+                  updateOwner(ownerName, ownerPhone, customer.id);
+                }}
               >
                 Update Profile
               </Button>

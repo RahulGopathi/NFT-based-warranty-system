@@ -38,12 +38,12 @@ const StyledTextField = styled(TextField)({
 });
 
 export default function RetailerProfile() {
-  const [label, setLabel] = React.useState('');
-  const { user } = useContext(AuthContext);
-
-  const handleChange = (event) => {
-    setLabel(event.target.value);
-  };
+  const { user, updateUser } = useContext(AuthContext);
+  const [label, setLabel] = React.useState(''); // eslint-disable-line
+  const [firstName, setFirstName] = React.useState(user.first_name);
+  const [lastName, setLastName] = React.useState(user.last_name);
+  const [email, setEmail] = React.useState(user.email);
+  const [isProfileUpdated, setIsProfileUpdated] = React.useState(false);
 
   console.log(user);
 
@@ -84,7 +84,11 @@ export default function RetailerProfile() {
                   <StyledTextField
                     fullWidth
                     size="small"
-                    onChange={handleChange}
+                    value={firstName}
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
+                      setIsProfileUpdated(true);
+                    }}
                     label={label === '' ? ' ' : ' '}
                     InputLabelProps={{ shrink: false }}
                     textColor="#A4A9AF"
@@ -107,7 +111,10 @@ export default function RetailerProfile() {
                   <StyledTextField
                     fullWidth
                     size="small"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setLastName(e.target.value);
+                      setIsProfileUpdated(true);
+                    }}
                     label={label === '' ? ' ' : ' '}
                     InputLabelProps={{ shrink: false }}
                     textColor="#A4A9AF"
@@ -130,7 +137,10 @@ export default function RetailerProfile() {
                   <StyledTextField
                     fullWidth
                     size="small"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setIsProfileUpdated(true);
+                    }}
                     label={label === '' ? ' ' : ' '}
                     InputLabelProps={{ shrink: false }}
                     textColor="#A4A9AF"
@@ -150,9 +160,10 @@ export default function RetailerProfile() {
             }}
           >
             <Button
-              className="btns"
-              buttonStyle="btn--primary"
-              buttonSize="btn--large"
+              buttonStyle={isProfileUpdated ? 'btn--primary' : 'btn--disabled'}
+              onClick={() => {
+                updateUser(firstName, lastName, email, user.user_id);
+              }}
             >
               Update Profile
             </Button>
