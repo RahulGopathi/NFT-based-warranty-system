@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Item
+from .models import Order, Product, Item
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -35,7 +35,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('id', 'serial_no', 'warranty_end_date', 'product', 'warranty_image', 'created_at', 'updated_at', 'owner')
+        fields = ('id', 'serial_no', 'warranty_end_date', 'product', 'warranty_image', 'created_at', 'updated_at', 'owner', 'is_issued')
         read_only_fields = ('created_at', 'updated_at')
 
     def get_product(self, obj):
@@ -47,3 +47,15 @@ class UpdateItemSerializer(serializers.ModelSerializer):
         model = Item
         fields = '__all__'
         read_only_fields = ('created_at', 'updated_at')
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"
+    
+    def validate(self, attrs):
+        super().validate(attrs)
+        item = attrs.get('item')
+        item.is_issued = True
+        item.save()
+        return attrs

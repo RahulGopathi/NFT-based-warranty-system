@@ -12,6 +12,8 @@ from .utils import serialize_image
 from django.core.files import File
 from django.conf import settings
 import os
+from products.models import Order
+from products.serializers import OrderSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -27,7 +29,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-    filterset_fields = ('product', 'warranty_end_date', 'warranty_period', )
+    filterset_fields = ('product', 'warranty_end_date', 'is_issued')
     search_fields = ('serial_no', 'owner__name')
 
     def get_queryset(self):
@@ -70,3 +72,11 @@ class ItemViewSet(viewsets.ModelViewSet):
         item.owner = owner
         item.save()
         return Response(ItemSerializer(item).data, status=201)
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filterset_fields = ('is_delivered',)
+
+

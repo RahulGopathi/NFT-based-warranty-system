@@ -25,6 +25,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import toast from 'react-hot-toast';
+
 
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
@@ -101,6 +103,10 @@ export default function RetailerProduct() {
   const [issuedItems, setIssuedItems] = React.useState([]);
   const [UnissuedItems, setUnissuedItems] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [owner_phone, setOwnerPhone] = React.useState('');
+  const [owner_name, setOwnerName] = React.useState('');
+  const [item, setItem] = React.useState('');
+
   const params = useParams();
   const api = useAxios();
 
@@ -108,8 +114,8 @@ export default function RetailerProduct() {
     const value = e.target.value;
 
     const items = product.items;
-    const issued_items = items.filter((item) => item.owner !== null);
-    const unissued_items = items.filter((item) => item.owner === null);
+    const issued_items = items.filter((item) => item.is_issued === true);
+    const unissued_items = items.filter((item) => item.is_issued === false);
     const search_issued_items = issued_items.filter((item) =>
       item.serial_no.toLowerCase().includes(value.toLowerCase())
     );
@@ -127,10 +133,10 @@ export default function RetailerProduct() {
     const { data } = await api.get(`/products/${params.id}`);
     setProduct(data);
     // filter for issued items
-    const issuedItems = data.items.filter((item) => item.owner !== null);
+    const issuedItems = data.items.filter((item) => item.is_issued === true);
     setIssuedItems(issuedItems);
     // filter for unissued items
-    const unissuedItems = data.items.filter((item) => item.owner === null);
+    const unissuedItems = data.items.filter((item) => item.is_issued === false);
     setUnissuedItems(unissuedItems);
   };
 
@@ -179,7 +185,7 @@ export default function RetailerProduct() {
                   <Typography>{item.serial_no}</Typography>
                 </Box>
                 <Box sx={{ width: '20%' }}>
-                  <Typography>{item.warranty_period}</Typography>
+                  <Typography>{product.warranty_period}</Typography>
                 </Box>
                 <Box
                   sx={{ width: '40%', alignItems: 'center', display: 'flex' }}
@@ -189,7 +195,10 @@ export default function RetailerProduct() {
                       className="nav-button"
                       variant="outlined"
                       color="success"
-                      onClick={handleOpen}
+                      onClick={() => {
+                        setItem(item.id);
+                        setOpen(true);
+                      }}
                     >
                       <Typography
                         component="span"
@@ -253,7 +262,7 @@ export default function RetailerProduct() {
                   <Typography>{item.serial_no}</Typography>
                 </Box>
                 <Box sx={{ width: '20%' }}>
-                  <Typography>{item.warranty_period}</Typography>
+                  <Typography>{product.warranty_period}</Typography>
                 </Box>
                 <Box sx={{ width: '20%' }}>
                   <Typography>{item.owner}</Typography>
@@ -270,7 +279,7 @@ export default function RetailerProduct() {
                         level="body1"
                         className="nav-button-text"
                       >
-                        View Warranty Card
+                        {item.is_issued ? 'Issued' : 'Unissued'}
                       </Typography>
                     </Button>
                   </Box>
@@ -287,17 +296,27 @@ export default function RetailerProduct() {
     setOpen(false);
   }
 
-  const handleOpen = () => {
-    setOpen(true);
-  }
 
+  const handleIssueUser = async () => {
+    console.log("ITEM",item);
+    const payload = {
+      "phno": owner_phone,
+      "name": owner_name,
+      "item": item,
+    };
+    toast.promise(
+      api.post('/orders/', payload),
+        {
+          loading: 'Issuing...',
+          success: (data) => { setOpen(false); fetchData(); return 'Issued Successfully!'; },
+          error: (err) => <b>{err}</b>,
+        }
+      );
+  }
 
 
   useEffect(() => {
     fetchData();
-    console.log(product);
-    console.log(issuedItems);
-    console.log(UnissuedItems);
   }, []); // eslint-disable-line
   return (
     <StyledDiv>
@@ -316,6 +335,8 @@ export default function RetailerProduct() {
                           type="number"
                           fullWidth
                           variant="standard"
+                          value={owner_phone}
+                          onChange={(e) => setOwnerPhone(e.target.value)}
                         />
                         <TextField
                           autoFocus
@@ -325,11 +346,13 @@ export default function RetailerProduct() {
                           type="text"
                           fullWidth
                           variant="standard"
+                          value={owner_name}
+                          onChange={(e) => setOwnerName(e.target.value)}
                         />
                       </DialogContent>
                       <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={handleClose}>Issue</Button>
+                        <Button  onClick={handleIssueUser}>Issue</Button>
                       </DialogActions>
       </Dialog>
         <Box
@@ -382,7 +405,7 @@ export default function RetailerProduct() {
                     {product.product_data}
                   </Typography>
                 </Grid>
-                <Grid item></Grid>
+                
               </Grid>
             </Grid>
           </Grid>
@@ -501,7 +524,7 @@ export default function RetailerProduct() {
                     <Typography>Owner</Typography>
                   </Box>
                   <Box sx={{ width: '20%' }}>
-                    <Typography>Action</Typography>
+                    <Typography>Status</Typography>
                   </Box>
                 </Box>
               </Grid>
