@@ -16,7 +16,7 @@ const WalletProvider = ({ children }) => {
       : ''
   );
 
-  const ownerLogin = async () => {
+  const ownerLogin = async (redirectTo) => {
     if (localStorage.getItem('userWalletAddress')) {
       try {
         const response = await fetch(baseURL + '/owner/login/', {
@@ -31,7 +31,7 @@ const WalletProvider = ({ children }) => {
         const data = await response.json();
         if (response.status === 200) {
           setCustomer(data);
-          navigate('customer/dashboard');
+          navigate(redirectTo);
         } else {
           navigate('/customer/register');
         }

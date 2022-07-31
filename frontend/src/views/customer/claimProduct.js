@@ -80,7 +80,6 @@ export default function CustomerClaim() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchItems = async () => {
-    console.log(customer.phno);
     try {
       const response = await api.get('/orders/?phno=' + customer.phno);
       console.log(response.data);

@@ -75,6 +75,25 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const confirmPassword = async (email, password) => {
+    const response = await fetch(baseURL + '/login/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+    const data = await response.json();
+    setAuthTokens(data);
+    setUser(jwt_decode(data.access));
+    localStorage.setItem('authTokens', JSON.stringify(data));
+    toast.success('Profile updated successfully.');
+    navigate('/retailer/profile');
+  };
+
   const updateUser = async (first_name, last_name, email, id) => {
     const response = await fetch(baseURL + '/update/' + id + '/', {
       method: 'PUT',
@@ -88,8 +107,7 @@ const AuthProvider = ({ children }) => {
       }),
     });
     if (response.status === 200) {
-      toast.success('Profile updated successfully.');
-      navigate('/retailer/profile');
+      navigate('/retailer/confirmPassword', { state: { email } });
     }
   };
 
@@ -107,6 +125,7 @@ const AuthProvider = ({ children }) => {
     setAuthTokens,
     registerUser,
     loginUser,
+    confirmPassword,
     updateUser,
     logoutUser,
   };

@@ -21,7 +21,7 @@ export default function CustomerDashboard() {
   const api = useCustomerAxios();
 
   const redirectItem = (id) => {
-    navigate('/item/' + id);
+    navigate('/customer/item/' + id);
   };
 
   useEffect(() => {
@@ -136,7 +136,7 @@ export default function CustomerDashboard() {
                     }}
                   >
                     <Link
-                      to={'/item/' + item.id + '?setOpen=true'}
+                      to={'/customer/item/' + item.id + '?setOpen=true'}
                       style={{
                         display: 'flex',
                         justifyContent: 'center',

@@ -9,6 +9,7 @@ import CustomerDashboard from './views/customer/customerDashboard';
 import RetailerLogin from './views/retailer/retailerLogin';
 import RetailerDashboard from './views/retailer/retailerDashboard';
 import RetailerSignup from './views/retailer/retailerSignup';
+import RetailerConfirmPassword from './views/retailer/retailerConfirmPassword';
 import CustomerSignup from './views/customer/customerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
@@ -72,14 +73,14 @@ function App() {
                 element={
                   <div>
                     <CustomerProtectedRoute>
-                      <Navbar />
+                      <Navbar showNavbarButton={false} />
                       <CustomerClaim />
                     </CustomerProtectedRoute>
                   </div>
                 }
               />
               <Route
-                path="/item/:id"
+                path="/customer/item/:id"
                 element={
                   <div>
                     <CustomerProtectedRoute>
@@ -135,6 +136,14 @@ function App() {
                   <div>
                     <Navbar />
                     <RetailerSignup />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/confirmPassword"
+                element={
+                  <div>
+                    <RetailerConfirmPassword />
                   </div>
                 }
               />
