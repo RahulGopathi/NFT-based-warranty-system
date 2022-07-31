@@ -1,7 +1,7 @@
-export const BASE_URL = 'http://127.0.0.1:8000';
-export const API_BASE_URL = 'http://127.0.0.1:8000/api';
-export const API_AUTH_BASE_URL = 'http://127.0.0.1:8000/auth';
-export const FRONTEND_BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'https://pydo.rahulgopathi.tech';
+export const API_BASE_URL = 'https://pydo.rahulgopathi.tech/api';
+export const API_AUTH_BASE_URL = 'https://pydo.rahulgopathi.tech/auth';
+export const FRONTEND_BASE_URL = 'https://nft-based-warranty-system.vercel.app';
 export const smartContractAddress =
   '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
