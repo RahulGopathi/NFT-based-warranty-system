@@ -62,39 +62,27 @@ export default function ClaimItemDescription() {
   let { order_id } = useParams();
   const [captchaRendered, setCaptchaRendered] = useState(false);
   const [item, setItem] = useState([]);
-  const [tokenId, setTokenId] = useState();
   const [itemStatus, setItemStatus] = useState('Loading...');
   const [inputOTP, setInputOTP] = useState('');
   const [dialogStatusText, setDialogStatusText] = useState('');
-  const [warrantyMinted, setWarrantyMinted] = useState(false);
   const [open, setOpen] = React.useState(false);
   let query = useQuery();
 
-  const getMintedStatus = async (metadataURI) => {
-    const result = await contract.isContentOwned(metadataURI);
-    setWarrantyMinted(result);
-    console.log(result);
-  };
-
-  const trasferWarranty = async (from_address, to_address) => {
+  const trasferWarranty = async (from_address, to_address, tokenid) => {
     const connection = contract.connect(signer);
     const addr = connection.address;
     console.log('from_address', from_address);
     console.log('to_address', to_address);
     console.log('addr', addr);
-    console.log('tokenId', item.item_data.nft_id);
+    console.log('tokenId', tokenid);
 
     try {
-      const result = await contract.transferNFT(
-        addr,
-        to_address,
-        item.item_data.nft_id
-      );
+      const result = await contract.transferNFT(addr, to_address, tokenid);
       const receipt = await result.wait();
       console.log(receipt);
       setDialogStatusText('Warranty transferred successfully');
       setOpen(true);
-      completeOrder(tokenId);
+      completeOrder();
     } catch (err) {
       console.log(err);
       setDialogStatusText('Warranty transfer failed');
@@ -111,22 +99,24 @@ export default function ClaimItemDescription() {
     console.log('metadataURI', metadataURI);
 
     try {
-      const result = await contract.payToMint(localStorage.getItem('userWalletAddress'), metadataURI);
+      const result = await contract.payToMint(
+        localStorage.getItem('userWalletAddress'),
+        metadataURI
+      );
       const receipt = await result.wait();
       console.log('receipt', receipt);
       setDialogStatusText('Warranty minted successfully');
-      setTokenId(Number(receipt.logs[0].topics[3]));
-      try {
-        const result1 = await contract.approveTransfer(addr, receipt.logs[0].topics[3]);
-        const receipt1 = await result.wait();
-        console.log('receipt', receipt);
-      }
-      catch (err) {
-        console.log('err', err.message);
-        setDialogStatusText('Error minting warranty! please try again');
-        setOpen(true);
-      }
-      setOpen(true);
+      const tokenid = Number(receipt.logs[0].topics[3]);
+      console.log('tokenid', tokenid);
+      localStorage.setItem('tokenId', tokenid);
+
+      const result1 = await contract.approveTransfer(
+        addr,
+        receipt.logs[0].topics[3]
+      );
+      const receipt1 = await result1.wait();
+      setDialogStatusText('got approved successfully');
+      console.log('receipt', receipt1);
     } catch (err) {
       console.log('err', err.message);
       setDialogStatusText('Error minting warranty! please try again');
@@ -189,14 +179,14 @@ export default function ClaimItemDescription() {
         'Content-Type': 'application/json',
       },
       params: {
+        nft_id: localStorage.getItem('tokenId'),
         order_id: order_id,
         to_address: localStorage.getItem('userWalletAddress'),
-        nft_id: tokenId,
       },
     });
     const data = await response.data;
     if (response.status === 200) {
-      setDialogStatusText('Minting Warranty...');
+      setDialogStatusText('Order completed successfully');
     } else {
       setDialogStatusText(data[Object.keys(data)[0]]);
     }
@@ -208,11 +198,11 @@ export default function ClaimItemDescription() {
         .confirm(code)
         .then((result) => {
           setDialogStatusText('Loading...');
-          if (item.from_address && item.from_address !== item.to_address) {
+          if (item.from_address) {
             trasferWarranty(
               item.from_address,
               localStorage.getItem('userWalletAddress'),
-              item.item_data.metadata_uri
+              item.item_data.nft_id
             );
           } else {
             mintWarranty(item.item_data.metadata_uri);

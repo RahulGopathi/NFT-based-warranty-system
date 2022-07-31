@@ -508,7 +508,7 @@ export default function RetailerProduct() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCreateItemClose}>Cancel</Button>
-          <Button onClick={handleCreateItem}>Issue</Button>
+          <Button onClick={handleCreateItem}>Create</Button>
         </DialogActions>
       </Dialog>
       <Box

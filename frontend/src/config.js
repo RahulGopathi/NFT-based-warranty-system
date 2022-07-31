@@ -1,9 +1,9 @@
-export const BASE_URL = 'https://pydo.rahulgopathi.tech';
-export const API_BASE_URL = 'https://pydo.rahulgopathi.tech/api';
-export const API_AUTH_BASE_URL = 'https://pydo.rahulgopathi.tech/auth';
+export const BASE_URL = 'http://127.0.0.1:8000';
+export const API_BASE_URL = 'http://127.0.0.1:8000/api';
+export const API_AUTH_BASE_URL = 'http://127.0.0.1:8000/auth';
 export const FRONTEND_BASE_URL = 'http://localhost:3000';
 export const smartContractAddress =
-  '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyAVaSv8qyJL0bazGI9Nxx2wFovNNhhI7JE',

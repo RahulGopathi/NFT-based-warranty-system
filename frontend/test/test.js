@@ -3,7 +3,6 @@ const { ethers } = require('hardhat');
 
 describe('MyNFT', function () {
   it('Should mint and transfer an NFT to someone', async function () {
-
     const [owner1, owner2] = await ethers.getSigners();
 
     const PyDO = await ethers.getContractFactory('pydo');
@@ -28,11 +27,14 @@ describe('MyNFT', function () {
     balance = await pydo.balanceOf(owner1.address);
     expect(balance).to.equal(1);
 
-    console.log("minted the token");
+    console.log('minted the token');
 
-    const sellToken = await pydo.approveTransfer(owner2.address, newlyMintedToken.transactionIndex);
+    await pydo.approveTransfer(
+      owner2.address,
+      newlyMintedToken.transactionIndex
+    );
 
-    console.log("approved the transfer");
+    console.log('approved the transfer');
 
     // balance = await pydo.balanceOf(smartContractAddress);
     // expect(balance).to.equal(1);
@@ -43,12 +45,13 @@ describe('MyNFT', function () {
 
     console.log('transferring the token');
 
-
-    await pydo.connect(owner2).transferNFT(
-      owner1.address,
-      owner2.address,
-      newlyMintedToken.transactionIndex
-    );
+    await pydo
+      .connect(owner2)
+      .transferNFT(
+        owner1.address,
+        owner2.address,
+        newlyMintedToken.transactionIndex
+      );
 
     balance = await pydo.balanceOf(owner1.address);
     expect(balance).to.equal(0);
