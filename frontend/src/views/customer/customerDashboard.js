@@ -135,7 +135,7 @@ export default function CustomerDashboard() {
                       bgcolor: 'background.level1',
                     }}
                   >
-                    {item.order_id? (
+                    {item.order_id ? (
                       <Link
                         to={'/customer/item/' + item.id}
                         style={{
@@ -151,7 +151,11 @@ export default function CustomerDashboard() {
                             variant="solid"
                             size="sm"
                             color="primary"
-                            sx={{ ml: 'auto', fontWeight: 600, fontSize: '1.2rem' }}
+                            sx={{
+                              ml: 'auto',
+                              fontWeight: 600,
+                              fontSize: '1.2rem',
+                            }}
                           >
                             Issued!
                           </Button>
@@ -173,7 +177,11 @@ export default function CustomerDashboard() {
                             variant="solid"
                             size="sm"
                             color="primary"
-                            sx={{ ml: 'auto', fontWeight: 600, fontSize: '1.2rem' }}
+                            sx={{
+                              ml: 'auto',
+                              fontWeight: 600,
+                              fontSize: '1.2rem',
+                            }}
                           >
                             Transfer
                           </Button>

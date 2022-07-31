@@ -8,6 +8,7 @@
 
 .dialog {
   width: 700px;
+  min-width: 350px;
   margin: auto;
   overflow-x: hidden !important;
 }

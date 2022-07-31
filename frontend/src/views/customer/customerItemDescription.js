@@ -229,7 +229,9 @@ export default function CustomerItemDescription() {
   const fetchNumber = async (order_id) => {
     try {
       console.log(order_id);
-      const number_response = await api.get('/orders/get_order/?order_id=' + order_id);
+      const number_response = await api.get(
+        '/orders/get_order/?order_id=' + order_id
+      );
       console.log(number_response.data.phno);
       if (number_response.status === 200) {
         setNumber(number_response.data.phno);
@@ -245,7 +247,7 @@ export default function CustomerItemDescription() {
       console.log(response.data);
       if (response.status === 200) {
         setItem(response.data);
-        if(response.data.order_id){
+        if (response.data.order_id) {
           fetchNumber(response.data.order_id);
         }
       }
@@ -354,7 +356,11 @@ export default function CustomerItemDescription() {
                     alignItems: 'center',
                   }}
                 >
-                  You have already issued this item to the Mobile Number <span style={{ marginLeft: '5px', color: '#d9d9d9' }}>{inputPhoneNumber || number}</span>.
+                  You have already issued this item to the Mobile Number{' '}
+                  <span style={{ marginLeft: '5px', color: '#d9d9d9' }}>
+                    {inputPhoneNumber || number}
+                  </span>
+                  .
                 </Typography>
                 <Typography
                   variant="h6"
@@ -401,179 +407,179 @@ export default function CustomerItemDescription() {
               </Box>
             )}
 
-              {/* <<<<<<<< Mobile Number Input Dialog Box >>>>>>>> */}
+            {/* <<<<<<<< Mobile Number Input Dialog Box >>>>>>>> */}
 
-              <Dialog
-                open={open}
-                onClose={handleClose}
-                className="dialog"
-                PaperProps={{
-                  style: {
-                    backgroundColor: '#0a1929',
-                    color: '#fff',
-                    border: 0.1,
-                    borderColor: '#A4A9AF',
-                    borderStyle: 'solid',
-                  },
-                }}
-              >
-                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  Enter the Details
-                </DialogTitle>
-                <DialogContent sx={{ pb: 0 }}>
-                  <DialogContentText sx={{ color: '#A4A9AF' }}>
-                    Enter the Mobile no. of the person you want to transfer the
-                    product to
-                  </DialogContentText>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              className="dialog"
+              PaperProps={{
+                style: {
+                  backgroundColor: '#0a1929',
+                  color: '#fff',
+                  border: 0.1,
+                  borderColor: '#A4A9AF',
+                  borderStyle: 'solid',
+                },
+              }}
+            >
+              <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+                Enter the Details
+              </DialogTitle>
+              <DialogContent sx={{ pb: 0 }}>
+                <DialogContentText sx={{ color: '#A4A9AF' }}>
+                  Enter the Mobile no. of the person you want to transfer the
+                  product to
+                </DialogContentText>
+                <div>
+                  <StyledTextField
+                    fullWidth
+                    type="tel"
+                    size="small"
+                    value={inputPhoneNumber}
+                    onChange={handleChange}
+                    label={label === '' ? ' ' : ' '}
+                    InputLabelProps={{ shrink: false }}
+                    textcolor="#A4A9AF"
+                    variant="outlined"
+                    sx={{ color: 'white', mt: 2 }}
+                  />
+                </div>
+              </DialogContent>
+              <DialogActions className="dialog-btns">
+                <Button onClick={handleClose} className="left-btn">
+                  Cancel
+                </Button>
+                <Button onClick={handleClickOpenOtp} className="right-btn">
+                  Get OTP
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            {/* <<<<<<<< OTP Input Dialog Box >>>>>>>> */}
+
+            <Dialog
+              open={openOtp}
+              onClose={handleCloseOtp}
+              className="dialog"
+              PaperProps={{
+                style: {
+                  backgroundColor: '#0a1929',
+                  color: '#fff',
+                  border: 0.1,
+                  borderColor: '#A4A9AF',
+                  borderStyle: 'solid',
+                },
+              }}
+            >
+              <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+                {dialogStatusText ? '' : 'Enter OTP'}
+              </DialogTitle>
+              <DialogContent sx={{ pb: 0 }}>
+                <DialogContentText sx={{ color: '#A4A9AF' }}>
+                  {dialogStatusText ? (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography sx={{ fontSize: '1.2rem' }}>
+                        {dialogStatusText}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <div>
+                      Enter the OTP sent to the Mobile Number ending with{' '}
+                      <b>XXXXXX{String(customer.phno).slice(-4)}.</b>
+                    </div>
+                  )}
+                </DialogContentText>
+                {!dialogStatusText && <Otpinput getInputData={getInputData} />}
+              </DialogContent>
+              <DialogActions>
+                {dialogStatusText ? (
+                  <Button onClick={handleCloseOtp}>Cancel</Button>
+                ) : (
+                  <Button onClick={handleClickOpenLink}>Transfer</Button>
+                )}
+              </DialogActions>
+            </Dialog>
+
+            {/* <<<<<<<< Transfer Link Display Dialog Box >>>>>>>> */}
+
+            <Dialog
+              open={openLink}
+              onClose={handleCloseLink}
+              className="dialog"
+              PaperProps={{
+                style: {
+                  backgroundColor: '#0a1929',
+                  color: '#fff',
+                  border: 0.1,
+                  borderColor: '#A4A9AF',
+                  borderStyle: 'solid',
+                  minWidth: '300px',
+                },
+              }}
+            >
+              <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
+                {dialogStatusText ? '' : 'Transfer Link'}
+              </DialogTitle>
+              <DialogContent sx={{ pb: 0 }}>
+                <DialogContentText sx={{ color: '#61c97d' }}>
+                  {dialogStatusText ? (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography sx={{ fontSize: '1.2rem' }}>
+                        {dialogStatusText}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <div>
+                      The following Transfer link has been sent to the Mobile
+                      number '{inputPhoneNumber || number}'.
+                    </div>
+                  )}
+                </DialogContentText>
+                {!dialogStatusText && (
                   <div>
                     <StyledTextField
                       fullWidth
-                      type="tel"
                       size="small"
-                      value={inputPhoneNumber}
-                      onChange={handleChange}
+                      value={baseClaimURL + (item.order_id || order.order_id)}
+                      readOnly
                       label={label === '' ? ' ' : ' '}
                       InputLabelProps={{ shrink: false }}
-                      textcolor="#A4A9AF"
+                      textColor="#A4A9AF"
                       variant="outlined"
+                      InputProps={{ readOnly: true }}
                       sx={{ color: 'white', mt: 2 }}
                     />
                   </div>
-                </DialogContent>
-                <DialogActions className="dialog-btns">
-                  <Button onClick={handleClose} className="left-btn">
-                    Cancel
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseLink}>Close</Button>
+                {!dialogStatusText && (
+                  <Button
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        baseClaimURL + (item.order_id || order.order_id)
+                      );
+                      setIsLinkCopied(true);
+                      setButton(false);
+                    }}
+                  >
+                    {isLinkCopied ? 'Copied!' : 'Copy!'}
                   </Button>
-                  <Button onClick={handleClickOpenOtp} className="right-btn">
-                    Get OTP
-                  </Button>
-                </DialogActions>
-              </Dialog>
-
-              {/* <<<<<<<< OTP Input Dialog Box >>>>>>>> */}
-
-              <Dialog
-                open={openOtp}
-                onClose={handleCloseOtp}
-                className="dialog"
-                PaperProps={{
-                  style: {
-                    backgroundColor: '#0a1929',
-                    color: '#fff',
-                    border: 0.1,
-                    borderColor: '#A4A9AF',
-                    borderStyle: 'solid',
-                  },
-                }}
-              >
-                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  {dialogStatusText ? '' : 'Enter OTP'}
-                </DialogTitle>
-                <DialogContent sx={{ pb: 0 }}>
-                  <DialogContentText sx={{ color: '#A4A9AF' }}>
-                    {dialogStatusText ? (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Typography sx={{ fontSize: '1.2rem' }}>
-                          {dialogStatusText}
-                        </Typography>
-                      </Box>
-                    ) : (
-                      <div>
-                        Enter the OTP sent to the Mobile Number ending with{' '}
-                        <b>XXXXXX{String(customer.phno).slice(-4)}.</b>
-                      </div>
-                    )}
-                  </DialogContentText>
-                  {!dialogStatusText && (
-                    <Otpinput getInputData={getInputData} />
-                  )}
-                </DialogContent>
-                <DialogActions>
-                  {dialogStatusText ? (
-                    <Button onClick={handleCloseOtp}>Cancel</Button>
-                  ) : (
-                    <Button onClick={handleClickOpenLink}>Transfer</Button>
-                  )}
-                </DialogActions>
-              </Dialog>
-
-              {/* <<<<<<<< Transfer Link Display Dialog Box >>>>>>>> */}
-
-              <Dialog
-                open={openLink}
-                onClose={handleCloseLink}
-                className="dialog"
-                PaperProps={{
-                  style: {
-                    backgroundColor: '#0a1929',
-                    color: '#fff',
-                    border: 0.1,
-                    borderColor: '#A4A9AF',
-                    borderStyle: 'solid',
-                    minWidth: '300px',
-                  },
-                }}
-              >
-                <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  {dialogStatusText ? '' : 'Transfer Link'}
-                </DialogTitle>
-                <DialogContent sx={{ pb: 0 }}>
-                  <DialogContentText sx={{ color: '#61c97d' }}>
-                    {dialogStatusText ? (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Typography sx={{ fontSize: '1.2rem' }}>
-                          {dialogStatusText}
-                        </Typography>
-                      </Box>
-                    ) : (
-                      <div>
-                        The following Transfer link has been sent to the Mobile number '{inputPhoneNumber || number}'.</div>
-                    )}
-                  </DialogContentText>
-                  {!dialogStatusText && (
-                    <div>
-                      <StyledTextField
-                        fullWidth
-                        size="small"
-                        value={baseClaimURL + (item.order_id || order.order_id)}
-                        readOnly
-                        label={label === '' ? ' ' : ' '}
-                        InputLabelProps={{ shrink: false }}
-                        textColor="#A4A9AF"
-                        variant="outlined"
-                        InputProps={{ readOnly: true }}
-                        sx={{ color: 'white', mt: 2 }}
-                      />
-                    </div>
-                  )}
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseLink}>Close</Button>
-                  {!dialogStatusText && (
-                    <Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          baseClaimURL + (item.order_id || order.order_id)
-                        );
-                        setIsLinkCopied(true);
-                        setButton(false);
-                      }}
-                    >
-                      {isLinkCopied ? 'Copied!' : 'Copy!'}
-                    </Button>
-                  )}
-                </DialogActions>
-              </Dialog>
+                )}
+              </DialogActions>
+            </Dialog>
           </Box>
         </div>
       ) : (
