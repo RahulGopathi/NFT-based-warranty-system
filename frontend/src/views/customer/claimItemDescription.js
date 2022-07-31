@@ -10,8 +10,6 @@ import {
   Grid,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// import ButtonBase from '@mui/material/ButtonBase';
-// import { Link } from 'react-router-dom';
 import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
 import '../customer/customerItemDescription.css';
@@ -19,7 +17,6 @@ import { Button } from '../../components/Button';
 import Otpinput from '../../components/otpInput';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
-// import TextField from '@mui/material/TextField';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { initializeApp } from 'firebase/app';
@@ -79,12 +76,13 @@ export default function ClaimItemDescription() {
     console.log(result);
   };
 
-  const trasferWarranty = async (from_address, to_address, metadataURI) => {
+  const trasferWarranty = async (from_address, to_address) => {
     const connection = contract.connect(signer);
     const addr = connection.address;
     console.log('from_address', from_address);
     console.log('to_address', to_address);
-    console.log('metadataURI', metadataURI);
+    console.log('addr', addr);
+    console.log('tokenId', item.item_data.nft_id);
 
     try {
       const result = await contract.transferNFT(
@@ -108,24 +106,37 @@ export default function ClaimItemDescription() {
     const connection = contract.connect(signer);
     const addr = connection.address;
     console.log('addr', addr);
+    console.log('contract', contractAddress);
+    console.log('walletAdde', localStorage.getItem('userWalletAddress'));
     console.log('metadataURI', metadataURI);
 
     try {
-      const result = await contract.payToMint(addr, metadataURI);
+      const result = await contract.payToMint(localStorage.getItem('userWalletAddress'), metadataURI);
       const receipt = await result.wait();
       console.log('receipt', receipt);
       setDialogStatusText('Warranty minted successfully');
       setTokenId(Number(receipt.logs[0].topics[3]));
+      try {
+        const result1 = await contract.approveTransfer(addr, receipt.logs[0].topics[3]);
+        const receipt1 = await result.wait();
+        console.log('receipt', receipt);
+      }
+      catch (err) {
+        console.log('err', err.message);
+        setDialogStatusText('Error minting warranty! please try again');
+        setOpen(true);
+      }
       setOpen(true);
     } catch (err) {
       console.log('err', err.message);
       setDialogStatusText('Error minting warranty! please try again');
       setOpen(true);
     }
-    getMintedStatus(metadataURI);
+    const iscontentowned = await contract.isContentOwned(metadataURI);
 
-    if (warrantyMinted) {
+    if (iscontentowned) {
       setDialogStatusText('Warranty minted successfully');
+      console.log('Warranty minted successfully');
       completeOrder();
       setOpen(true);
     }
