@@ -48,7 +48,7 @@ class Item(models.Model):
 
 
 class Order(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="order")
     phno = models.CharField(max_length=10)
     name = models.CharField(max_length=100, blank=True)
     is_delivered = models.BooleanField(default=False)
