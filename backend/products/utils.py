@@ -2,7 +2,6 @@ import requests
 import os
 from django.conf import settings
 import cv2
-import json
 
 
 def serialize_image(image_path, text, item):
@@ -35,6 +34,7 @@ def upload_file_to_ipfs(file_path):
     file = {'file': open(file_path, 'rb')}
     response = requests.post(url, headers=header, files=file)
     return response.json()['IpfsHash']
+
 
 def upload_json_to_ipfs(metadata):
     header = {'Authorization': 'Bearer ' + settings.PINATA_JWT_SECRET}
