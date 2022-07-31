@@ -18,6 +18,7 @@ import RetailerProduct from './views/retailer/retailerProductPage';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
 import CustomerClaim from './views/customer/claimProduct';
+import CreateProduct from './views/retailer/createProduct';
 import ClaimItemDescription from './views/customer/claimItemDescription';
 
 function App() {
@@ -153,6 +154,15 @@ function App() {
                   <div>
                     <Navbar />
                     <RetailerProduct />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/create/"
+                element={
+                  <div>
+                    <Navbar />
+                    <CreateProduct />
                   </div>
                 }
               />

@@ -105,7 +105,8 @@ export default function RetailerProduct() {
   const [owner_phone, setOwnerPhone] = React.useState('');
   const [owner_name, setOwnerName] = React.useState('');
   const [item, setItem] = React.useState('');
-
+  const [openCreateItem, setOpenCreateItem] = React.useState(false);
+  const [serial_no, setSerialNo] = React.useState('');
   const params = useParams();
   const api = useAxios();
 
@@ -294,6 +295,10 @@ export default function RetailerProduct() {
     setOpen(false);
   };
 
+  const handleCreateItemClose = () => {
+    setOpenCreateItem(false);
+  };
+
   const handleIssueUser = async () => {
     console.log('ITEM', item);
     const payload = {
@@ -312,101 +317,243 @@ export default function RetailerProduct() {
     });
   };
 
+  const handleCreateItem = async () => {
+    const payload = {
+      serial_no: serial_no,
+      product: product.id,
+    };
+    toast.promise(api.post('/items/', payload), {
+      loading: 'Creating...',
+      success: (data) => {
+        setOpenCreateItem(false);
+        fetchData();
+        return 'Item Created Successfully!';
+      },
+      error: (err) => <b>{err}</b>,
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, []); // eslint-disable-line
   return (
     <StyledDiv>
-      <div>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Issue to Customer</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              To Issue to User please Enter the customer name and phone number
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="phone"
-              label="Phone Number"
-              type="number"
-              fullWidth
-              variant="standard"
-              value={owner_phone}
-              onChange={(e) => setOwnerPhone(e.target.value)}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="Name"
-              label="Customer Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={owner_name}
-              onChange={(e) => setOwnerName(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleIssueUser}>Issue</Button>
-          </DialogActions>
-        </Dialog>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Typography className="product_name">{product.name}</Typography>
-        </Box>
-        <Box
-          sx={{
-            p: 2,
-            margin: 'auto',
-            height: '100%',
-            width: '90vw',
-            flexGrow: 1,
-            backgroundColor: 'transparent',
-            color: 'white',
-          }}
-        >
-          <Grid container spacing={2}>
-            <Card
-              variant="outlined"
-              sx={{ minWidth: '10%', width: 300, height: 190, mt: 3 }}
-            >
-              <AspectRatio minHeight="120px" maxHeight="200px">
-                <Img src={product.image} alt="product_img" />
-              </AspectRatio>
-            </Card>
-            <Grid item xs={12} sm container>
-              <Grid item xs container direction="column" spacing={2}>
-                <Grid item xs>
-                  <Typography
-                    gutterBottom
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
-                  >
-                    <span className="fields">Category - </span>{' '}
-                    {product.category}
-                  </Typography>
-                  <Typography
-                    gutterBottom
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
-                  >
-                    <span className="fields">Description - </span>{' '}
-                    {product.product_data}
-                  </Typography>
-                </Grid>
+      <Dialog
+        open={open}
+        className="dialog"
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            backgroundColor: '#0a1929',
+            color: '#fff',
+            border: 0.1,
+            borderColor: '#A4A9AF',
+            borderStyle: 'solid',
+          },
+        }}
+      >
+        <DialogTitle className="dialog-input">Issue to Customer</DialogTitle>
+        <DialogContent>
+          <DialogContentText className="dialog-input">
+            To Issue to User please Enter the customer name and phone number
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="phone"
+            label="Phone Number"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={owner_phone}
+            className="dialog-input"
+            onChange={(e) => setOwnerPhone(e.target.value)}
+            sx={{
+              '& .MuiInputBase-root': {
+                color: 'white',
+              },
+              '& label.Mui-focused': {
+                color: '#BBDEFB',
+              },
+              '& label': {
+                color: '#B3B3B3',
+              },
+              '& .MuiInput-underline:after': {
+                borderBottomColor: 'white',
+              },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#fff',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#000',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#fff',
+                },
+              },
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="Name"
+            label="Customer Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            className="dialog-input"
+            value={owner_name}
+            onChange={(e) => setOwnerName(e.target.value)}
+            sx={{
+              '& .MuiInputBase-root': {
+                color: 'white',
+              },
+              '& label.Mui-focused': {
+                color: '#BBDEFB',
+              },
+              '& label': {
+                color: '#B3B3B3',
+              },
+              '& .MuiInput-underline:after': {
+                borderBottomColor: 'white',
+              },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#fff',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#000',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#fff',
+                },
+              },
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleIssueUser}>Issue</Button>
+        </DialogActions>
+      </Dialog>
+      {/* Create Item Dialog */}
+      <Dialog
+        open={openCreateItem}
+        className="dialog"
+        onClose={handleCreateItemClose}
+        PaperProps={{
+          style: {
+            backgroundColor: '#0a1929',
+            color: '#fff',
+            border: 0.1,
+            borderColor: '#A4A9AF',
+            borderStyle: 'solid',
+          },
+        }}
+      >
+        <DialogTitle className="dialog-input">Create Item</DialogTitle>
+        <DialogContent>
+          <DialogContentText className="dialog-input">
+            To create Item please Enter the serial number
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="serial_no"
+            label="Serial No"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={serial_no}
+            className="dialog-input"
+            onChange={(e) => setSerialNo(e.target.value)}
+            sx={{
+              '& .MuiInputBase-root': {
+                color: 'white',
+              },
+              '& label.Mui-focused': {
+                color: '#BBDEFB',
+              },
+              '& label': {
+                color: '#B3B3B3',
+              },
+              '& .MuiInput-underline:after': {
+                borderBottomColor: 'white',
+              },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#fff',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#000',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#fff',
+                },
+              },
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCreateItemClose}>Cancel</Button>
+          <Button onClick={handleCreateItem}>Issue</Button>
+        </DialogActions>
+      </Dialog>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography className="product_name">{product.name}</Typography>
+      </Box>
+      <Box
+        sx={{
+          p: 2,
+          margin: 'auto',
+          height: '100%',
+          width: '90vw',
+          flexGrow: 1,
+          backgroundColor: 'transparent',
+          color: 'white',
+        }}
+      >
+        <Grid container spacing={2}>
+          <Card
+            variant="outlined"
+            sx={{ minWidth: '10%', width: 300, height: 190, mt: 3 }}
+          >
+            <AspectRatio minHeight="120px" maxHeight="200px">
+              <Img src={product.image} alt="product_img" />
+            </AspectRatio>
+          </Card>
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
+                >
+                  <span className="fields">Category - </span> {product.category}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
+                >
+                  <span className="fields">Description - </span>{' '}
+                  {product.product_data}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
-        </Box>
-      </div>
+        </Grid>
+      </Box>
+      =
       <Box sx={{ width: '100%' }}>
         <Grid
           sx={{
@@ -456,6 +603,27 @@ export default function RetailerProduct() {
                 ),
               }}
             />
+          </Grid>
+          <Grid columns={2}>
+            <Box>
+              <Button
+                className="nav-button"
+                variant="outlined"
+                color="success"
+                onClick={() => {
+                  setItem(item.id);
+                  setOpenCreateItem(true);
+                }}
+              >
+                <Typography
+                  component="span"
+                  level="body1"
+                  className="nav-button-text"
+                >
+                  Create Item
+                </Typography>
+              </Button>
+            </Box>
           </Grid>
         </Grid>
         <TabPanel value={value} index={0}>
