@@ -56,12 +56,44 @@ const StyledTextField = styled(TextField)({
 export default function CustomerClaim() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
-  const [itemsStatus, setItemsStatus] = useState('No Items');
+  const [itemsStatus, setItemsStatus] = useState(
+    'Currently there are no transferrable items linked with your mobile number.'
+  );
+  const [orderStatus, setOrderStatus] = useState('Loading...');
   const api = useCustomerAxios();
   const [open, setOpen] = useState(false);
+  const [openError, setOpenError] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [label, setLabel] = useState('');
   const { customer } = useContext(WalletContext);
+  const [inputSerialNumber, setInputSerialNumber] = useState('');
+
+  const handleChange = (event) => {
+    setInputSerialNumber(event.target.value);
+  };
+
+  const handleClickClaim = async (event) => {
+    try {
+      const order_response = await api.get(
+        '/items/?serial_no=' + inputSerialNumber
+      );
+      console.log(order_response.data);
+      if (order_response.status === 200) {
+        if (order_response.data.order_id) {
+          redirectItem(order_response.data.order_id);
+        } else {
+          handleClose();
+          setOrderStatus('This item is not being transferred by the owner');
+          setOpenError(true);
+        }
+      }
+    } catch (e) {
+      console.log('error');
+      handleClose();
+      setOrderStatus('The Serial number you entered is invalid');
+      setOpenError(true);
+    }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -69,6 +101,10 @@ export default function CustomerClaim() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCloseError = () => {
+    setOpenError(false);
   };
 
   const redirectItem = (id) => {
@@ -112,20 +148,44 @@ export default function CustomerClaim() {
               Claim your Products
             </Typography>
           </Box>
-          <Typography
-            variant="h5"
-            sx={{
-              position: 'relative',
-              top: '50%',
-              color: '#A4A9AF',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '25vh',
-            }}
-          >
-            {itemsStatus}
-          </Typography>
+          <Box sx={{ top: '50%', height: '25vh', position: 'relative' }}>
+            <Typography
+              variant="h5"
+              sx={{
+                color: '#A4A9AF',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {itemsStatus}
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                mt: 1,
+                color: '#d9d9d9',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              You can claim any product by clicking{' '}
+              <span
+                onClick={handleClickOpen}
+                style={{
+                  marginLeft: '5px',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  color: '#61c97d',
+                }}
+              >
+                {' '}
+                here
+              </span>
+              .
+            </Typography>
+          </Box>
         </Box>
       ) : (
         <Box sx={{ width: '100%' }}>
@@ -250,56 +310,87 @@ export default function CustomerClaim() {
               </Grid>
             ))}
           </Grid>
-
-          {/* <<<<<<< Serial Number Input Dialog >>>>>>>> */}
-
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            className="dialog"
-            PaperProps={{
-              style: {
-                backgroundColor: '#0a1929',
-                color: '#fff',
-                border: 0.1,
-                borderColor: '#A4A9AF',
-                borderStyle: 'solid',
-              },
-            }}
-          >
-            <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-              Claim
-            </DialogTitle>
-            <DialogContent sx={{ pb: 0 }}>
-              <DialogContentText sx={{ color: '#A4A9AF' }}>
-                Enter the Serial no. of the product you want to claim
-              </DialogContentText>
-              <div>
-                <StyledTextField
-                  fullWidth
-                  type="text"
-                  size="small"
-                  label={label === '' ? ' ' : ' '}
-                  InputLabelProps={{ shrink: false }}
-                  textColor="#A4A9AF"
-                  variant="outlined"
-                  sx={{ color: 'white', mt: 2 }}
-                />
-              </div>
-            </DialogContent>
-            <DialogActions className="dialog-btns">
-              <CustomButton onClick={handleClose} className="left-btn">
-                Cancel
-              </CustomButton>
-              <CustomButton onClick={handleClose} className="right-btn">
-                Claim
-              </CustomButton>
-            </DialogActions>
-          </Dialog>
-
-          {/* <<<<<<< End Dialog >>>>>>>> */}
         </Box>
       )}
+
+      {/* <<<<<<< Serial Number Input Dialog >>>>>>>> */}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        className="dialog"
+        PaperProps={{
+          style: {
+            backgroundColor: '#0a1929',
+            color: '#fff',
+            border: 0.1,
+            borderColor: '#A4A9AF',
+            borderStyle: 'solid',
+          },
+        }}
+      >
+        <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>Claim</DialogTitle>
+        <DialogContent sx={{ pb: 0 }}>
+          <DialogContentText sx={{ color: '#A4A9AF' }}>
+            Enter the Serial no. of the product you want to claim
+          </DialogContentText>
+          <div>
+            <StyledTextField
+              fullWidth
+              type="text"
+              size="small"
+              value={inputSerialNumber}
+              onChange={handleChange}
+              label={label === '' ? ' ' : ' '}
+              InputLabelProps={{ shrink: false }}
+              textColor="#A4A9AF"
+              variant="outlined"
+              sx={{ color: 'white', mt: 2 }}
+            />
+          </div>
+        </DialogContent>
+        <DialogActions className="dialog-btns">
+          <CustomButton onClick={handleClose} className="left-btn">
+            Cancel
+          </CustomButton>
+          <CustomButton onClick={handleClickClaim} className="right-btn">
+            Claim
+          </CustomButton>
+        </DialogActions>
+      </Dialog>
+
+      {/* <<<<<<< End Serial Number Input Dialog >>>>>>>> */}
+
+      {/* <<<<<<< Order Status Dialog >>>>>>>> */}
+
+      <Dialog
+        open={openError}
+        onClose={handleCloseError}
+        className="dialog"
+        PaperProps={{
+          style: {
+            backgroundColor: '#0a1929',
+            color: '#fff',
+            border: 0.1,
+            borderColor: '#A4A9AF',
+            borderStyle: 'solid',
+          },
+        }}
+      >
+        <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>Error!</DialogTitle>
+        <DialogContent sx={{ pb: 0 }}>
+          <DialogContentText sx={{ color: '#A4A9AF' }}>
+            {orderStatus}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className="dialog-btns">
+          <CustomButton onClick={handleCloseError} className="left-btn">
+            Close
+          </CustomButton>
+        </DialogActions>
+      </Dialog>
+
+      {/* <<<<<<< End Order Status Dialog >>>>>>>> */}
     </StyledDiv>
   );
 }

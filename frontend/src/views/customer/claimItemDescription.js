@@ -62,8 +62,6 @@ export default function ClaimItemDescription() {
         }
       );
       const data = await response.json();
-      console.log(order_id);
-      console.log(data);
       if (response.status === 200) {
         setItem(data);
         console.log('entered');
