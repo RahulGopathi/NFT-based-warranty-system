@@ -65,5 +65,5 @@ class Order(models.Model):
             self.item.is_issued = True
             self.item.save()
         if self.order_id == "":
-            self.order_id = str(self.id) + 'x' + self.item.image_ipfs[-6:]
+            self.order_id = str(self.id) + 'x' + self.item.metadata_uri[-6:]
             self.save()

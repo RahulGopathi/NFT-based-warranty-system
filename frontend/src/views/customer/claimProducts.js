@@ -108,7 +108,7 @@ export default function CustomerClaim() {
   };
 
   const redirectItem = (id) => {
-    navigate('/claim/order/' + id);
+    navigate('/customer/claim/order/' + id);
   };
 
   useEffect(() => {
@@ -285,7 +285,11 @@ export default function CustomerClaim() {
                     }}
                   >
                     <Link
-                      to={'/claim/order/' + item.order_id + '?setOpen=true'}
+                      to={
+                        '/customer/claim/order/' +
+                        item.order_id +
+                        '?setOpen=true'
+                      }
                       style={{
                         display: 'flex',
                         justifyContent: 'center',

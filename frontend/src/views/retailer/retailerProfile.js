@@ -67,7 +67,7 @@ export default function RetailerProfile() {
             color: 'white',
           }}
         >
-          <Box className="profile">
+          <Box className="customer-profile">
             <Grid item xs>
               <Box sx={{ margin: 2 }}>
                 <Typography
@@ -78,7 +78,7 @@ export default function RetailerProfile() {
                 >
                   <span>First Name</span>
                 </Typography>
-                <div className="text-field">
+                <div className="customer-text-field">
                   <StyledTextField
                     fullWidth
                     size="small"
@@ -105,7 +105,7 @@ export default function RetailerProfile() {
                 >
                   <span>Last Name</span>
                 </Typography>
-                <div className="text-field">
+                <div className="customer-text-field">
                   <StyledTextField
                     fullWidth
                     size="small"
@@ -131,7 +131,7 @@ export default function RetailerProfile() {
                 >
                   <span>Email</span>
                 </Typography>
-                <div className="text-field">
+                <div className="customer-text-field">
                   <StyledTextField
                     fullWidth
                     size="small"

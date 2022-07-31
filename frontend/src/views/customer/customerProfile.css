@@ -1,4 +1,4 @@
-.text-field {
+.customer-text-field {
   width: 300px;
 }
 
@@ -6,7 +6,7 @@
   color: white !important;
 }
 
-.profile {
+.customer-profile {
   width: 300px;
   margin: auto;
 }

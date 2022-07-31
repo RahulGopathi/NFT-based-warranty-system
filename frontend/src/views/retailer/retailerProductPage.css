@@ -5,6 +5,8 @@
 }
 .nav-button {
   background-color: 'transparent';
+  height: 55px;
+  margin-top: 0px;
   width: max-content;
   border-radius: 5px !important;
   color: white;

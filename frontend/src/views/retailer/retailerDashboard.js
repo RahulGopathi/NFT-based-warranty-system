@@ -33,6 +33,7 @@ import {
 import { createData } from './utils';
 import './retailerDashboard.css';
 import CardOverflow from '@mui/joy/CardOverflow';
+import { useNavigate } from 'react-router-dom';
 
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
@@ -198,6 +199,7 @@ function a11yProps(index) {
 }
 
 export default function RetailerDashboard() {
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
   const [rows, setRows] = useState([]);
   const [categoryValue, setCategoryValue] = useState(0);
@@ -206,6 +208,10 @@ export default function RetailerDashboard() {
   // eslint-disable-next-line
   const [searchText, setSearchText] = useState('');
   const api = useAxios();
+
+  const redirectItem = (id) => {
+    navigate('/retailer/products/' + id);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -475,31 +481,37 @@ export default function RetailerDashboard() {
                       sx={{ minWidth: '10%', width: '100%', mt: 3 }}
                     >
                       <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 0.5,
+                        onClick={() => {
+                          redirectItem(product.id);
                         }}
                       >
-                        <Typography
-                          variant="h6"
-                          fontSize="md"
-                          sx={{ alignSelf: 'flex-start' }}
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 0.5,
+                          }}
                         >
-                          {product.name}
-                        </Typography>
-                        <Typography variant="caption">
-                          Updated {calculateDateDifference(product.updated_at)}d
-                          ago
-                        </Typography>
+                          <Typography
+                            variant="h6"
+                            fontSize="md"
+                            sx={{ alignSelf: 'flex-start' }}
+                          >
+                            {product.name}
+                          </Typography>
+                          <Typography variant="caption">
+                            Updated{' '}
+                            {calculateDateDifference(product.updated_at)}d ago
+                          </Typography>
+                        </Box>
+                        <AspectRatio
+                          minHeight="120px"
+                          maxHeight="200px"
+                          sx={{ my: 2 }}
+                        >
+                          <img src={product.image} alt="" />
+                        </AspectRatio>
                       </Box>
-                      <AspectRatio
-                        minHeight="120px"
-                        maxHeight="200px"
-                        sx={{ my: 2 }}
-                      >
-                        <img src={product.image} alt="" />
-                      </AspectRatio>
                       <CardOverflow
                         variant="soft"
                         sx={{
@@ -514,7 +526,11 @@ export default function RetailerDashboard() {
                         }}
                       >
                         <Link
-                          to="#"
+                          to={
+                            '/retailer/products/' +
+                            product.id +
+                            '?setOpenCreateItem=true'
+                          }
                           style={{
                             display: 'flex',
                             justifyContent: 'center',
