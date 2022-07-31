@@ -2,6 +2,8 @@ export const BASE_URL = 'http://localhost:8000';
 export const API_BASE_URL = 'http://localhost:8000/api';
 export const API_AUTH_BASE_URL = 'http://localhost:8000/auth';
 export const FRONTEND_BASE_URL = 'http://localhost:3000';
+export const smartContractAddress =
+  '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyAVaSv8qyJL0bazGI9Nxx2wFovNNhhI7JE',

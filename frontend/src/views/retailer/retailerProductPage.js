@@ -313,7 +313,7 @@ export default function RetailerProduct() {
         fetchData();
         return 'Issued Successfully!';
       },
-      error: (err) => <b>{err}</b>,
+      error: (err) => <b>Failed to issue to a customer</b>,
     });
   };
 
@@ -362,7 +362,7 @@ export default function RetailerProduct() {
             margin="dense"
             id="phone"
             label="Phone Number"
-            type="number"
+            type="tel"
             fullWidth
             variant="standard"
             value={owner_phone}
@@ -553,7 +553,7 @@ export default function RetailerProduct() {
           </Grid>
         </Grid>
       </Box>
-      =
+      <div className="mt-3"></div>
       <Box sx={{ width: '100%' }}>
         <Grid
           sx={{
@@ -611,7 +611,6 @@ export default function RetailerProduct() {
                 variant="outlined"
                 color="success"
                 onClick={() => {
-                  setItem(item.id);
                   setOpenCreateItem(true);
                 }}
               >

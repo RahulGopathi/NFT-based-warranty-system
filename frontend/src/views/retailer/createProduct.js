@@ -52,7 +52,7 @@ export default function CreateProduct() {
   const [product_file, setProductfile] = React.useState({});
   const [product_description, setProductdescription] = React.useState('');
   const [category, setCategory] = React.useState('home');
-  const [product, setProduct] = React.useState(0);
+  const [product, setProduct] = React.useState(0); // eslint-disable-line
   const api = useAxios();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ export default function CreateProduct() {
     if (response.status === 201) {
       setProduct(response.data.id);
       toast.success('Product Created Successfully');
-      navigate(`/retailer/products/${product}`);
+      navigate(`/retailer/products/${response.data.id}`);
     } else {
       toast.error(response.data);
     }

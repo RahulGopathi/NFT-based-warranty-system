@@ -9,8 +9,10 @@ module.exports = {
   },
   networks: {
     polygon: {
-      url: "https://polygon-mumbai.g.alchemy.com/v2/3Dq4RKNRrelNTzpARgEpFbtsf6IlYFmP",
-      accounts: ["014a4621c606b10c2213273bdd1316e39fca1de0a7813afb8ed78ee0b5929936"]
-    }
+      url: 'https://polygon-mumbai.g.alchemy.com/v2/3Dq4RKNRrelNTzpARgEpFbtsf6IlYFmP',
+      accounts: [
+        '014a4621c606b10c2213273bdd1316e39fca1de0a7813afb8ed78ee0b5929936',
+      ],
+    },
   },
 };

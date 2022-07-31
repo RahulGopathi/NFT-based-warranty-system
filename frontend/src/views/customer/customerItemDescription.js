@@ -78,6 +78,7 @@ export default function CustomerItemDescription() {
   let { id } = useParams();
   const api = useCustomerAxios();
   const { customer } = React.useContext(WalletContext);
+  const [captchaRendered, setCaptchaRendered] = useState(false);
   const [item, setItem] = useState([]);
   const [order, setOrder] = useState([]); // eslint-disable-line
   const [itemStatus, setItemStatus] = useState('Loading...');
@@ -188,6 +189,7 @@ export default function CustomerItemDescription() {
       body: JSON.stringify({
         phno: inputPhoneNumber,
         item: item.id,
+        from_address: customer.wallet_address,
       }),
     });
     const data = await response.json();
@@ -205,16 +207,19 @@ export default function CustomerItemDescription() {
   useEffect(() => {
     fetchItem();
 
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      'recaptcha-container',
-      {
-        size: 'invisible',
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
+    if (!captchaRendered) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        'recaptcha-container',
+        {
+          size: 'invisible',
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
         },
-      },
-      auth
-    );
+        auth
+      );
+      setCaptchaRendered(true);
+    }
 
     if (query.get('setOpen') === 'true') {
       setOpen(true);

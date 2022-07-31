@@ -23,7 +23,12 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { initializeApp } from 'firebase/app';
-import { API_BASE_URL, BASE_URL, firebaseConfig } from '../../config';
+import {
+  API_BASE_URL,
+  BASE_URL,
+  firebaseConfig,
+  smartContractAddress,
+} from '../../config';
 import {
   getAuth,
   RecaptchaVerifier,
@@ -32,7 +37,7 @@ import {
 import { ethers } from 'ethers';
 import pydo from '../../artifacts/contracts/PyDO.sol/pydo.json';
 
-const contractAddress = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9';
+const contractAddress = smartContractAddress;
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -60,15 +65,43 @@ export default function ClaimItemDescription() {
   let { order_id } = useParams();
   const [captchaRendered, setCaptchaRendered] = useState(false);
   const [item, setItem] = useState([]);
+  const [tokenId, setTokenId] = useState();
   const [itemStatus, setItemStatus] = useState('Loading...');
   const [inputOTP, setInputOTP] = useState('');
   const [dialogStatusText, setDialogStatusText] = useState('');
+  const [warrantyMinted, setWarrantyMinted] = useState(false);
   const [open, setOpen] = React.useState(false);
   let query = useQuery();
 
-  const getMintedStatus = async () => {
-    const result = await contract.isContentOwned('QmW7YnxE3LHPNKtd4HvkXYfxQtnCrFhzh4RSYiWCMHsLnB');
-    console.log(result)
+  const getMintedStatus = async (metadataURI) => {
+    const result = await contract.isContentOwned(metadataURI);
+    setWarrantyMinted(result);
+    console.log(result);
+  };
+
+  const trasferWarranty = async (from_address, to_address, metadataURI) => {
+    const connection = contract.connect(signer);
+    const addr = connection.address;
+    console.log('from_address', from_address);
+    console.log('to_address', to_address);
+    console.log('metadataURI', metadataURI);
+
+    try {
+      const result = await contract.transferNFT(
+        addr,
+        to_address,
+        item.item_data.nft_id
+      );
+      const receipt = await result.wait();
+      console.log(receipt);
+      setDialogStatusText('Warranty transferred successfully');
+      setOpen(true);
+      completeOrder(tokenId);
+    } catch (err) {
+      console.log(err);
+      setDialogStatusText('Warranty transfer failed');
+      setOpen(true);
+    }
   };
 
   const mintWarranty = async (metadataURI) => {
@@ -76,11 +109,27 @@ export default function ClaimItemDescription() {
     const addr = connection.address;
     console.log('addr', addr);
     console.log('metadataURI', metadataURI);
-    const result = await contract.payToMint(addr, metadataURI);
 
-    await result.wait();
-    //getMintedStatus();
-  }
+    try {
+      const result = await contract.payToMint(addr, metadataURI);
+      const receipt = await result.wait();
+      console.log('receipt', receipt);
+      setDialogStatusText('Warranty minted successfully');
+      setTokenId(Number(receipt.logs[0].topics[3]));
+      setOpen(true);
+    } catch (err) {
+      console.log('err', err.message);
+      setDialogStatusText('Error minting warranty! please try again');
+      setOpen(true);
+    }
+    getMintedStatus(metadataURI);
+
+    if (warrantyMinted) {
+      setDialogStatusText('Warranty minted successfully');
+      completeOrder();
+      setOpen(true);
+    }
+  };
 
   const getInputData = (input) => {
     const otp =
@@ -130,11 +179,13 @@ export default function ClaimItemDescription() {
       },
       params: {
         order_id: order_id,
+        to_address: localStorage.getItem('userWalletAddress'),
+        nft_id: tokenId,
       },
     });
     const data = await response.data;
     if (response.status === 200) {
-      setDialogStatusText('Transferring NFT...');
+      setDialogStatusText('Minting Warranty...');
     } else {
       setDialogStatusText(data[Object.keys(data)[0]]);
     }
@@ -146,7 +197,15 @@ export default function ClaimItemDescription() {
         .confirm(code)
         .then((result) => {
           setDialogStatusText('Loading...');
-          completeOrder();
+          if (item.from_address && item.from_address !== item.to_address) {
+            trasferWarranty(
+              item.from_address,
+              localStorage.getItem('userWalletAddress'),
+              item.item_data.metadata_uri
+            );
+          } else {
+            mintWarranty(item.item_data.metadata_uri);
+          }
         })
         .catch((error) => {
           setDialogStatusText('The OTP entered is incorrect, please try again');
@@ -175,7 +234,10 @@ export default function ClaimItemDescription() {
     }
 
     if (query.get('setOpen') === 'true') {
-      setOpen(true);
+      if (item.phno) {
+        setOpen(true);
+        handleClickOpen();
+      }
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

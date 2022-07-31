@@ -32,15 +32,20 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
+    order_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
-        fields = ('id', 'serial_no', 'metadata_uri', 'warranty_end_date', 'product',
+        fields = ('id', 'serial_no', 'order_id', 'metadata_uri', 'warranty_end_date', 'product',
                   'warranty_image', 'created_at', 'updated_at', 'owner', 'is_issued')
         read_only_fields = ('created_at', 'updated_at')
 
     def get_product(self, obj):
         return ProductSerializer(obj.product, get_items=False).data
+
+    def get_order_id(self, obj):
+        if obj.order.exists():
+            return obj.order.first().order_id
 
 
 class UpdateItemSerializer(serializers.ModelSerializer):
