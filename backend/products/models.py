@@ -33,7 +33,7 @@ class Product(models.Model):
 class Item(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     owner = models.ForeignKey('users.Owner', on_delete=models.SET_NULL, null=True)
-    image_ipfs = models.CharField(max_length=100, blank=True)
+    metadata_uri = models.CharField(max_length=100, blank=True)
     nft_id = models.CharField(max_length=100, blank=True)
     warranty_image = models.FileField(upload_to='items/', null=True, blank=True)
     serial_no = models.CharField(max_length=100)
@@ -53,6 +53,8 @@ class Order(models.Model):
     name = models.CharField(max_length=100, blank=True)
     is_delivered = models.BooleanField(default=False)
     order_id = models.CharField(max_length=100, blank=True)
+    to_address = models.CharField(max_length=500, blank=True)
+    from_address = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
         return f"{self.item.serial_no}"

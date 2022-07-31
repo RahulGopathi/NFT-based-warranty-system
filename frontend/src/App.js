@@ -9,6 +9,7 @@ import CustomerDashboard from './views/customer/customerDashboard';
 import RetailerLogin from './views/retailer/retailerLogin';
 import RetailerDashboard from './views/retailer/retailerDashboard';
 import RetailerSignup from './views/retailer/retailerSignup';
+import RetailerConfirmPassword from './views/retailer/retailerConfirmPassword';
 import CustomerSignup from './views/customer/customerSignup';
 import CustomerProtectedRoute from './utils/customerProtected';
 import CustomerItemDescription from './views/customer/customerItemDescription';
@@ -17,6 +18,7 @@ import RetailerProduct from './views/retailer/retailerProductPage';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
 import CustomerClaim from './views/customer/claimProduct';
+import CreateProduct from './views/retailer/createProduct';
 import ClaimItemDescription from './views/customer/claimItemDescription';
 
 function App() {
@@ -72,14 +74,14 @@ function App() {
                 element={
                   <div>
                     <CustomerProtectedRoute>
-                      <Navbar />
+                      <Navbar showNavbarButton={false} />
                       <CustomerClaim />
                     </CustomerProtectedRoute>
                   </div>
                 }
               />
               <Route
-                path="/item/:id"
+                path="/customer/item/:id"
                 element={
                   <div>
                     <CustomerProtectedRoute>
@@ -139,11 +141,28 @@ function App() {
                 }
               />
               <Route
+                path="/retailer/confirmPassword"
+                element={
+                  <div>
+                    <RetailerConfirmPassword />
+                  </div>
+                }
+              />
+              <Route
                 path="/retailer/products/:id"
                 element={
                   <div>
                     <Navbar />
                     <RetailerProduct />
+                  </div>
+                }
+              />
+              <Route
+                path="/retailer/create/"
+                element={
+                  <div>
+                    <Navbar />
+                    <CreateProduct />
                   </div>
                 }
               />

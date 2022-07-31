@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
@@ -39,13 +39,11 @@ const StyledTextField = styled(TextField)({
 
 export default function RetailerProfile() {
   const { user, updateUser } = useContext(AuthContext);
-  const [label, setLabel] = React.useState(''); // eslint-disable-line
-  const [firstName, setFirstName] = React.useState(user.first_name);
-  const [lastName, setLastName] = React.useState(user.last_name);
-  const [email, setEmail] = React.useState(user.email);
-  const [isProfileUpdated, setIsProfileUpdated] = React.useState(false);
-
-  console.log(user);
+  const [label, setLabel] = useState(''); // eslint-disable-line
+  const [firstName, setFirstName] = useState(user.first_name);
+  const [lastName, setLastName] = useState(user.last_name);
+  const [email, setEmail] = useState(user.email);
+  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
   return (
     <div>

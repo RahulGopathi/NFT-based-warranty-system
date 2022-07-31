@@ -308,10 +308,14 @@ function Navbar(props) {
               <i className="fa-brands fa-hive"></i>
             </Link>
           ) : (
-            <Box className="navbar-logo" onClick={closeMobileMenu}>
+            <Link
+              to={isCustomer ? '/customer/dashboard' : '/retailer/dashboard'}
+              className="navbar-logo"
+              onClick={closeMobileMenu}
+            >
               PyDO
               <i className="fa-brands fa-hive"></i>
-            </Box>
+            </Link>
           )}
           <ul className="nav-menu">
             {/* <li className='nav-item'>
