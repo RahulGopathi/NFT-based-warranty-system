@@ -26,6 +26,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 const StyledDiv = styled('div')(() => ({
   marginTop: 40,
@@ -96,6 +97,10 @@ function a11yProps(index) {
   };
 }
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export default function RetailerProduct() {
   const [value, setValue] = React.useState(0);
   const [product, setProduct] = React.useState({});
@@ -109,6 +114,7 @@ export default function RetailerProduct() {
   const [serial_no, setSerialNo] = React.useState('');
   const params = useParams();
   const api = useAxios();
+  let query = useQuery();
 
   const searchInputHandler = async (e) => {
     const value = e.target.value;
@@ -335,7 +341,12 @@ export default function RetailerProduct() {
 
   useEffect(() => {
     fetchData();
+
+    if (query.get('setOpenCreateItem') === 'true') {
+      setOpenCreateItem(true);
+    }
   }, []); // eslint-disable-line
+
   return (
     <StyledDiv>
       <Dialog
@@ -548,6 +559,15 @@ export default function RetailerProduct() {
                   <span className="fields">Description - </span>{' '}
                   {product.product_data}
                 </Typography>
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ fontSize: '1.3rem', color: 'rgb(200, 200, 200)' }}
+                >
+                  <span className="fields">Warranty Period - </span>{' '}
+                  {product.warranty_period} months
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -584,7 +604,6 @@ export default function RetailerProduct() {
             columns={{ xs: 12 }}
             sx={{
               marginLeft: { xs: 1, md: 10 },
-              marginBottom: 1,
               width: { xs: '80%', md: '50%' },
             }}
           >
