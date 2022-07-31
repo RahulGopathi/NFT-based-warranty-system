@@ -29,6 +29,18 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from 'firebase/auth';
+import { ethers } from 'ethers';
+import pydo from '../../artifacts/contracts/PyDO.sol/pydo.json';
+
+const contractAddress = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9';
+
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+// get the end user
+const signer = provider.getSigner();
+
+// get the smart contract
+const contract = new ethers.Contract(contractAddress, pydo.abi, signer);
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -53,6 +65,22 @@ export default function ClaimItemDescription() {
   const [dialogStatusText, setDialogStatusText] = useState('');
   const [open, setOpen] = React.useState(false);
   let query = useQuery();
+
+  const getMintedStatus = async () => {
+    const result = await contract.isContentOwned('QmW7YnxE3LHPNKtd4HvkXYfxQtnCrFhzh4RSYiWCMHsLnB');
+    console.log(result)
+  };
+
+  const mintWarranty = async (metadataURI) => {
+    const connection = contract.connect(signer);
+    const addr = connection.address;
+    console.log('addr', addr);
+    console.log('metadataURI', metadataURI);
+    const result = await contract.payToMint(addr, metadataURI);
+
+    await result.wait();
+    //getMintedStatus();
+  }
 
   const getInputData = (input) => {
     const otp =
@@ -124,6 +152,7 @@ export default function ClaimItemDescription() {
           setDialogStatusText('The OTP entered is incorrect, please try again');
         });
     } else {
+      //mintWarranty('QmW7YnxE3LHPNKtd4HvkXYfxQtnCrFhzh4RSYiWCMHsLnB');
       setDialogStatusText('Invalid OTP entered');
     }
   };
