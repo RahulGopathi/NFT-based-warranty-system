@@ -36,7 +36,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('id', 'serial_no', 'order_id', 'metadata_uri', 'warranty_end_date', 'product',
+        fields = ('id', 'serial_no', 'order_id', 'nft_id', 'metadata_uri', 'warranty_end_date', 'product',
                   'warranty_image', 'created_at', 'updated_at', 'owner', 'is_issued')
         read_only_fields = ('created_at', 'updated_at')
 
@@ -64,9 +64,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         super().validate(attrs)
-        if Order.objects.filter(phno=attrs['phno']).exists():
-            raise serializers.ValidationError("Product has been already transferred")
-        elif Order.objects.filter(item=attrs['item']).exists():
+        if Order.objects.filter(item=attrs['item']).exists():
             raise serializers.ValidationError("Product has been already transferred to other number")
         item = attrs.get('item')
         item.is_issued = True

@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import Owner
 
 
 class Product(models.Model):
@@ -63,7 +64,8 @@ class Order(models.Model):
         super().save(*args, **kwargs)
         if self.is_delivered:
             self.item.is_issued = True
+            self.item.owner = Owner.objects.get_or_create(wallet_address=self.to_address)[0]
             self.item.save()
         if self.order_id == "":
-            self.order_id = str(self.id) + 'x' + self.item.image_ipfs[-6:]
+            self.order_id = str(self.id) + 'x' + self.item.metadata_uri[-6:]
             self.save()

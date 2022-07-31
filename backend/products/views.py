@@ -14,6 +14,7 @@ from django.conf import settings
 import os
 from products.models import Order
 from products.serializers import OrderSerializer
+import datetime
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -105,5 +106,14 @@ class OrderViewSet(viewsets.ModelViewSet):
         order_id = request.query_params.get('order_id', None)
         order = get_object_or_404(Order, order_id=order_id)
         order.is_delivered = True
+        item = order.item
+        order.to_address = request.query_params.get('to_address')
+        warranty_period = item.product.warranty_period
+        delta = datetime.timedelta(days=warranty_period)
+        item.warranty_end_date = datetime.date.today() + delta
+        if request.query_params.get('nft_id'):
+            item.nft_id = request.query_params.get('nft_id')
+        item.save()
         order.save()
+        order.delete()
         return Response(OrderSerializer(order).data)
