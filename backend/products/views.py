@@ -58,8 +58,8 @@ class ItemViewSet(viewsets.ModelViewSet):
         product = get_object_or_404(Product, id=data['product'])
         image = product.image.path
         item = Item.objects.create(owner=owner, product=product, **validated_data)
-        ipfs_hash, image_url = serialize_image(image, validated_data['serial_no'])
-        item.image_ipfs = ipfs_hash
+        ipfs_hash, image_url = serialize_image(image, validated_data['serial_no'], item)
+        item.metadata_uri = ipfs_hash
         item.warranty_image = File(open(os.path.join(settings.MEDIA_ROOT, image_url), 'rb'), name=image_url.split('/')[-1])
         item.save()
         return Response(ItemSerializer(item).data)

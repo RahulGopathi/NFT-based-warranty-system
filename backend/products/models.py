@@ -33,7 +33,7 @@ class Product(models.Model):
 class Item(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     owner = models.ForeignKey('users.Owner', on_delete=models.SET_NULL, null=True)
-    image_ipfs = models.CharField(max_length=100, blank=True)
+    metadata_uri = models.CharField(max_length=100, blank=True)
     nft_id = models.CharField(max_length=100, blank=True)
     warranty_image = models.FileField(upload_to='items/', null=True, blank=True)
     serial_no = models.CharField(max_length=100)
