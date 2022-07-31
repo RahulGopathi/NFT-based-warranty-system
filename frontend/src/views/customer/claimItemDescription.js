@@ -1,7 +1,15 @@
 import * as React from 'react';
-import { Box, Typography } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid';
 // import ButtonBase from '@mui/material/ButtonBase';
 // import { Link } from 'react-router-dom';
 import Card from '@mui/joy/Card';
@@ -12,13 +20,18 @@ import Otpinput from '../../components/otpInput';
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 // import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import { useLocation } from 'react-router-dom';
-import { API_BASE_URL, BASE_URL } from '../../config';
+import axios from 'axios';
+import { initializeApp } from 'firebase/app';
+import { API_BASE_URL, BASE_URL, firebaseConfig } from '../../config';
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from 'firebase/auth';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 const Img = styled('img')({
   margin: 'auto',
@@ -33,21 +46,105 @@ function useQuery() {
 
 export default function ClaimItemDescription() {
   let { order_id } = useParams();
+  const [captchaRendered, setCaptchaRendered] = useState(false);
   const [item, setItem] = useState([]);
   const [itemStatus, setItemStatus] = useState('Loading...');
+  const [inputOTP, setInputOTP] = useState('');
+  const [dialogStatusText, setDialogStatusText] = useState('');
   const [open, setOpen] = React.useState(false);
   let query = useQuery();
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const getInputData = (input) => {
+    const otp =
+      input.input1 +
+      input.input2 +
+      input.input3 +
+      input.input4 +
+      input.input5 +
+      input.input6;
+    setInputOTP(otp);
+    console.log(otp);
   };
 
-  const handleClose = () => {
+  const handleClickOpen = () => {
+    setOpen(true);
+    const phoneNumber = '+91' + item.phno;
+    const appVerifier = window.recaptchaVerifier;
+
+    console.log('sending OTP to ' + phoneNumber);
+    setDialogStatusText('Sending OTP to ' + phoneNumber);
+
+    appVerifier.render().then((widgetId) => {
+      window.recaptchaWidgetId = widgetId;
+    });
+
+    signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        setDialogStatusText('');
+      })
+      .catch((error) => {
+        setDialogStatusText('An error occurred while sending OTP');
+        console.log(error);
+      });
+  };
+
+  const handleCloseOtp = () => {
     setOpen(false);
+  };
+
+  const completeOrder = async () => {
+    const response = await axios.get(API_BASE_URL + '/orders/claim_order/', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {
+        order_id: order_id,
+      },
+    });
+    const data = await response.data;
+    if (response.status === 200) {
+      setDialogStatusText('Transferring NFT...');
+    } else {
+      setDialogStatusText(data[Object.keys(data)[0]]);
+    }
+  };
+  const handleClaim = () => {
+    if (inputOTP) {
+      const code = inputOTP;
+      window.confirmationResult
+        .confirm(code)
+        .then((result) => {
+          setDialogStatusText('Loading...');
+          completeOrder();
+        })
+        .catch((error) => {
+          setDialogStatusText('The OTP entered is incorrect, please try again');
+        });
+    } else {
+      setDialogStatusText('Invalid OTP entered');
+    }
   };
 
   useEffect(() => {
     fetchItem();
+
+    if (!captchaRendered) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        'recaptcha-container',
+        {
+          size: 'invisible',
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+      setCaptchaRendered(true);
+    }
+
     if (query.get('setOpen') === 'true') {
       setOpen(true);
     }
@@ -64,7 +161,8 @@ export default function ClaimItemDescription() {
       const data = await response.json();
       if (response.status === 200) {
         setItem(data);
-        console.log('entered');
+      } else {
+        setItemStatus(data[Object.keys(data)[0]]);
       }
     } catch (e) {
       setItemStatus('An Error Occurred! please try again later.');
@@ -73,6 +171,7 @@ export default function ClaimItemDescription() {
 
   return (
     <div>
+      <div id="recaptcha-container"></div>
       {item.item_data ? (
         <div>
           <Box
@@ -181,7 +280,7 @@ export default function ClaimItemDescription() {
 
               <Dialog
                 open={open}
-                onClose={handleClose}
+                onClose={handleClaim}
                 className="dialog"
                 PaperProps={{
                   style: {
@@ -194,17 +293,38 @@ export default function ClaimItemDescription() {
                 }}
               >
                 <DialogTitle sx={{ margin: 'auto', fontSize: 25 }}>
-                  Enter OTP
+                  {dialogStatusText ? '' : 'Enter OTP'}
                 </DialogTitle>
                 <DialogContent sx={{ pb: 0 }}>
                   <DialogContentText sx={{ color: '#A4A9AF' }}>
-                    Enter the OTP sent to the Mobile Number given by the seller
+                    {dialogStatusText ? (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Typography sx={{ fontSize: '1.2rem' }}>
+                          {dialogStatusText}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <div>
+                        Enter the OTP sent to the Mobile Number ending with{' '}
+                        <b>XXXXXX{String(item.phno).slice(-4)}.</b>
+                      </div>
+                    )}
                   </DialogContentText>
-                  <Otpinput />
+                  {!dialogStatusText && (
+                    <Otpinput getInputData={getInputData} />
+                  )}
                 </DialogContent>
                 <DialogActions>
-                  {/* <Button onClick={handleCloseOtp}>Resend OTP</Button> */}
-                  <Button onClick={handleClose}>Continue</Button>
+                  {dialogStatusText ? (
+                    <Button onClick={handleCloseOtp}>Close</Button>
+                  ) : (
+                    <Button onClick={handleClaim}>Claim</Button>
+                  )}
                 </DialogActions>
               </Dialog>
 

@@ -27,11 +27,11 @@ class ProductFactory(factory.django.DjangoModelFactory):
 class ItemFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'products.Item'
-        django_get_or_create = ('product', 'image_ipfs', 'nft_id', 'warranty_image', 'serial_no', 'warranty_start_date',
+        django_get_or_create = ('product', 'metadata_uri', 'nft_id', 'warranty_image', 'serial_no', 'warranty_start_date',
                                 'warranty_end_date', 'is_issued', 'created_at', 'updated_at')
 
     product = factory.Iterator(Product.objects.all())
-    image_ipfs = factory.Faker('uuid4')
+    metadata_uri = factory.Faker('uuid4')
     nft_id = factory.Faker('uuid4')
     warranty_image = factory.django.ImageField(color=factory.fuzzy.FuzzyChoice(COLOUR))
     serial_no = factory.Faker('uuid4')

@@ -135,27 +135,51 @@ export default function CustomerDashboard() {
                       bgcolor: 'background.level1',
                     }}
                   >
-                    <Link
-                      to={'/customer/item/' + item.id + '?setOpen=true'}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        textDecoration: 'none',
-                        color: 'white',
-                        width: '100%',
-                      }}
-                    >
-                      <Box>
-                        <Button
-                          variant="solid"
-                          size="sm"
-                          color="primary"
-                          sx={{ ml: 'auto', fontWeight: 600 }}
-                        >
-                          Transfer
-                        </Button>
-                      </Box>
-                    </Link>
+                    {item.order_id? (
+                      <Link
+                        to={'/customer/item/' + item.id}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          textDecoration: 'none',
+                          color: 'white',
+                          width: '100%',
+                        }}
+                      >
+                        <Box>
+                          <Button
+                            variant="solid"
+                            size="sm"
+                            color="primary"
+                            sx={{ ml: 'auto', fontWeight: 600, fontSize: '1.2rem' }}
+                          >
+                            Issued!
+                          </Button>
+                        </Box>
+                      </Link>
+                    ) : (
+                      <Link
+                        to={'/customer/item/' + item.id + '?setOpen=true'}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          textDecoration: 'none',
+                          color: 'white',
+                          width: '100%',
+                        }}
+                      >
+                        <Box>
+                          <Button
+                            variant="solid"
+                            size="sm"
+                            color="primary"
+                            sx={{ ml: 'auto', fontWeight: 600, fontSize: '1.2rem' }}
+                          >
+                            Transfer
+                          </Button>
+                        </Box>
+                      </Link>
+                    )}
                   </CardOverflow>
                 </Card>
               </Grid>

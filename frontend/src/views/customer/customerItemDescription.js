@@ -1,9 +1,6 @@
 import * as React from 'react';
-import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-// import ButtonBase from '@mui/material/ButtonBase';
-// import { Link } from 'react-router-dom';
 import Card from '@mui/joy/Card';
 import AspectRatio from '@mui/joy/AspectRatio';
 import '../customer/customerItemDescription.css';
@@ -13,17 +10,19 @@ import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import useCustomerAxios from '../../utils/useCustomerAxios';
 import {
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   TextField,
+  Typography,
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { WalletContext } from '../../contexts/WalletContext';
 import { initializeApp } from 'firebase/app';
-import { API_BASE_URL, firebaseConfig } from '../../config';
+import { FRONTEND_BASE_URL, API_BASE_URL, firebaseConfig } from '../../config';
 import {
   getAuth,
   RecaptchaVerifier,
@@ -78,16 +77,19 @@ export default function CustomerItemDescription() {
   const api = useCustomerAxios();
   const { customer } = React.useContext(WalletContext);
   const [item, setItem] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState([]); // eslint-disable-line
   const [itemStatus, setItemStatus] = useState('Loading...');
   const [inputPhoneNumber, setInputPhoneNumber] = useState('');
   const [inputOTP, setInputOTP] = useState('');
+  const [number, setNumber] = useState('');
   const [dialogStatusText, setDialogStatusText] = useState('');
   const [open, setOpen] = React.useState(false);
   const [openLink, setOpenLink] = React.useState(false);
   const [openOtp, setOpenOtp] = React.useState(false);
   const [label, setLabel] = React.useState('');
+  const [button, setButton] = React.useState(true);
+  const [isLinkCopied, setIsLinkCopied] = React.useState(false);
+  const baseClaimURL = FRONTEND_BASE_URL + '/customer/claim/order/';
   let query = useQuery();
 
   const getInputData = (input) => {
@@ -116,7 +118,11 @@ export default function CustomerItemDescription() {
   };
 
   const handleClickOpenOtp = () => {
-    if (inputPhoneNumber && inputPhoneNumber.length === 10) {
+    if (inputPhoneNumber === customer.phno) {
+      setDialogStatusText("Product can't be transferred to yourself!");
+      setOpen(false);
+      setOpenOtp(true);
+    } else if (inputPhoneNumber && inputPhoneNumber.length === 10) {
       const phoneNumber = '+91' + customer.phno;
       const appVerifier = window.recaptchaVerifier;
 
@@ -156,8 +162,7 @@ export default function CustomerItemDescription() {
         .confirm(code)
         .then((result) => {
           setDialogStatusText('Loading...');
-          setOpenOtp(false);
-          setOpenLink(true);
+          createOrder();
         })
         .catch((error) => {
           setDialogStatusText('The OTP entered is incorrect, please try again');
@@ -169,28 +174,36 @@ export default function CustomerItemDescription() {
     }
   };
 
+  const handleClickOpenIssuedLink = async () => {
+    setOpenLink(true);
+  };
+
   const handleCloseLink = () => {
     setOpenLink(false);
+    setButton(false);
   };
 
   // eslint-disable-next-line no-unused-vars
-  const createOrder = async (given_phno, item_id) => {
+  const createOrder = async () => {
     const response = await fetch(API_BASE_URL + '/orders/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        phno: customer.phno,
-        item: item_id,
+        phno: inputPhoneNumber,
+        item: item.id,
       }),
     });
     const data = await response.json();
     console.log(data);
     if (response.status === 201) {
       setOrder(data);
+      setDialogStatusText('');
+      setOpenOtp(false);
+      setOpenLink(true);
     } else {
-      setDialogStatusText('An error occurred while creating order');
+      setDialogStatusText(data[Object.keys(data)[0]]);
     }
   };
 
@@ -213,12 +226,28 @@ export default function CustomerItemDescription() {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const fetchNumber = async (order_id) => {
+    try {
+      console.log(order_id);
+      const number_response = await api.get('/orders/get_order/?order_id=' + order_id);
+      console.log(number_response.data.phno);
+      if (number_response.status === 200) {
+        setNumber(number_response.data.phno);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const fetchItem = async () => {
     try {
       const response = await api.get('/items/' + id);
       console.log(response.data);
       if (response.status === 200) {
         setItem(response.data);
+        if(response.data.order_id){
+          fetchNumber(response.data.order_id);
+        }
       }
     } catch (e) {
       setItemStatus('An Error Occurred! please try again later.');
@@ -313,21 +342,64 @@ export default function CustomerItemDescription() {
                 </Grid>
               </Grid>
             </Grid>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: 1,
-              }}
-            >
-              <Button
-                className="btns"
-                buttonStyle="btn--primary"
-                buttonSize="btn--large"
-                onClick={handleClickOpen}
+
+            {item.order_id || !button ? (
+              <Box>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: '#A4A9AF',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  You have already issued this item to the Mobile Number <span style={{ marginLeft: '5px', color: '#d9d9d9' }}>{inputPhoneNumber || number}</span>.
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    mt: 1,
+                    color: '#d9d9d9',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  You can view the unique transfer link
+                  <span
+                    onClick={handleClickOpenIssuedLink}
+                    style={{
+                      marginLeft: '5px',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                      color: '#61c97d',
+                    }}
+                  >
+                    {' '}
+                    here
+                  </span>
+                  .
+                </Typography>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: 1,
+                }}
               >
-                Transfer
-              </Button>
+                <Button
+                  className="btns"
+                  buttonStyle="btn--primary"
+                  buttonSize="btn--large"
+                  onClick={handleClickOpen}
+                >
+                  Transfer
+                </Button>
+              </Box>
+            )}
 
               {/* <<<<<<<< Mobile Number Input Dialog Box >>>>>>>> */}
 
@@ -412,7 +484,7 @@ export default function CustomerItemDescription() {
                       </Box>
                     ) : (
                       <div>
-                        Enter the OTP sent to your Mobile Number ending with{' '}
+                        Enter the OTP sent to the Mobile Number ending with{' '}
                         <b>XXXXXX{String(customer.phno).slice(-4)}.</b>
                       </div>
                     )}
@@ -422,7 +494,6 @@ export default function CustomerItemDescription() {
                   )}
                 </DialogContent>
                 <DialogActions>
-                  {/* <Button onClick={handleCloseOtp}>Resend OTP</Button> */}
                   {dialogStatusText ? (
                     <Button onClick={handleCloseOtp}>Cancel</Button>
                   ) : (
@@ -466,9 +537,7 @@ export default function CustomerItemDescription() {
                       </Box>
                     ) : (
                       <div>
-                        The following Transfer link has been sent to the Mobile
-                        number you just entered!
-                      </div>
+                        The following Transfer link has been sent to the Mobile number '{inputPhoneNumber || number}'.</div>
                     )}
                   </DialogContentText>
                   {!dialogStatusText && (
@@ -476,13 +545,13 @@ export default function CustomerItemDescription() {
                       <StyledTextField
                         fullWidth
                         size="small"
-                        onChange={handleChange}
+                        value={baseClaimURL + (item.order_id || order.order_id)}
+                        readOnly
                         label={label === '' ? ' ' : ' '}
                         InputLabelProps={{ shrink: false }}
                         textColor="#A4A9AF"
                         variant="outlined"
                         InputProps={{ readOnly: true }}
-                        defaultValue="link"
                         sx={{ color: 'white', mt: 2 }}
                       />
                     </div>
@@ -491,11 +560,20 @@ export default function CustomerItemDescription() {
                 <DialogActions>
                   <Button onClick={handleCloseLink}>Close</Button>
                   {!dialogStatusText && (
-                    <Button onClick={handleCloseLink}>Copy!</Button>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          baseClaimURL + (item.order_id || order.order_id)
+                        );
+                        setIsLinkCopied(true);
+                        setButton(false);
+                      }}
+                    >
+                      {isLinkCopied ? 'Copied!' : 'Copy!'}
+                    </Button>
                   )}
                 </DialogActions>
               </Dialog>
-            </Box>
           </Box>
         </div>
       ) : (
