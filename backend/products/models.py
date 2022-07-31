@@ -53,6 +53,8 @@ class Order(models.Model):
     name = models.CharField(max_length=100, blank=True)
     is_delivered = models.BooleanField(default=False)
     order_id = models.CharField(max_length=100, blank=True)
+    to_address = models.CharField(max_length=500, blank=True)
+    from_address = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
         return f"{self.item.serial_no}"
