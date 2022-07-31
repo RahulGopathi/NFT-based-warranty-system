@@ -58,6 +58,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         super().validate(attrs)
+        if Order.objects.filter(phno=attrs['phno']).exists():
+            raise serializers.ValidationError("Product has been already transferred")
+        elif Order.objects.filter(item=attrs['item']).exists():
+            raise serializers.ValidationError("Product has been already transferred to other number")
         item = attrs.get('item')
         item.is_issued = True
         item.save()

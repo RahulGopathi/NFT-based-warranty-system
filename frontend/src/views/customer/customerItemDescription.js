@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 // import ButtonBase from '@mui/material/ButtonBase';
@@ -13,17 +12,19 @@ import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import useCustomerAxios from '../../utils/useCustomerAxios';
 import {
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   TextField,
+  Typography,
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { WalletContext } from '../../contexts/WalletContext';
 import { initializeApp } from 'firebase/app';
-import { API_BASE_URL, firebaseConfig } from '../../config';
+import { FRONTEND_BASE_URL, API_BASE_URL, firebaseConfig } from '../../config';
 import {
   getAuth,
   RecaptchaVerifier,
@@ -78,8 +79,7 @@ export default function CustomerItemDescription() {
   const api = useCustomerAxios();
   const { customer } = React.useContext(WalletContext);
   const [item, setItem] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState([]); // eslint-disable-line
   const [itemStatus, setItemStatus] = useState('Loading...');
   const [inputPhoneNumber, setInputPhoneNumber] = useState('');
   const [inputOTP, setInputOTP] = useState('');
@@ -88,6 +88,8 @@ export default function CustomerItemDescription() {
   const [openLink, setOpenLink] = React.useState(false);
   const [openOtp, setOpenOtp] = React.useState(false);
   const [label, setLabel] = React.useState('');
+  const [isLinkCopied, setIsLinkCopied] = React.useState(false);
+  const baseClaimURL = FRONTEND_BASE_URL + '/customer/claim/order/';
   let query = useQuery();
 
   const getInputData = (input) => {
@@ -116,7 +118,11 @@ export default function CustomerItemDescription() {
   };
 
   const handleClickOpenOtp = () => {
-    if (inputPhoneNumber && inputPhoneNumber.length === 10) {
+    if (inputPhoneNumber === customer.phno) {
+      setDialogStatusText("Product can't be transferred to yourself!");
+      setOpen(false);
+      setOpenOtp(true);
+    } else if (inputPhoneNumber && inputPhoneNumber.length === 10) {
       const phoneNumber = '+91' + customer.phno;
       const appVerifier = window.recaptchaVerifier;
 
@@ -156,8 +162,7 @@ export default function CustomerItemDescription() {
         .confirm(code)
         .then((result) => {
           setDialogStatusText('Loading...');
-          setOpenOtp(false);
-          setOpenLink(true);
+          createOrder();
         })
         .catch((error) => {
           setDialogStatusText('The OTP entered is incorrect, please try again');
@@ -174,23 +179,26 @@ export default function CustomerItemDescription() {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const createOrder = async (given_phno, item_id) => {
+  const createOrder = async () => {
     const response = await fetch(API_BASE_URL + '/orders/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        phno: customer.phno,
-        item: item_id,
+        phno: inputPhoneNumber,
+        item: item.id,
       }),
     });
     const data = await response.json();
     console.log(data);
     if (response.status === 201) {
       setOrder(data);
+      setDialogStatusText('');
+      setOpenOtp(false);
+      setOpenLink(true);
     } else {
-      setDialogStatusText('An error occurred while creating order');
+      setDialogStatusText(data[Object.keys(data)[0]]);
     }
   };
 
@@ -412,7 +420,7 @@ export default function CustomerItemDescription() {
                       </Box>
                     ) : (
                       <div>
-                        Enter the OTP sent to your Mobile Number ending with{' '}
+                        Enter the OTP sent to the Mobile Number ending with{' '}
                         <b>XXXXXX{String(customer.phno).slice(-4)}.</b>
                       </div>
                     )}
@@ -422,7 +430,6 @@ export default function CustomerItemDescription() {
                   )}
                 </DialogContent>
                 <DialogActions>
-                  {/* <Button onClick={handleCloseOtp}>Resend OTP</Button> */}
                   {dialogStatusText ? (
                     <Button onClick={handleCloseOtp}>Cancel</Button>
                   ) : (
@@ -476,13 +483,13 @@ export default function CustomerItemDescription() {
                       <StyledTextField
                         fullWidth
                         size="small"
-                        onChange={handleChange}
+                        value={baseClaimURL + order.order_id}
+                        readOnly
                         label={label === '' ? ' ' : ' '}
                         InputLabelProps={{ shrink: false }}
                         textColor="#A4A9AF"
                         variant="outlined"
                         InputProps={{ readOnly: true }}
-                        defaultValue="link"
                         sx={{ color: 'white', mt: 2 }}
                       />
                     </div>
@@ -491,7 +498,16 @@ export default function CustomerItemDescription() {
                 <DialogActions>
                   <Button onClick={handleCloseLink}>Close</Button>
                   {!dialogStatusText && (
-                    <Button onClick={handleCloseLink}>Copy!</Button>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          baseClaimURL + order.order_id
+                        );
+                        setIsLinkCopied(true);
+                      }}
+                    >
+                      {isLinkCopied ? 'Copied!' : 'Copy!'}
+                    </Button>
                   )}
                 </DialogActions>
               </Dialog>

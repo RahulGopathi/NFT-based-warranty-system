@@ -17,7 +17,7 @@ import RetailerProtectedRoute from './utils/retailerProtected';
 import RetailerProduct from './views/retailer/retailerProductPage';
 import CustomerProfile from './views/customer/customerProfile';
 import RetailerProfile from './views/retailer/retailerProfile';
-import CustomerClaim from './views/customer/claimProduct';
+import CustomerClaim from './views/customer/claimProducts';
 import ClaimItemDescription from './views/customer/claimItemDescription';
 
 function App() {
@@ -91,7 +91,7 @@ function App() {
                 }
               />
               <Route
-                path="/claim/order/:order_id"
+                path="/customer/claim/order/:order_id"
                 element={
                   <div>
                     <Navbar />
