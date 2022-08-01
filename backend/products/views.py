@@ -14,6 +14,7 @@ from django.conf import settings
 import os
 from products.models import Order
 from products.serializers import OrderSerializer
+import datetime
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -103,7 +104,21 @@ class OrderViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def claim_order(self, request):
         order_id = request.query_params.get('order_id', None)
-        order = get_object_or_404(Order, order_id=order_id)
-        order.is_delivered = True
-        order.save()
-        return Response(OrderSerializer(order).data)
+        to_address = request.query_params.get('to_address', None)
+        nft_id = request.query_params.get('nft_id', None)
+        print(order_id, to_address, nft_id)
+        if order_id:
+            order = get_object_or_404(Order, order_id=order_id)
+            item = order.item
+            owner, created = Owner.objects.get_or_create(wallet_address=to_address)
+            item.owner = owner
+            if nft_id:
+                item.nft_id = nft_id
+            warranty_period = item.product.warranty_period
+            delta = datetime.timedelta(days=warranty_period)
+            item.warranty_end_date = datetime.date.today() + delta*30
+            item.save()
+            order.save()
+            order.delete()
+            return Response(OrderSerializer(order).data)
+        return Response(status=400)

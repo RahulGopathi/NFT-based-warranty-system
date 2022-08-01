@@ -49,6 +49,10 @@ contract pydo is ERC721, ERC721URIStorage, Ownable {
     return existingURIs[uri] == 1;
   }
 
+  function approveTransfer(address to, uint256 tokenId) public {
+    approve(to, tokenId);
+  }
+
   function payToMint(address recipient, string memory metadataURI)
     public
     returns (uint256)

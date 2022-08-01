@@ -36,7 +36,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('id', 'serial_no', 'order_id', 'metadata_uri', 'warranty_end_date', 'product',
+        fields = ('id', 'serial_no', 'order_id', 'nft_id', 'metadata_uri', 'warranty_end_date', 'product',
                   'warranty_image', 'created_at', 'updated_at', 'owner', 'is_issued')
         read_only_fields = ('created_at', 'updated_at')
 

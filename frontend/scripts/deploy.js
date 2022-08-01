@@ -14,12 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const FiredGuys = await hre.ethers.getContractFactory('pydo');
-  const firedGuys = await FiredGuys.deploy();
+  const PyDO = await hre.ethers.getContractFactory('pydo');
+  const pydo = await PyDO.deploy();
 
-  await firedGuys.deployed();
+  await pydo.deployed();
 
-  console.log('PyDO NFT deployed to:', firedGuys.address);
+  console.log('PyDO NFT deployed to:', pydo.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
