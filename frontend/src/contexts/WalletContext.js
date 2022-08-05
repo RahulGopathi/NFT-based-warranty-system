@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { API_AUTH_BASE_URL } from '../config';
+import InstallMetamask from '../components/InstallMetamask';
 
 const baseURL = API_AUTH_BASE_URL;
 const WalletContext = createContext();
@@ -147,8 +148,10 @@ const WalletProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    checkIfWalletIsConnected(setUserWalletAddress);
-    setLoading(false);
+    if (window.ethereum) {
+      checkIfWalletIsConnected(setUserWalletAddress);
+      setLoading(false);
+    }
 
     if (window.ethereum) {
       window.ethereum.on('disconnect', () => {
@@ -160,7 +163,7 @@ const WalletProvider = ({ children }) => {
 
   return (
     <WalletContext.Provider value={contextData}>
-      {loading ? null : children}
+      {window.ethereum ? loading ? null : children : <InstallMetamask />}
     </WalletContext.Provider>
   );
 };

@@ -35,14 +35,19 @@ import { ethers } from 'ethers';
 import pydo from '../../artifacts/contracts/PyDO.sol/pydo.json';
 
 const contractAddress = smartContractAddress;
+var provider = null;
+var contract = null;
+var signer = null;
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+if (window.ethereum) {
+  provider = new ethers.providers.Web3Provider(window.ethereum);
 
-// get the end user
-const signer = provider.getSigner();
+  // get the end user
+  signer = provider.getSigner();
 
-// get the smart contract
-const contract = new ethers.Contract(contractAddress, pydo.abi, signer);
+  // get the smart contract
+  contract = new ethers.Contract(contractAddress, pydo.abi, signer);
+}
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
